@@ -1,8 +1,5 @@
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import '../styles/custom.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-<<<<<<< HEAD
-@import '@fortawesome/fontawesome-free/css/all.min.css';
-@import '../styles/custom.css';
-=======
->>>>>>> b0a01eb90408b4f555e3a74079add9668bf969a9
