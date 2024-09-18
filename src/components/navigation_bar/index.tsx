@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -117,3 +118,12 @@ const NavBar: React.FC = () => {
 };
 
 export default NavBar;
+=======
+import React from "react";
+
+const NavigationBar = () => {
+	return <div className="absolute z-50">NavigationBar</div>;
+};
+
+export default NavigationBar;
+>>>>>>> b0a01eb90408b4f555e3a74079add9668bf969a9
