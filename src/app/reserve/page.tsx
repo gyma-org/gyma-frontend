@@ -1,6 +1,6 @@
 
 import dynamic from "next/dynamic";
-import "../../src/app/globals.css";
+import "../globals.css";
 import React from 'react';
 
 const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
@@ -52,9 +52,6 @@ const FavoritePage: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className="absolute z-50 bottom-0 left-0 right-0">
-			<Footer />
-	  </div>
     </div>
   );
 };

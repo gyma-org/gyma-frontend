@@ -2,7 +2,6 @@ import NavigationBar from "@/components/navigation_bar";
 import dynamic from "next/dynamic";
 
 const Map = dynamic(() => import("@/components/map"), { ssr: false });
-const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 
 export default function Home() {
 	return (
@@ -10,6 +9,9 @@ export default function Home() {
 			<div>
 				<Map />
 			</div>
+			{/* <div className="absolute z-50 bottom-0 left-0 right-0">
+				<NavigationBar />
+			</div> */}
 		</div>
 	);
 }
