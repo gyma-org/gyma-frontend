@@ -1,7 +1,4 @@
 /** @type {import('next').NextConfig} */
-<<<<<<< HEAD
-const nextConfig = {};
-=======
 import withPWA from 'next-pwa';
 
 // PWA configuration
@@ -11,6 +8,5 @@ const nextConfig = withPWA({
   register: true,  // to register Service Worker
   skipWaiting: true, // register faster
 });
->>>>>>> b0a01eb90408b4f555e3a74079add9668bf969a9
 
 export default nextConfig;

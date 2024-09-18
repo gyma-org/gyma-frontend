@@ -35,15 +35,11 @@ const Map = () => {
 				drawMarkerOnMap();
 				addRouteToMap();
 				drawPolygonOnMap();
-<<<<<<< HEAD
 				locateUser();
-=======
->>>>>>> b0a01eb90408b4f555e3a74079add9668bf969a9
 			});
 		}
 	}, []);
 
-<<<<<<< HEAD
 	// Get user location
 	const locateUser = () => {
 		navigator.geolocation.getCurrentPosition(
@@ -71,8 +67,6 @@ const Map = () => {
 			.catch((error) => console.error("Error fetching gyms:", error));
 	};
 
-=======
->>>>>>> b0a01eb90408b4f555e3a74079add9668bf969a9
 	function addRouteToMap() {
 		const routes: [number, number][][] = [];
 		const points: number[][] = [];
