@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@mapbox/polyline": "^1.2.1",
     "@neshan-maps-platform/mapbox-gl-react": "^1.0.2",
     "next": "14.2.7",
