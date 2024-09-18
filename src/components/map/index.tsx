@@ -212,7 +212,7 @@ const Map = () => {
         paint: {
           "circle-color": "#9fbef9",
           "circle-stroke-color": "#FFFFFF",
-          "circle-strokeWidth": 2,
+          "circle-stroke-width": 2,
           "circle-radius": 5,
         },
       });
@@ -431,7 +431,7 @@ const Map = () => {
         filter: ["==", "$type", "Point"],
         paint: {
           "circle-radius": 6,
-          "circle-strokeWidth": 2,
+          "circle-stroke-width": 2,
           "circle-color": "red",
           "circle-stroke-color": "blue",
         },
