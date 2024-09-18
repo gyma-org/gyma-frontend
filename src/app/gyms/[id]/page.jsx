@@ -1,7 +1,6 @@
 import React from "react";
-
-import { Box, Button, CardMedia, Container, Rating, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+
 import { Address, Comments, Description, GYMHeader, ImageSlider, Specifications } from "@/components/gym";
 
 const GymPage = () => {
