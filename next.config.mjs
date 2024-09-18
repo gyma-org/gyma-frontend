@@ -1,12 +1,13 @@
 /** @type {import('next').NextConfig} */
 import withPWA from "next-pwa";
 
-// PWA configuration
-const nextConfig = withPWA({
-  dest: "public", // Destination for PWA assets (like service worker)
-  disable: process.env.NODE_ENV === "development", // Disable PWA in development mode
-  register: true, // to register Service Worker
-  skipWaiting: true, // register faster
+const pwaConfig = withPWA({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  scope: "/app",
 });
 
-export default nextConfig;
+export default {
+  ...pwaConfig,
+};
