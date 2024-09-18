@@ -6,37 +6,23 @@ import { Address, Comments, Description, GYMHeader, ImageSlider, Specifications 
 
 const GymPage = () => {
   return (
-    <Box sx={{ bgcolor: "#f3f3f3", minHeight: "100vh", pb: 8 }}>
-      <Container
-        sx={{
-          p: { xs: 0, md: 2 },
-        }}>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            direction: "rtl",
-          }}>
-          {/* Header */}
-          <GYMHeader />
-
-          {/* Image Slider */}
-          <ImageSlider />
-
-          {/* Specifications */}
-          <Specifications />
-
-          {/* Description */}
-          <Description />
-
-          {/* Address */}
-          <Address />
-
-          {/* Comments */}
-          <Comments />
-        </Grid>
-      </Container>
-    </Box>
+    <Grid
+      container
+      spacing={2}
+      sx={{
+        direction: "rtl",
+        p: { xs: 0, md: 2 },
+        bgcolor: "#f3f3f3",
+        minHeight: "100vh",
+        pb: 8,
+      }}>
+      <GYMHeader />
+      <ImageSlider />
+      <Specifications />
+      <Description />
+      <Address />
+      <Comments />
+    </Grid>
   );
 };
 
