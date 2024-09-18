@@ -1,62 +1,100 @@
-// src/components/Footer/index.tsx
-
 'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const Footer: React.FC = () => {
-  const pathname = usePathname() || '/'; // Default to '/' if pathname is null
+  const pathname = usePathname() || '/';
   const [activePath, setActivePath] = useState<string>(pathname);
+  const [clickedButton, setClickedButton] = useState<string | null>(pathname);
+
+  const router = useRouter();
 
   const handleClick = (path: string) => {
+    setClickedButton(path);
     setActivePath(path);
+    
+    // Navigate to the path immediately
+    if (path !== pathname) {
+      router.push(path);
+    }
   };
 
   return (
-    <footer className="bg-white custom-shadow text-white py-4">
-      <div className="container mx-auto flex justify-center space-x-4">
-        <Link
-          href="/"
+    <footer className="bg-white custom-shadow text-white py-4 fixed bottom-0 left-0 right-0">
+      <div className="container mx-auto flex justify-center space-x-4 p-1">
+        {/* Map Button */}
+        <button
           onClick={() => handleClick('/')}
-          className={`flex flex-col items-center justify-center w-20 h-20 rounded-md transition-transform transform ${
-            activePath === '/' ? 'bg-blue-500 scale-105' : 'bg-gray-700 scale-100'
+          className={`relative flex flex-col items-center justify-center w-20 h-20 md:w-20 md:h-20 rounded-md transition-all duration-300 ease-in-out ${
+            activePath === '/' && clickedButton === '/'
+              ? 'bg-blue-500 translate-y-[-16px] scale-110'
+              : 'bg-gray-700 translate-y-0 scale-100'
           }`}
+          style={{
+            position: 'relative',
+            top: clickedButton === '/' ? '-16px' : '0px',
+            transition: 'top 0.3s ease, transform 0.3s ease',
+          }}
         >
           <i className="fas fa-map-marker-alt text-2xl mb-1"></i>
           <span className="text-sm">نقشه</span>
-        </Link>
-        <Link
-          href="/favorite"
+        </button>
+
+        {/* Favorite Button */}
+        <button
           onClick={() => handleClick('/favorite')}
-          className={`flex flex-col items-center justify-center w-20 h-20 rounded-md transition ease-in-out duration-300 ${
-            activePath === '/favorite' ? 'bg-blue-500 scale-up button-active' : 'bg-gray-700 scale-down button-inactive'
+          className={`relative flex flex-col items-center justify-center w-20 h-20 md:w-20 md:h-20 rounded-md transition-all duration-300 ease-in-out ${
+            activePath === '/favorite' && clickedButton === '/favorite'
+              ? 'bg-blue-500 translate-y-[-16px] scale-110'
+              : 'bg-gray-700 translate-y-0 scale-100'
           }`}
+          style={{
+            position: 'relative',
+            top: clickedButton === '/favorite' ? '-16px' : '0px',
+            transition: 'top 0.3s ease, transform 0.3s ease',
+          }}
         >
           <i className="fas fa-star text-2xl mb-1"></i>
           <span className="text-sm">علاقه‌مندی‌ها</span>
-        </Link>
-        <Link
-          href="/reserve"
+        </button>
+
+        {/* Reserve Button */}
+        <button
           onClick={() => handleClick('/reserve')}
-          className={`flex flex-col items-center justify-center w-20 h-20 rounded-md transition-transform transform ${
-            activePath === '/reserve' ? 'bg-blue-500 scale-105' : 'bg-gray-700 scale-100'
+          className={`relative flex flex-col items-center justify-center w-20 h-20 md:w-20 md:h-20 rounded-md transition-all duration-300 ease-in-out ${
+            activePath === '/reserve' && clickedButton === '/reserve'
+              ? 'bg-blue-500 translate-y-[-16px] scale-110'
+              : 'bg-gray-700 translate-y-0 scale-100'
           }`}
+          style={{
+            position: 'relative',
+            top: clickedButton === '/reserve' ? '-16px' : '0px',
+            transition: 'top 0.3s ease, transform 0.3s ease',
+          }}
         >
           <i className="fas fa-calendar-check text-2xl mb-1"></i>
           <span className="text-sm">رزرو</span>
-        </Link>
-        <Link
-          href="/profile"
+        </button>
+
+        {/* Profile Button */}
+        <button
           onClick={() => handleClick('/profile')}
-          className={`flex flex-col items-center justify-center w-20 h-20 rounded-md transition-transform transform ${
-            activePath === '/profile' ? 'bg-blue-500 scale-105' : 'bg-gray-700 scale-100'
+          className={`relative flex flex-col items-center justify-center w-20 h-20 md:w-20 md:h-20 rounded-md transition-all duration-300 ease-in-out ${
+            activePath === '/profile' && clickedButton === '/profile'
+              ? 'bg-blue-500 translate-y-[-16px] scale-110'
+              : 'bg-gray-700 translate-y-0 scale-100'
           }`}
+          style={{
+            position: 'relative',
+            top: clickedButton === '/profile' ? '-16px' : '0px',
+            transition: 'top 0.3s ease, transform 0.3s ease',
+          }}
         >
           <i className="fas fa-user text-2xl mb-1"></i>
           <span className="text-sm">پروفایل</span>
-        </Link>
+        </button>
       </div>
     </footer>
   );

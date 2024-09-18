@@ -12,7 +12,7 @@ const gyms = [
     address: '123 Main St, Cityville',
     price: '$30/month',
     rating: 4.5,
-    image: '/images/gym1.jpg' // Ensure to put your images in the public/images directory
+    image: '/images/gym1.webp' // Ensure to put your images in the public/images directory
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const gyms = [
     address: '456 Elm St, Townsville',
     price: '$25/month',
     rating: 4.2,
-    image: '/images/gym2.jpg'
+    image: '/images/gym1.webp'
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ const gyms = [
     address: '789 Oak St, Villagetown',
     price: '$35/month',
     rating: 4.8,
-    image: '/images/gym3.jpg'
+    image: '/images/gym1.webp'
   }
 ];
 
