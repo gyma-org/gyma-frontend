@@ -1,17 +1,22 @@
-import NavigationBar from "@/components/navigation_bar";
-import dynamic from "next/dynamic";
+import { Button, Container } from "@mui/material";
+import Link from "next/link";
+// import dynamic from "next/dynamic";
 
-const Map = dynamic(() => import("@/components/map"), { ssr: false });
+// const Map = dynamic(() => import("@/components/map"), { ssr: false });
 
 export default function Home() {
-	return (
-		<div className="flex relative h-screen w-screen flex-col items-center justify-between overflow-hidden">
-			<div>
-				<Map />
-			</div>
-			{/* <div className="absolute z-50 bottom-0 left-0 right-0">
-				<NavigationBar />
-			</div> */}
-		</div>
-	);
+  return (
+    <Container
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        width: "100vw",
+      }}>
+      <Link href={"/a"}>
+        <Button variant="contained">{"ورود به برنامه"}</Button>
+      </Link>
+    </Container>
+  );
 }
