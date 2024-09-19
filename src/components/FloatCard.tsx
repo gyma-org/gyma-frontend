@@ -8,10 +8,10 @@ const FloatCard = () => {
         boxShadow: "0px 0px 5px #00000040",
         borderRadius: "16px",
         maxWidth: 500,
+        width: "100%",
         aspectRatio: "4/1",
         p: 1,
         display: "flex",
-        my: 2,
       }}>
       {/* Save button */}
       <Box>

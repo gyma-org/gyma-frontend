@@ -23,7 +23,7 @@ const Search = () => {
   return (
     <BootstrapInput
       placeholder="جستجو ..."
-      sx={{ width: "100%", maxWidth: 500 }}
+      sx={{ width: "100%", maxWidth: 600 }}
       startAdornment={
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="14.6666" cy="14.6666" r="9.33333" stroke="#33363F" stroke-width="2" />
