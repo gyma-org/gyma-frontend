@@ -14,7 +14,7 @@ const Profile = () => {
           boxShadow: "0px 0px 10px #00000040",
           p: 1,
           mt: 3,
-          mx: 1,
+          mx: "auto",
           position: "relative",
         }}>
         <CardMedia
@@ -98,7 +98,16 @@ const Profile = () => {
       </Box>
 
       {/* User Wallet */}
-      <Grid size={{ xs: 12, md: 8 }} sx={{ mt: 2, position: "relative", maxWidth: 400, mx: "auto" }}>
+      <Grid
+        size={{ xs: 12, md: 6.9 }}
+        sx={{
+          mt: 2,
+          position: "relative",
+          mx: "auto",
+          boxShadow: "0px 0px 10px #00000040",
+          borderRadius: "24px",
+          overflow: "hidden",
+        }}>
         <svg width="100%" height="auto" viewBox="0 0 398 233" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="100%" height="232.483" rx="20" fill="url(#paint0_linear_0_1)" />
           <mask
@@ -185,6 +194,47 @@ const Profile = () => {
             />
             <path d="M40.3795 16.1048H5.79907V19.4741H40.3795V16.1048Z" fill="#222222" />
           </svg>
+        </Button>
+      </Grid>
+
+      {/* Buttons */}
+      <Grid
+        size={{ xs: 12, md: 4.8 }}
+        sx={{
+          mt: 2,
+          ml: { xs: 0, md: 2 },
+          position: "relative",
+          mx: "auto",
+        }}>
+        <Button
+          variant="contained"
+          sx={{
+            width: "100%",
+            aspectRatio: "5 / 1",
+            boxShadow: "0px 0px 10px #00000040",
+            borderRadius: "16px",
+            bgcolor: "#fff",
+            color: "#000",
+            my: 1,
+            fontWeight: 700,
+            fontSize: { xs: 18, md: 20 },
+          }}>
+          {"پشتیبانی"}
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            my: 1,
+            width: "100%",
+            aspectRatio: "5 / 1",
+            boxShadow: "0px 0px 10px #00000040",
+            borderRadius: "16px",
+            bgcolor: "#fff",
+            color: "#000",
+            fontWeight: 700,
+            fontSize: { xs: 18, md: 20 },
+          }}>
+          {"درباره جیما"}
         </Button>
       </Grid>
     </Grid>
