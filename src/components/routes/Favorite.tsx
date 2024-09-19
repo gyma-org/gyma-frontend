@@ -26,7 +26,7 @@ const Favorite = () => {
         <Search />
       </Box>
       <Grid
-        sx={{ maxWidth: 1050, mx: "auto", mt: { xs: 12, md: 16 }, justifyContent: "start" }}
+        sx={{ maxWidth: 1050, mx: "auto", my: { xs: 13, md: 16 }, justifyContent: "start" }}
         container
         spacing={3}>
         <FloatCard />
