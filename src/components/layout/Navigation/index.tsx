@@ -56,10 +56,10 @@ const Navigation = ({
                 <path
                   d="M18.5397 7.7619L17.7046 12.7726C17.2831 15.3014 15.3014 17.2831 12.7726 17.7046L7.7619 18.5397C6.40826 18.7653 5.23471 17.5917 5.46032 16.2381L6.29543 11.2274C6.71691 8.69856 8.69856 6.71691 11.2274 6.29543L16.2381 5.46032C17.5917 5.23471 18.7653 6.40826 18.5397 7.7619Z"
                   stroke="#ABABAB"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 />
-                <circle cx="12" cy="12" r="2" stroke="#ABABAB" stroke-width="2" stroke-linecap="round" />
+                <circle cx="12" cy="12" r="2" stroke="#ABABAB" strokeWidth="2" strokeLinecap="round" />
               </svg>
             )
           }
@@ -159,7 +159,7 @@ const Navigation = ({
                 <path
                   d="M19.7274 20.4471C19.2716 19.1713 18.2672 18.0439 16.8701 17.2399C15.4729 16.4358 13.7611 16 12 16C10.2389 16 8.52706 16.4358 7.12991 17.2399C5.73276 18.0439 4.72839 19.1713 4.27259 20.4471"
                   stroke="#ABABAB"
-                  stroke-width="2"
+                  strokeWidth="2"
                   stroke-linecap="round"
                 />
                 <circle cx="12" cy="8" r="4" stroke="#ABABAB" strokeWidth="2" strokeLinecap="round" />
