@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { listGyms } from '../../api/gymList';  // Import the API function
 import { GymListResponse } from '../../types/gymList';  // Import the type
+import Image from 'next/image';
 
 const GymListTest: React.FC = () => {
   const [gyms, setGyms] = useState<GymListResponse[]>([]);  // State to store the list of gyms
@@ -39,8 +40,16 @@ const GymListTest: React.FC = () => {
             <p><strong>Location:</strong> Lat {gym.lat}, Lon {gym.lon}</p>
             <p><strong>City:</strong> {gym.city}</p>
             <p><strong>Phone Number:</strong> {gym.phone_number}</p>
-            {gym.profile && <img src={gym.profile} alt={`${gym.name} profile`} width={100} />}
-            {gym.gallery.length > 0 && (
+            {gym.profile_url && (
+              <Image 
+                src={gym.profile_url} 
+                alt={`${gym.name} profile`} 
+                width={100} 
+                height={100} 
+                layout="responsive" 
+              />
+            )}
+            {Array.isArray(gym.gallery) && gym.gallery.length > 0 && (
               <div>
                 <h3>Gallery:</h3>
                 {gym.gallery.map((img, index) => (
