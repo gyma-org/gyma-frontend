@@ -3,6 +3,10 @@ import { listGyms } from '../../api/gymList';  // Import the API function
 import { GymListResponse } from '../../types/gymList';  // Import the type
 import Image from 'next/image';
 
+// Use environment variables
+const GALLERY_BASE_URL = process.env.NEXT_PUBLIC_GALLERY_BASE_URL;
+const PROFILE_BASE_URL = process.env.NEXT_PUBLIC_PROFILE_BASE_URL;
+
 const GymListTest: React.FC = () => {
   const [gyms, setGyms] = useState<GymListResponse[]>([]);  // State to store the list of gyms
   const [loading, setLoading] = useState<boolean>(true);  // Loading state
@@ -14,7 +18,12 @@ const GymListTest: React.FC = () => {
         const data = await listGyms();  // Call the API function
         setGyms(data);  // Update state with the fetched gyms
       } catch (err) {
-        setError(err.message);  // Handle errors
+        // Type guard to check if err is an instance of Error
+        if (err instanceof Error) {
+          setError(err.message);  // Set the error message
+        } else {
+          setError("An unknown error occurred");  // Fallback for unknown errors
+        }
       } finally {
         setLoading(false);  // Stop loading
       }
@@ -42,7 +51,7 @@ const GymListTest: React.FC = () => {
             <p><strong>Phone Number:</strong> {gym.phone_number}</p>
             {gym.profile_url && (
               <Image 
-                src={gym.profile_url} 
+                src={`${PROFILE_BASE_URL}${gym.profile_url}`} 
                 alt={`${gym.name} profile`} 
                 width={100} 
                 height={100} 
@@ -53,7 +62,12 @@ const GymListTest: React.FC = () => {
               <div>
                 <h3>Gallery:</h3>
                 {gym.gallery.map((img, index) => (
-                  <img key={index} src={img} alt={`${gym.name} gallery ${index}`} width={100} />
+                  <img 
+                    key={index} 
+                    src={`${GALLERY_BASE_URL}${img}`} 
+                    alt={`${gym.name} gallery ${index}`} 
+                    width={100} 
+                  />
                 ))}
               </div>
             )}
