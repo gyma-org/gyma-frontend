@@ -2,36 +2,19 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { getGymDetails } from "@/api/gymDetails";
 import { GymDetails } from "@/types/gymDetails"; 
-import { useParams } from "react-router-dom";
 import { Address, Comments, Description, GYMHeader, ImageSlider, Specifications } from "@/components/gym";
 
-const GymPage = () => {
-  const { id } = useParams(); // Get the gym code from the URL
-  const [gymDetails, setGymDetails] = useState<GymDetails | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export default async function GymPage({ params }) {
+  const { id } = params; // Get gym code from the URL (dynamic param)
 
-  useEffect(() => {
-    const fetchGymDetails = async () => {
-      try {
-        const data = await getGymDetails(id); // Fetch gym details by gym code
-        setGymDetails(data);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Fetch gym details using the gym code
+  const gymDetails = await getGymDetails(id);
 
-    fetchGymDetails();
-  }, [id]);
+  // console.log("Fetched Gym Details:", id);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (!gymDetails) {
+    return <p>No gym details found for gym code: {id}</p>;
+  }
 
   return (
     <Grid
@@ -43,15 +26,17 @@ const GymPage = () => {
         bgcolor: "#f3f3f3",
         minHeight: "100vh",
         pb: 8,
-      }}>
+      }}
+    >
       <GYMHeader/>
-      <ImageSlider gym={gymDetails} />
-      <Specifications gym={gymDetails} />
-      <Description gym={gymDetails} />
-      <Address gym={gymDetails} />
-      <Comments gym={gymDetails} />
+      <ImageSlider images={gymDetails.gallery} />
+      <Specifications 
+      features={gymDetails.features}
+      gymName={gymDetails.name}
+       />
+      <Description text={gymDetails.description} />
+      <Address address={gymDetails.address} />
+      <Comments />
     </Grid>
   );
-};
-
-export default GymPage;
+}
