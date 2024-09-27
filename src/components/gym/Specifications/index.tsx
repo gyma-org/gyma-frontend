@@ -2,7 +2,19 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Box, Button, Rating, Typography } from "@mui/material";
 
-const index = () => {
+interface SpecificationsProps {
+  gymName: string;
+  location: string;
+  rating: number;
+  attributes: string[];
+  workingHours: {
+    men: string;
+    women: string;
+  };
+  price: number;
+}
+
+const index: React.FC<SpecificationsProps> = ({ gymName, location, rating, attributes, workingHours, price }) =>{
   return (
     <Grid
       size={{
@@ -25,7 +37,7 @@ const index = () => {
             lg: 32,
           },
         }}>
-        {"باشگاه انرژی مثبت"}
+        {gymName}
       </Typography>
 
       {/* Location */}
