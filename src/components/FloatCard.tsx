@@ -1,9 +1,18 @@
 import { Box, CardMedia, IconButton, Rating, Typography } from "@mui/material";
 import React from "react";
 
-const FloatCard = () => {
+interface FloatCardProps {
+  name: string;
+  address: string;
+  city: string;
+  profile?: string;
+  onClick?: () => void;
+}
+
+const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick }) => {
   return (
     <Box
+      onClick={onClick} // Attach the onClick handler here
       sx={{
         boxShadow: "0px 0px 5px #00000040",
         borderRadius: "16px",
@@ -12,6 +21,7 @@ const FloatCard = () => {
         aspectRatio: "4/1",
         p: 1,
         display: "flex",
+        cursor: "pointer", // Optional: change cursor to pointer
       }}>
       {/* Save button */}
       <Box>
@@ -34,7 +44,7 @@ const FloatCard = () => {
               fontWeight: "bold",
               fontSize: { xs: 16, md: 28 },
             }}>
-            {"باشگاه خوبای اون خیابونه"}
+            {name}
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -56,7 +66,7 @@ const FloatCard = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            <Typography fontSize={13}>{"تهران، اون خیابونه"}</Typography>
+            <Typography fontSize={13}>{city}, {address}</Typography>
           </Box>
         </Box>
         <Box
@@ -83,7 +93,7 @@ const FloatCard = () => {
 
       {/* Card image */}
       <CardMedia
-        image="https://placehold.co/600x400"
+        image={profile}
         sx={{
           mr: 1,
           height: "100%",
