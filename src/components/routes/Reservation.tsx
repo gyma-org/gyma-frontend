@@ -52,7 +52,7 @@ const Reservation = () => {
         sx={{
           mr: { xs: 0, md: 5 },
         }}>
-        {"رزرو های فعال"}
+        {"رزرو های گذشته"}
       </Typography>
       <Grid
         container
