@@ -1,12 +1,15 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 import Search from "../Search";
+import ReservationCard from "../ReservationCard";
 
 const Reservation = () => {
   return (
-    <Grid mx="auto" sx={{ p: 1, direction: "rtl" }}>
+    <Grid
+      mx="auto"
+      sx={{ p: 1, direction: "rtl" }}>
       {/* Search component */}
       <Box
         sx={{
@@ -24,10 +27,46 @@ const Reservation = () => {
         }}>
         <Search />
       </Box>
-      <Grid
+      <Typography
+        variant="h6"
+        mt={12}
+        mb={2}
         sx={{
-          mt: 12,
-        }}></Grid>
+          mr: { xs: 0, md: 5 },
+        }}>
+        {"رزرو های فعال"}
+      </Typography>
+      <Grid
+        container
+        maxWidth={1400}
+        sx={{
+          mx: "auto",
+          justifyContent: { xs: "center", md: "space-between" },
+        }}>
+        <ReservationCard />
+      </Grid>
+      <Typography
+        variant="h6"
+        mt={3}
+        mb={1}
+        sx={{
+          mr: { xs: 0, md: 5 },
+        }}>
+        {"رزرو های فعال"}
+      </Typography>
+      <Grid
+        container
+        maxWidth={1400}
+        sx={{
+          mb: 12,
+          mx: "auto",
+          justifyContent: { xs: "center", md: "space-between" },
+        }}>
+        <ReservationCard outdate={true} />
+        <ReservationCard outdate={true} />
+        <ReservationCard outdate={true} />
+        <ReservationCard outdate={true} />
+      </Grid>
     </Grid>
   );
 };

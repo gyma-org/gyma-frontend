@@ -1,0 +1,42 @@
+.ticket {
+  filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.3));
+  min-width: 320px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket .rip {
+  height: 20px;
+  margin: 0 10px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAACCAYAAAB7Xa1eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuOWwzfk4AAAAaSURBVBhXY5g7f97/2XPn/AcCBmSMQ+I/AwB2eyNBlrqzUQAAAABJRU5ErkJggg==);
+  background-size: 4px 2px;
+  background-repeat: repeat-x;
+  background-position: center;
+  position: relative;
+  background-color: #fff;
+  box-shadow: 0 1px 0 2 #fff, 0 -1px 0 2 #fff;
+}
+
+.ticket .rip:before,
+.ticket .rip:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 5px solid transparent;
+  outline: 5px solid #fff;
+  border-radius: 100%;
+  pointer-events: none;
+}
+
+.ticket .rip:before {
+  left: -10px;
+}
+
+.ticket .rip:after {
+  transform: translate(-50%, -50%) rotate(225deg);
+  right: -30px;
+}
