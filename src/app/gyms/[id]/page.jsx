@@ -31,13 +31,13 @@ export default async function GymPage({ params }) {
       <GYMHeader/>
       <ImageSlider images={gymDetails.gallery} />
       <Specifications 
-      features={gymDetails.features}
-      gymName={gymDetails.name}
-      location={gymDetails.address}
-       />
+        features={gymDetails.features}
+        gymName={gymDetails.name}
+        location={gymDetails.address}
+      />
       <Description text={gymDetails.description} />
       <Address
-      location={gymDetails.address} 
+        location={gymDetails.address} 
       />
       <Comments />
     </Grid>
