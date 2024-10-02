@@ -10,7 +10,7 @@ export default async function GymPage({ params }) {
   // Fetch gym details using the gym code
   const gymDetails = await getGymDetails(id);
 
-  // console.log("Fetched Gym Details:", id);
+  console.log("Fetched Gym Details:", gymDetails);
 
   if (!gymDetails) {
     return <p>No gym details found for gym code: {id}</p>;
@@ -33,9 +33,12 @@ export default async function GymPage({ params }) {
       <Specifications 
       features={gymDetails.features}
       gymName={gymDetails.name}
+      location={gymDetails.address}
        />
       <Description text={gymDetails.description} />
-      <Address address={gymDetails.address} />
+      <Address
+      location={gymDetails.address} 
+      />
       <Comments />
     </Grid>
   );

@@ -3,12 +3,13 @@ import { Box, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Search from "../Search";
 import FloatCard from "../FloatCard";
-import { listGyms } from '../../api/gymList';  // Import the API function
-import { GymListResponse } from '../../types/gymList';  // Import the type
+import { API_BASE_URL } from "@/config";
+import { listGyms } from '../../api/gymList';
+import { GymListResponse } from '../../types/gymList'; 
 import Link from 'next/link'; 
 
-const GALLERY_BASE_URL = "http://localhost:8000/media/media/gallery/";
-const PROFILE_BASE_URL = "http://localhost:8000/media/media/profile/";
+const GALLERY_BASE_URL = `${API_BASE_URL}/media/media/gallery/`;
+const PROFILE_BASE_URL = `${API_BASE_URL}/media/media/profile/`;
 
 const Favorite = () => {
   const [gyms, setGyms] = useState<GymListResponse[]>([]);  // State to store the list of gyms

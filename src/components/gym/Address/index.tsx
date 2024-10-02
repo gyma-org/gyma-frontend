@@ -3,7 +3,11 @@ import React from "react";
 import { Box, CardMedia, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-const Address = () => {
+interface AddressProps {
+  location: string;
+}
+
+const Address: React.FC<AddressProps> = ({location}) => {
   return (
     <Grid
       size={12}
@@ -14,7 +18,7 @@ const Address = () => {
         {"آدرس : "}
       </Typography>
       <Typography sx={{ p: 2, fontSize: { xs: 16, md: 24 } }}>
-        {"خیابان فلان، کوچه فلان، مرکز فلان"}
+        {location}
       </Typography>
       <Box
         sx={{
