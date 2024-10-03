@@ -1,0 +1,48 @@
+/* styles/custom.css */
+.custom-shadow {
+  -webkit-box-shadow: 0px -2px 5px 4px rgba(0,0,0,0.44); 
+  box-shadow: 0px -2px 5px 4px rgba(0,0,0,0.44);
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(1);
+    top: 0;
+  }
+  100% {
+    transform: scale(1.10);
+    top: -16px; /* Adjust this value for vertical movement */
+  }
+}
+
+/* Keyframes for scale-down effect */
+@keyframes scaleDown {
+  0% {
+    transform: scale(1.10);
+    top: -16px; /* Adjust this value for vertical movement */
+  }
+  100% {
+    transform: scale(1);
+    top: 0;
+  }
+}
+
+/* Classes to apply animations */
+.scale-up {
+  animation: scaleUp 0.3s ease-in-out;
+}
+
+.scale-down {
+  animation: scaleDown 0.3s ease-in-out;
+}
+
+/* Define classes for active and non-active states */
+.button-active {
+  background-color: #3b82f6; /* Blue color for active state */
+  color: white;
+}
+
+.button-inactive {
+  background-color: #374151; /* Gray color for inactive state */
+  color: white;
+}
