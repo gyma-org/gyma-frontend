@@ -2,7 +2,20 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Box, Button, Rating, Typography } from "@mui/material";
 
-const index = () => {
+interface SpecificationsProps {
+  gymName: string;
+  location: string;
+  rating: number;
+  attributes: string[];
+  workingHours: {
+    men: string;
+    women: string;
+  };
+  price: number;
+  features: string[];
+}
+
+const index: React.FC<SpecificationsProps> = ({ gymName, location, rating, attributes, workingHours, price, features }) =>{
   return (
     <Grid
       size={{
@@ -25,7 +38,7 @@ const index = () => {
             lg: 32,
           },
         }}>
-        {"باشگاه انرژی مثبت"}
+        {gymName}
       </Typography>
 
       {/* Location */}
@@ -50,7 +63,7 @@ const index = () => {
               stroke-linejoin="round"
             />
           </svg>
-          <Typography>{"تهران، فلان آدرس"}</Typography>
+          <Typography>{location}</Typography>
         </Box>
         <Rating
           sx={{
@@ -77,19 +90,18 @@ const index = () => {
           </Typography>
         </Box>
         <Box mr={8}>
-          <Typography variant="subtitle1" fontWeight={500}>
-            {"دوش آب گرم"}
+        {features.length > 0 ? (
+          features.map((feature, index) => (
+            <Typography key={index} variant="subtitle1" fontWeight={500}>
+              {feature}
+            </Typography>
+          ))
+        ) : (
+          <Typography variant="subtitle1" fontWeight={500} color="textSecondary">
+            {"ویژگی موجود نیست"}
           </Typography>
-          <Typography variant="subtitle1" fontWeight={500}>
-            {"دوش آب گرم"}
-          </Typography>
-          <Typography variant="subtitle1" fontWeight={500}>
-            {"دوش آب گرم"}
-          </Typography>
-          <Typography variant="subtitle1" fontWeight={500}>
-            {"دوش آب گرم"}
-          </Typography>
-        </Box>
+        )}
+      </Box>
       </Box>
 
       {/* Time */}
