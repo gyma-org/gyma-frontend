@@ -1,0 +1,109 @@
+.calendarContainer {
+  max-width: 400px;
+  /* margin: 40px auto; */
+  background-color: white;
+  font-weight: 700;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendarHeader button {
+  padding: 5px 15px;
+  background-color: #F95A00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.calendarHeader button:hover {
+  background-color: #F95A00;
+}
+
+/* h3 {
+  margin: 0;
+  font-size: 1.4em;
+  color: #333;
+} */
+
+.daysOfWeek {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  color: #F95A00;
+  margin-bottom: 10px;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.dayContainer {
+  text-align: center;
+}
+
+.dayButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  background-color: #F5F5F5;
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dayButton:hover {
+  background-color: #F95A00;
+  color: white;
+}
+
+.selected {
+  background-color: #F95A00;
+  color: white;
+}
+
+.dayNumber {
+  font-size: 16px;
+  margin: 0;
+}
+
+.price {
+  font-size: 10px;
+}
+
+.reserveButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #F95A00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reserveButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.reserveButton:hover:not(:disabled) {
+  background-color: #F95A00;
+}
