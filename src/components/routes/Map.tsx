@@ -1,8 +1,11 @@
 import React from "react";
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-
+// import Mapp from "@/components/map/index"
 import Search from "../Search";
+import dynamic from 'next/dynamic';
+
+const Mapp = dynamic(() => import('@/components/map/index'), { ssr: false });
 
 const Map = () => {
   return (
@@ -28,6 +31,7 @@ const Map = () => {
         sx={{
           mt: 12,
         }}></Grid>
+        <Mapp />
     </Grid>
   );
 };
