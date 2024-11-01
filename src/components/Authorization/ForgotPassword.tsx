@@ -95,9 +95,7 @@ export default function ForgotPassword({ open, onClose }: ForgotPasswordProps) {
         <Title>بازیابی رمز عبور</Title>
       </Header>
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
-        <DialogContentText>
-          آدرس ایمیل حساب کاربری خود را وارد کنید تا لینک بازیابی رمز عبور برای شما ارسال شود.
-        </DialogContentText>
+        <DialogContentText>برای بازیابی رمز عبور لطفا ایمیل خود را وارد کنید.</DialogContentText>
         <Input
           value={formik.values.email}
           onChange={formik.handleChange}

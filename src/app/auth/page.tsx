@@ -451,13 +451,13 @@ const LoginSignup: React.FC = () => {
           <OverlayContainer signingIn={signIn}>
             <Overlay signingIn={signIn}>
               <LeftOverlayPanel signingIn={signIn}>
-                <Title>{"سلام دوست من"}</Title>
-                <Paragraph>{"مشخصات شخصی خود را وارد کنید و سفر را با ما آغاز کنید"}</Paragraph>
+                <Title>{"ساخت حساب"}</Title>
+                <Paragraph>{".برای ساخت حساب کابری شما به این اطلاعات نیاز داریم"}</Paragraph>
                 <GhostButton onClick={() => toggle(true)}>{"رفتن به ورود"}</GhostButton>
               </LeftOverlayPanel>
               <RightOverlayPanel signingIn={signIn}>
-                <Title>{"خوش برگشتی"}</Title>
-                <Paragraph>{"برای حفظ ارتباط با ما، لطفا با اطلاعات شخصی خود وارد شوید."}</Paragraph>
+                <Title>{"ورود به حساب"}</Title>
+                <Paragraph>{".اطلاعات خود را وارد کنید"}</Paragraph>
                 <GhostButton onClick={() => toggle(false)}>{"رفتن به ساخت حساب"}</GhostButton>
               </RightOverlayPanel>
             </Overlay>
