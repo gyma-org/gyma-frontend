@@ -443,7 +443,7 @@ const LoginSignup: React.FC = () => {
                 left: "50%",
                 transform: "translateX(-50%)",
               }}>
-              {signIn ? "حساب کاربری ندارید؟ بساز." : "حساب کاربری داری؟ وارد شو."}
+              {signIn ? "حساب کاربری ندارید؟" : "حساب کاربری داری؟"}
             </MuiButton>
           </>
         )}
