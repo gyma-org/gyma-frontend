@@ -6,6 +6,7 @@ import { Box, InputBase, styled, useTheme, useMediaQuery } from "@mui/material";
 import { Button as MuiButton, Container as MuiContainer } from "@mui/material";
 import { ErrorMessage, Field, Formik, FormikHelpers } from "formik";
 import ForgotPassword from "@/components/Authorization/ForgotPassword";
+import Verification from "@/components/Authorization/Verification";
 
 interface SignUpContainerProps {
   signingIn?: boolean;
@@ -237,6 +238,7 @@ const RightOverlayPanel = styled(OverlayPanel, {
 
 // Paragraph component
 const Paragraph = styled("p")({
+  direction: "rtl",
   fontSize: "14px",
   fontWeight: 400,
   lineHeight: "20px",
@@ -250,10 +252,13 @@ const LoginSignup: React.FC = () => {
   const [signIn, toggle] = useState(true);
 
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showCodeVerification, setShowCodeVerification] = useState(false);
 
   const handleLogin = async (values: SignInValues, { resetForm }: FormikHelpers<SignInValues>) => {};
 
-  const handleRegister = async (values: SignUpValues, { resetForm }: FormikHelpers<SignUpValues>) => {};
+  const handleRegister = async (values: SignUpValues, { resetForm }: FormikHelpers<SignUpValues>) => {
+    setShowCodeVerification(true);
+  };
 
   return (
     <MuiContainer
@@ -452,18 +457,22 @@ const LoginSignup: React.FC = () => {
             <Overlay signingIn={signIn}>
               <LeftOverlayPanel signingIn={signIn}>
                 <Title>{"ساخت حساب"}</Title>
-                <Paragraph>{".برای ساخت حساب کابری شما به این اطلاعات نیاز داریم"}</Paragraph>
+                <Paragraph>{"برای ساخت حساب کابری شما به این اطلاعات نیاز داریم."}</Paragraph>
                 <GhostButton onClick={() => toggle(true)}>{"رفتن به ورود"}</GhostButton>
               </LeftOverlayPanel>
               <RightOverlayPanel signingIn={signIn}>
                 <Title>{"ورود به حساب"}</Title>
-                <Paragraph>{".اطلاعات خود را وارد کنید"}</Paragraph>
+                <Paragraph>{"اطلاعات خود را وارد کنید."}</Paragraph>
                 <GhostButton onClick={() => toggle(false)}>{"رفتن به ساخت حساب"}</GhostButton>
               </RightOverlayPanel>
             </Overlay>
           </OverlayContainer>
         )}
       </Container>
+      <Verification
+        open={showCodeVerification}
+        onClose={() => setShowCodeVerification(false)}
+      />
       <ForgotPassword
         open={showForgotPassword}
         onClose={() => setShowForgotPassword(false)}
