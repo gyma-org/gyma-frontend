@@ -3,13 +3,15 @@ import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 // import Mapp from "@/components/map/index"
 import Search from "../Search";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const Mapp = dynamic(() => import('@/components/map/index'), { ssr: false });
+const Mapp = dynamic(() => import("@/components/map/index"), { ssr: false });
 
 const Map = () => {
   return (
-    <Grid mx="auto" sx={{ p: 1, direction: "rtl" }}>
+    <Grid
+      mx="auto"
+      sx={{ p: 1, direction: "rtl", height: "100%" }}>
       {/* Search component */}
       <Box
         sx={{
@@ -27,11 +29,10 @@ const Map = () => {
         }}>
         <Search />
       </Box>
-      <Grid
-        sx={{
-          mt: 12,
-        }}></Grid>
+
+      <Grid mt={12}>
         <Mapp />
+      </Grid>
     </Grid>
   );
 };

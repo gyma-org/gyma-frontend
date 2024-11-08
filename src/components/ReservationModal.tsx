@@ -2,20 +2,19 @@ import React from "react";
 import { Dialog } from "@mui/material";
 import PersianCalendar from "./PersianCalendar";
 
-interface PersianDatePickerModalProps {
+interface ReservationModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-const PersianDatePickerModal: React.FC<PersianDatePickerModalProps> = ({ open, onClose }) => {
+const ReservationModal: React.FC<ReservationModalProps> = ({ open, onClose }) => {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
-    >
+      onClose={onClose}>
       <PersianCalendar />
     </Dialog>
   );
 };
 
-export default PersianDatePickerModal;
+export default ReservationModal;

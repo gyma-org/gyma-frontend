@@ -18,6 +18,7 @@
     "@mui/material-nextjs": "^6.1.0",
     "@neshan-maps-platform/mapbox-gl-react": "^1.0.2",
     "formik": "^2.4.6",
+    "jalali-moment": "^3.3.11",
     "next": "14.2.7",
     "next-pwa": "^5.6.0",
     "react": "^18",

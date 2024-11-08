@@ -1,8 +1,6 @@
-"use client";
-
 import mapboxgl from "@neshan-maps-platform/mapbox-gl";
 import { Marker } from "mapbox-gl";
-import { Box } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import "./index.css";
 import React, { useEffect, useRef, useState } from "react";
 import { fetchNearbyGyms, Gym } from "../../api/gymMap";
@@ -17,16 +15,14 @@ const Mapp = () => {
   const [gymMarkers, setGymMarkers] = useState<Marker[]>([]); // Track gym markers to remove them
 
   useEffect(() => {
-    // Ensure this runs only on the client-side
     if (typeof window !== "undefined" && mapContainerRef.current) {
       const initializeMap = (userLat: number, userLon: number) => {
-        // Initialize the map
         mapRef.current = new mapboxgl.Map({
           mapType: mapboxgl.Map.mapTypes.neshanVector,
           container: mapContainerRef.current!,
           zoom: 12,
           pitch: 0,
-          center: [userLon, userLat], // Use user's location to center the map
+          center: [userLon, userLat],
           minZoom: 2,
           maxZoom: 21,
           trackResize: true,
@@ -36,15 +32,12 @@ const Mapp = () => {
         }) as unknown as mapboxgl.Map;
 
         mapRef.current.on("load", () => {
-          // Fetch gyms nearby based on user's location
           fetchNearbyGyms(userLat, userLon)
             .then((data) => {
-              console.log("Fetched gym data:", data); // Log the fetched data
-
-              // Check if the response is an array
+              console.log("Fetched gym data:", data);
               if (Array.isArray(data)) {
-                setGyms(data); // Directly set the gyms array
-                addMarkersToMap(data); // Pass the array to the marker function
+                setGyms(data);
+                addMarkersToMap(data);
               } else {
                 console.error("Invalid gym data format:", data);
               }
@@ -53,11 +46,9 @@ const Mapp = () => {
               console.error("Error fetching gyms:", error);
             });
         });
-
         handleClickOnMap();
       };
 
-      // Check if geolocation is available
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -67,9 +58,8 @@ const Mapp = () => {
           },
           (error) => {
             console.error("Error getting location:", error);
-            // Fallback to a default location if geolocation fails
-            const defaultLat = 35.6892; // Example: Tehran's latitude
-            const defaultLon = 51.389; // Example: Tehran's longitude
+            const defaultLat = 35.6892;
+            const defaultLon = 51.389;
             initializeMap(defaultLat, defaultLon);
           }
         );
@@ -81,7 +71,7 @@ const Mapp = () => {
         initializeMap(defaultLat, defaultLon);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClickOnMap = () => {
@@ -99,9 +89,7 @@ const Mapp = () => {
         }
 
         // Add new user marker
-        newMarker = new mapboxgl.Marker({ color: "blue" })
-          .setLngLat([lng, lat])
-          .addTo(map);
+        newMarker = new mapboxgl.Marker({ color: "blue" }).setLngLat([lng, lat]).addTo(map);
 
         // Update marker and selected location state
         setUserMarker(newMarker);
@@ -147,11 +135,7 @@ const Mapp = () => {
     newGymMarkers = gyms.map((gym) => {
       marker = new mapboxgl.Marker({ color: "purple" })
         .setLngLat([gym.lon, gym.lat])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 }).setHTML(
-            `<h3>${gym.name}</h3><p>${gym.address}</p>`
-          )
-        )
+        .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<h3>${gym.name}</h3><p>${gym.address}</p>`))
         .addTo(map);
 
       marker.togglePopup(); // Show the popup when the marker is added
@@ -160,23 +144,35 @@ const Mapp = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "500px" }}>
-      <div ref={mapContainerRef} style={{ width: "70%", height: "100%" }} />
-
+    <Box sx={{ display: "flex", height: "100%", position: "relative" }}>
       <Box
         sx={{
-          width: "30%", // Set the width of the sidebar
-          height: "100%",
-          overflowY: "auto", // Enable vertical scrolling
-          backgroundColor: "rgba(255, 255, 255, 0.9)", // Optional: slight background to distinguish the sidebar
-          padding: 2, // Optional: add some padding
-          boxShadow: 2, // Optional: add some shadow for depth
-        }}
-      >
+          display: { xs: "none", md: "flex" },
+          flexDirection: "column",
+          borderRadius: "15px",
+          gap: 1,
+          p: 2,
+          right: 10,
+          top: 10,
+          position: "absolute",
+          bgcolor: "#fff",
+          zIndex: 100,
+          border: "2px solid #FF9100",
+        }}>
+        <Typography align="center">{"باشگاه های نزدیک"}</Typography>
         {gyms.map((gym) => (
-          <FloatCard key={gym.gym_code} name={gym.name} address={gym.address} city={gym.city} />
+          <FloatCard
+            key={gym.gym_code}
+            name={gym.name}
+            address={gym.address}
+            city={gym.city}
+          />
         ))}
       </Box>
+      <Box
+        sx={{ width: "100%", height: "78vh" }}
+        ref={mapContainerRef}
+      />
     </Box>
   );
 };
