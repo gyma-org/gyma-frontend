@@ -4,7 +4,7 @@ import React from "react";
 
 const Profile = () => {
   return (
-    <Grid container maxWidth={700} mx="auto" sx={{ p: 1 }}>
+    <Grid container maxWidth={700} mx="auto" sx={{ p: 1, pb: 13 }}>
       {/* User Card */}
       <Box
         sx={{

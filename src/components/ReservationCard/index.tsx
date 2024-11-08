@@ -144,23 +144,23 @@ const ReservationCard = ({ outdate = false }: ReservationCardIFace) => {
                     <path
                       d="M4.96796 13.4338V18.9161C4.96796 20.2916 6.08497 21.408 7.46129 21.408H18.432C19.8083 21.408 20.9253 20.2916 20.9253 18.9161V13.4338"
                       stroke="#A9A9A9"
-                      stroke-width="3"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
+                      strokeWidth="3"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
                     />
                     <path
                       d="M12.9466 4.46289V16.4242"
                       stroke="#A9A9A9"
-                      stroke-width="3"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
+                      strokeWidth="3"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
                     />
                     <path
                       d="M8.95728 12.9355L12.9466 16.9226L16.9359 12.9355"
                       stroke="#A9A9A9"
-                      stroke-width="3"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
+                      strokeWidth="3"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
                     />
                   </svg>
                 </IconButton>

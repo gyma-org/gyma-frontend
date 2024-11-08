@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 5001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -17,11 +17,14 @@
     "@mui/material": "^6.1.0",
     "@mui/material-nextjs": "^6.1.0",
     "@neshan-maps-platform/mapbox-gl-react": "^1.0.2",
+    "formik": "^2.4.6",
     "next": "14.2.7",
     "next-pwa": "^5.6.0",
     "react": "^18",
     "react-dom": "^18",
-    "swiper": "^11.1.14"
+    "react-verification-input": "^4.1.2",
+    "swiper": "^11.1.14",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/mapbox__polyline": "^1.0.5",
