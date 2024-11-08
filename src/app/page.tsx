@@ -1,22 +1,21 @@
-import { Button, Container } from "@mui/material";
-import Link from "next/link";
-// import dynamic from "next/dynamic";
+"use client";
 
-// const Map = dynamic(() => import("@/components/map"), { ssr: false });
+import { Navigation } from "@/components/layout";
+import React, { useState } from "react";
+
+import { Map, Favorite, Reservation, Profile } from "@/components/routes";
+const pages = [<Map key={0} />, <Favorite key={1} />, <Reservation key={2} />, <Profile key={3} />];
 
 export default function Home() {
+  const [pageIndex, setPageIndex] = useState<number>(0);
+
   return (
-    <Container
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100vw",
-      }}>
-      <Link href={"/a"}>
-        <Button variant="contained">{"ورود به برنامه"}</Button>
-      </Link>
-    </Container>
+    <div>
+      {pages[pageIndex]}
+      <Navigation
+        value={pageIndex}
+        setValue={setPageIndex}
+      />
+    </div>
   );
 }
