@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import moment from "jalali-moment";
 import styles from "./PersianCalendar.module.css";
 
-const PersianCalendar: React.FC = () => {
+const PersianCalendar = ({ handleSetDate }: { handleSetDate: (date: string) => void }) => {
   const [currentDate, setCurrentDate] = useState(moment().locale("fa"));
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(null);
 
@@ -81,13 +81,11 @@ const PersianCalendar: React.FC = () => {
         className={styles.reserveButton}
         onClick={() => {
           if (selectedDate) {
-            alert(
-              `You reserved: ${selectedDate.jYear()}/${selectedDate.jMonth() + 1}/${selectedDate.jDate()}`
-            );
+            handleSetDate(selectedDate.format("jYYYY/jMM/jDD"));
           }
         }}
         disabled={!selectedDate}>
-        رزرو
+        انتخاب ساعت
       </button>
     </div>
   );

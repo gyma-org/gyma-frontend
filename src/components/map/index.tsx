@@ -20,11 +20,11 @@ const Mapp = () => {
         mapRef.current = new mapboxgl.Map({
           mapType: mapboxgl.Map.mapTypes.neshanVector,
           container: mapContainerRef.current!,
-          zoom: 12,
+          zoom: 40,
           pitch: 0,
           center: [userLon, userLat],
           minZoom: 2,
-          maxZoom: 21,
+          maxZoom: 50,
           trackResize: true,
           mapKey: "web.659fc6316bb54b98b27499e3972b294e",
           poi: false,

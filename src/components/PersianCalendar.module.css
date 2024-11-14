@@ -18,7 +18,7 @@
 
 .calendarHeader button {
   padding: 5px 15px;
-  background-color: #F95A00;
+  background-color: #f95a00;
   color: white;
   border: none;
   border-radius: 5px;
@@ -27,7 +27,7 @@
 }
 
 .calendarHeader button:hover {
-  background-color: #F95A00;
+  background-color: #f95a00;
 }
 
 /* h3 {
@@ -40,7 +40,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   font-weight: bold;
-  color: #F95A00;
+  color: #f95a00;
   margin-bottom: 10px;
 }
 
@@ -62,7 +62,7 @@
   width: 40px;
   height: 40px;
   text-align: center;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   /* border: 1px solid #ccc; */
   border-radius: 5px;
   cursor: pointer;
@@ -70,12 +70,12 @@
 }
 
 .dayButton:hover {
-  background-color: #F95A00;
+  background-color: #f95a00;
   color: white;
 }
 
 .selected {
-  background-color: #F95A00;
+  background-color: #f95a00;
   color: white;
 }
 
@@ -91,7 +91,7 @@
 .reserveButton {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #F95A00;
+  background-color: #f95a00;
   color: white;
   border: none;
   border-radius: 5px;
@@ -105,5 +105,5 @@
 }
 
 .reserveButton:hover:not(:disabled) {
-  background-color: #F95A00;
+  background-color: #f95a00;
 }
