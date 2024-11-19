@@ -2,32 +2,25 @@ import React from "react";
 import styles from "./PersianCalendar.module.css";
 import { Box, Button, Typography } from "@mui/material";
 
-const times = [
-  {
-    startTime: "10:00",
-    endTime: "13:00",
-    id: 1,
-  },
-  {
-    startTime: "14:00",
-    endTime: "17:00",
-    id: 2,
-  },
-  {
-    startTime: "18:00",
-    endTime: "21:00",
-    id: 3,
-  },
-];
+interface TimeSlot {
+  id: number;
+  start_time: string; // Match the session keys
+  end_time: string;
+}
 
 const TimeSelector = ({
+  timeSlots,
   handleSetTime,
   handleBack,
 }: {
-  handleSetTime: (time: number) => void;
+  timeSlots: TimeSlot[]; // Accept dynamic session time slots
+  handleSetTime: (selectedTime: { id: number; start_time: string; end_time: string }) => void;
   handleBack: () => void;
 }) => {
   const [selectedTimeID, setSelectedTimeID] = React.useState<number | null>(null);
+  console.log()
+  const selectedTime = timeSlots.find((time) => time.id === selectedTimeID);
+
   return (
     <Box
       sx={{
@@ -60,7 +53,8 @@ const TimeSelector = ({
           بازگشت
         </Button>
       </Box>
-      {/* render times */}
+
+      {/* Render time slots */}
       <Box
         sx={{
           display: "flex",
@@ -68,7 +62,7 @@ const TimeSelector = ({
           gap: 1,
           pb: 2,
         }}>
-        {times.map((time) => (
+        {timeSlots.map((time) => (
           <Button
             key={time.id}
             variant="contained"
@@ -78,10 +72,11 @@ const TimeSelector = ({
               boxShadow: "none",
             }}
             onClick={() => setSelectedTimeID(time.id)}>
-            {time.startTime} - {time.endTime}
+            {time.start_time} - {time.end_time}
           </Button>
         ))}
       </Box>
+
       <Box
         sx={{
           display: "flex",
@@ -89,14 +84,17 @@ const TimeSelector = ({
           justifyContent: "center",
         }}>
         <Button
-          variant="contained"
-          sx={{
-            bgcolor: selectedTimeID ? "#f95a00" : "#9e9e9e",
-          }}
-          onClick={() => (selectedTimeID ? handleSetTime(selectedTimeID) : null)}
-          disabled={!selectedTimeID}>
-          رزرو
-        </Button>
+  variant="contained"
+  sx={{ bgcolor: selectedTimeID ? "#f95a00" : "#9e9e9e" }}
+  onClick={() => {
+    if (selectedTime) {
+      console.log("Handle Set Time called with:", selectedTime);
+      handleSetTime(selectedTime);
+    }
+  }}
+  disabled={!selectedTimeID}>
+  رزرو
+</Button>
       </Box>
     </Box>
   );

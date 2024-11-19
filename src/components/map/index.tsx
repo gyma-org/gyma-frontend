@@ -20,11 +20,11 @@ const Mapp = () => {
         mapRef.current = new mapboxgl.Map({
           mapType: mapboxgl.Map.mapTypes.neshanVector,
           container: mapContainerRef.current!,
-          zoom: 40,
+          zoom: 12,
           pitch: 0,
           center: [userLon, userLat],
           minZoom: 2,
-          maxZoom: 50,
+          maxZoom: 21,
           trackResize: true,
           mapKey: "web.659fc6316bb54b98b27499e3972b294e",
           poi: false,
@@ -143,6 +143,11 @@ const Mapp = () => {
     });
   };
 
+  const handleGymClick = (id: string) => {
+    // Navigate to the gym details page
+    window.location.href = `/gyms/${id}`;
+  };
+
   return (
     <Box sx={{ display: "flex", height: "100%", position: "relative" }}>
       <Box
@@ -166,6 +171,7 @@ const Mapp = () => {
             name={gym.name}
             address={gym.address}
             city={gym.city}
+            onClick={() => handleGymClick(gym.id)}  // Pass the click handler
           />
         ))}
       </Box>

@@ -1,12 +1,17 @@
 "use client";
 
 import { FormEventHandler, useState } from "react";
+import { useRouter } from 'next/navigation'
 import * as Yup from "yup";
-import { Box, InputBase, styled, useTheme, useMediaQuery } from "@mui/material";
+import { Box, InputBase, Select, styled, useTheme, useMediaQuery, MenuItem, TextField, FormControl, InputLabel, FormHelperText, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Button as MuiButton, Container as MuiContainer } from "@mui/material";
 import { ErrorMessage, Field, Formik, FormikHelpers } from "formik";
 import ForgotPassword from "@/components/Authorization/ForgotPassword";
 import Verification from "@/components/Authorization/Verification";
+import { useAuth } from "@/context/AuthContext";
+import { RegisterValues } from "@/types/RegisterValues";
+import { verifyOtp, VerificationData } from "../../api/Verification";
+import { Console } from "console";
 
 interface SignUpContainerProps {
   signingIn?: boolean;
@@ -30,32 +35,37 @@ interface PanelProps {
 
 interface SignUpValues {
   username: string;
-  name: string;
   email: string;
-  phone: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  sex: string;
   password: string;
-  confirmPassword: string;
 }
 
 interface SignInValues {
-  email: string;
+  identifier: string;
   password: string;
 }
 
 const SignUpSchema = Yup.object().shape({
   username: Yup.string().required("نام کاربری ضروری است."),
-  name: Yup.string().required("نام ضروری است."),
+  first_name: Yup.string().required("نام ضروری است."),
+  last_name: Yup.string().required("نام ضروری است."),
   email: Yup.string().email("ایمیل معتبر نیست.").required("ایمیل ضروری است."),
-  phone: Yup.string().required("شماره تلفن ضرروی است."),
+  phone_number: Yup.string().required("شماره تلفن ضرروی است."),
   password: Yup.string().min(6, "حداقل ۶ کاراکتر.").required("کلمه عبور ضروری است."),
   confirmPassword: Yup.string()
     .nullable()
     .oneOf([Yup.ref("password"), null], "کلمات عبور باید مطابقت داشته باشند.")
     .required("تکرار کلمه عبور ضروری است."),
+  sex: Yup.string()
+  .oneOf(["men", "women"], "لطفا جنسیت را انتخاب کنید.")
+  .required("جنسیت ضروری است."),
 });
 
 const SignInSchema = Yup.object().shape({
-  email: Yup.string().email("ایمیل معتبر نیست.").required("ایمیل ضروری است."),
+  identifier: Yup.string().required("نام کاربری ضروری است."),
   password: Yup.string().required("کلمه عبور ضروری است."),
 });
 
@@ -250,14 +260,77 @@ const LoginSignup: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [signIn, toggle] = useState(true);
+  const router = useRouter();
 
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showCodeVerification, setShowCodeVerification] = useState(false);
 
-  const handleLogin = async (values: SignInValues, { resetForm }: FormikHelpers<SignInValues>) => {};
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
-  const handleRegister = async (values: SignUpValues, { resetForm }: FormikHelpers<SignUpValues>) => {
-    setShowCodeVerification(true);
+  const [openVerification, setOpenVerification] = useState(false); // State for showing the modal
+  const [verificationCode, setVerificationCode] = useState<string>("");
+  const [userPhoneNumber, setUserPhoneNumber] = useState<string>(""); // Capture phone number here
+
+  const { registerUser, loginUser } = useAuth();
+
+  const handleLogin = async (values: { identifier: string; password: string }) => {
+    try {
+      const response = await loginUser(values); // call loginUser from context
+      if (response.status_code === 400) {
+        // If status code is 400, navigate to the phone verification page
+        router.push("/phoneverification");
+      } else {
+        console.log("Logged in!")
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
+
+  // const handleRegister = async (values: SignUpValues, { resetForm }: FormikHelpers<SignUpValues>) => {
+  //   setShowCodeVerification(true);
+  // };
+
+  const handleRegister = async (values: RegisterValues ) => {
+    console.log("Form values: ", values);
+
+    const phoneNumber = values.phone_number;
+
+    const response = await registerUser(values); // call registerUser from context
+    if (response.success) {
+      setSnackbarMessage("ثبت نام اولیه با موفقیت انجام شد.");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+      setOpenVerification(true); 
+      setUserPhoneNumber(phoneNumber);
+    } else {
+      console.error("Registration error:", response.errors);
+      setSnackbarMessage("Registration failed. Please try again.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleVerify = async () => {
+    const data: VerificationData = {
+      user_phone_number: userPhoneNumber, // Use the captured phone number here
+      otp: verificationCode,
+    };
+
+    const verificationResponse = await verifyOtp(data);
+
+    if (verificationResponse.success) {
+      setOpenVerification(false);
+      setSnackbarMessage(verificationResponse.message);
+      setSnackbarSeverity("success");
+    } else {
+      setSnackbarMessage(verificationResponse.message);
+      setSnackbarSeverity("error");
+    }
+
+    setOpenSnackbar(true);
   };
 
   return (
@@ -282,16 +355,18 @@ const LoginSignup: React.FC = () => {
           signingIn={signIn}>
           <Formik
             initialValues={{
-              name: "",
               username: "",
+              first_name: "",
+              last_name: "",
+              phone_number: "",
               email: "",
-              phone: "",
+              sex: "",
               password: "",
               confirmPassword: "",
             }}
             validationSchema={SignUpSchema}
             onSubmit={handleRegister}>
-            {({ handleSubmit }: { handleSubmit: FormEventHandler<HTMLFormElement> | undefined }) => (
+            {({ handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <Title>{"ساخت حساب کاربری"}</Title>
                 <Field
@@ -305,14 +380,27 @@ const LoginSignup: React.FC = () => {
                   component="div">
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
+
                 <Field
                   as={Input}
-                  name="name"
+                  name="first_name"
                   type="text"
                   placeholder="نام"
                 />
                 <ErrorMessage
-                  name="name"
+                  name="first_name"
+                  component="div">
+                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
+                </ErrorMessage>
+
+                <Field
+                  as={Input}
+                  name="last_name"
+                  type="text"
+                  placeholder="نام خانوادگی"
+                />
+                <ErrorMessage
+                  name="last_name"
                   component="div">
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
@@ -331,15 +419,35 @@ const LoginSignup: React.FC = () => {
 
                 <Field
                   as={Input}
-                  name="phone"
+                  name="phone_number"
                   type="text"
                   placeholder="شماره تلفن"
                 />
                 <ErrorMessage
-                  name="phone"
+                  name="phone_number"
                   component="div">
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
+
+                <Field name="sex">
+                {({ field, form }: any) => (
+                  <FormControl fullWidth error={form.touched.sex && Boolean(form.errors.sex)}>
+                    <InputLabel>جنسیت</InputLabel>
+                    <Select
+                      {...field}
+                      label="جنسیت"
+                      defaultValue=""
+                      // onChange is handled by Formik's Field component automatically
+                    >
+                      <MenuItem value="men">Men</MenuItem>
+                      <MenuItem value="women">Women</MenuItem>
+                    </Select>
+                    {form.touched.sex && form.errors.sex && (
+                      <FormHelperText>{form.errors.sex}</FormHelperText>
+                    )}
+                  </FormControl>
+                )}
+                </Field>
 
                 <Field
                   as={Input}
@@ -379,26 +487,20 @@ const LoginSignup: React.FC = () => {
           sx={{ direction: "rtl" }}>
           <Formik
             initialValues={{
-              email: "",
+              identifier: "",
               password: "",
             }}
             validationSchema={SignInSchema}
             onSubmit={handleLogin}>
-            {({ handleSubmit }: { handleSubmit: FormEventHandler<HTMLFormElement> | undefined }) => (
+            {({ handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <Title>{"ورود"}</Title>
                 <Field
                   as={Input}
-                  name="email"
-                  type="email"
+                  name="identifier"
+                  type="text"
                   placeholder="ایمیل"
                 />
-                <ErrorMessage
-                  name="email"
-                  component="div">
-                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
-                </ErrorMessage>
-
                 <Field
                   as={Input}
                   name="password"
@@ -477,6 +579,46 @@ const LoginSignup: React.FC = () => {
         open={showForgotPassword}
         onClose={() => setShowForgotPassword(false)}
       />
+
+      {/* Verification Modal */}
+      <Dialog open={openVerification} onClose={() => setOpenVerification(false)}>
+        <DialogTitle>Phone Number Verification</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Enter Verification Code"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenVerification(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleVerify} color="primary">
+            Verify
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000} // Close after 6 seconds
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </MuiContainer>
   );
 };

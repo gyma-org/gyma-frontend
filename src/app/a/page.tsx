@@ -13,30 +13,28 @@ const pages = [
   <Profile key={3} />
 ];
 
-export default function Home() {
+const Application = () => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  // Redirect to login if unauthenticated user tries to access any page other than Map
+  // Redirect to login if trying to access restricted pages without authentication
   if (!loading && !user && pageIndex !== 0) {
     router.push("/auth");
     return null;
   }
 
-  // Update page index conditionally
-  const handleNavigation: React.Dispatch<React.SetStateAction<number>> = (index) => {
-    if (typeof index === 'number' && (index === 0 || user)) {
-      setPageIndex(index);
-    } else if (!user) {
-      router.push("/auth");
-    }
-  };
-
   return (
     <div>
-      {pages[pageIndex]}
-      <Navigation value={pageIndex} setValue={handleNavigation} />
+      {/* Show the current page based on the user's selected tab */}
+      {pageIndex === 0 || user ? (
+        pages[pageIndex]
+      ) : (
+        <Map /> // Default to showing the Map if user is not logged in
+      )}
+      <Navigation value={pageIndex} setValue={setPageIndex} />
     </div>
   );
-}
+};
+
+export default Application;
