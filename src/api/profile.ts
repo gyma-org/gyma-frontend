@@ -2,8 +2,11 @@ import { UserProfile } from '../types/profile'; // Import the Profile type from 
 // const API_USER_URL = 'http://127.0.0.1:9000'; // Adjust your API URL accordingly
 import { API_USER_URL } from '../config';
 
+const API_URL = "https://backuser.gyma.app"; // Adjust your API URL accordingly
+import { API_BASE_URL } from "../config";
 
 // Fetches the profile data for the authenticated user
+
 export const fetchProfile = async (
   accessToken: string,
   logoutUser: () => void
@@ -12,8 +15,8 @@ export const fetchProfile = async (
   const response = await fetch(`${API_USER_URL}/user/details/`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
     },
   });
 

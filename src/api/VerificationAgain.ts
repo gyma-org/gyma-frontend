@@ -42,11 +42,13 @@ interface SendOtpResponse {
         // Handle other failure cases with a general error
         throw new Error(data.message || 'Failed to send OTP');
       }
-    } catch (error) {
-      console.error("Error sending OTP:", error);
-      return { success: false, message: "Failed to send OTP." };
-    }
-  
+    } else if (data.remaining_time) {
+      // Return remaining time if there's a cooldown
+      return { success: false, message: data.error, remaining_time: data.remaining_time };
+    } else {
+      // Handle other failure cases with a general error
+      throw new Error(data.message || "Failed to send OTP");
+    }  
     // Default return to satisfy TypeScript's requirement for all code paths to return
     return { success: false, message: "Unexpected error occurred." };
   };
@@ -76,4 +78,11 @@ export const verifyOtp = async (data: { user_phone_number: string; otp: string }
       console.error("Error verifying OTP:", error);
       return { success: false, message: "OTP verification failed." };
     }
-  };
+
+    // If response is not ok, handle as failure
+    return { success: false, message: "OTP verification failed." };
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return { success: false, message: "OTP verification failed." };
+  }
+};

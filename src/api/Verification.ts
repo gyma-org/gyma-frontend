@@ -27,5 +27,8 @@ export interface VerificationData {
       console.error("Error during OTP verification:", error);
       return { success: false, message: "An error occurred during verification. Please try again." };
     }
-  };
-  
+  } catch (error) {
+    console.error("Error during OTP verification:", error);
+    return { success: false, message: "An error occurred during verification. Please try again." };
+  }
+};

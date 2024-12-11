@@ -3,7 +3,25 @@
 import { FormEventHandler, useState } from "react";
 import { useRouter } from 'next/navigation'
 import * as Yup from "yup";
-import { Box, InputBase, Select, styled, useTheme, useMediaQuery, MenuItem, TextField, FormControl, InputLabel, FormHelperText, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+
+import {
+  Box,
+  InputBase,
+  styled,
+  useTheme,
+  useMediaQuery,
+  TextField,
+  FormControl,
+  FormHelperText,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material";
 import { Button as MuiButton, Container as MuiContainer } from "@mui/material";
 import { ErrorMessage, Field, Formik, FormikHelpers } from "formik";
 import ForgotPassword from "@/components/Authorization/ForgotPassword";
