@@ -1,14 +1,14 @@
-import { UserWallet } from '../types/UserWallet';
+import { UserWallet } from "../types/UserWallet";
 
-const API_URL = 'http://127.0.0.1:9000';  // Adjust your API URL accordingly
+const API_URL = "https://backuser.gyma.app"; // Adjust your API URL accordingly
 
 // Function to fetch the wallet data for the authenticated user
 export const fetchUserWallet = async (accessToken: string): Promise<UserWallet> => {
   const response = await fetch(`${API_URL}/user/read-wallet/`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
     },
   });
 

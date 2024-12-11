@@ -11,7 +11,6 @@ import {
   useMediaQuery,
   TextField,
   FormControl,
-  InputLabel,
   FormHelperText,
   Snackbar,
   Alert,
@@ -21,8 +20,8 @@ import {
   DialogTitle,
   ToggleButtonGroup,
   ToggleButton,
-  Typography,
 } from "@mui/material";
+
 import { Button as MuiButton, Container as MuiContainer } from "@mui/material";
 import { ErrorMessage, Field, Formik } from "formik";
 import ForgotPassword from "@/components/Authorization/ForgotPassword";
