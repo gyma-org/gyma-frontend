@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://127.0.0.1:9000";
+// const API_USER_URL = "http://127.0.0.1:9000";
+import { API_USER_URL } from '../config';
 
 export interface VerificationData {
     user_phone_number: string;
@@ -7,7 +8,7 @@ export interface VerificationData {
   
   export const verifyOtp = async (data: VerificationData): Promise<{ success: boolean, message: string }> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/verification/verify-otp/`, {
+      const response = await fetch(`${API_USER_URL}/verification/verify-otp/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -21,7 +21,7 @@ interface SpecificationsProps {
   gymSex: string;
 }
 
-const index: React.FC<SpecificationsProps> = ({
+const Specifications: React.FC<SpecificationsProps> = ({
   gymName,
   location,
   // rating,
@@ -280,4 +280,4 @@ const index: React.FC<SpecificationsProps> = ({
   );
 };
 
-export default index;
+export default Specifications;

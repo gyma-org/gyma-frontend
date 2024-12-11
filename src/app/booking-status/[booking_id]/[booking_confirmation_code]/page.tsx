@@ -2,11 +2,27 @@ import React from "react";
 import { Box, Typography, Button, Paper } from "@mui/material";
 import Head from "next/head";
 
+// Defining the props with parameters for booking_id and booking_confirmation_code
 interface PaymentStatusPageProps {
   params: {
     booking_id: number;
     booking_confirmation_code: number;
   };
+}
+
+// Static paths generation for dynamic routes
+export async function generateStaticParams() {
+  // Sample data for static paths generation; replace this with actual data fetching logic
+  const bookingData = [
+    { booking_id: 123, booking_confirmation_code: 456 },
+    { booking_id: 789, booking_confirmation_code: 101 },
+    // Add more sample paths as needed
+  ];
+
+  return bookingData.map((item) => ({
+    booking_id: item.booking_id.toString(),
+    booking_confirmation_code: item.booking_confirmation_code.toString(),
+  }));
 }
 
 const PaymentStatusPage: React.FC<PaymentStatusPageProps> = ({ params }) => {

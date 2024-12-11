@@ -171,6 +171,7 @@ const Mapp = () => {
             name={gym.name}
             address={gym.address}
             city={gym.city}
+            profile={gym.profile}
             onClick={() => handleGymClick(gym.id)}  // Pass the click handler
           />
         ))}

@@ -26,7 +26,8 @@ export interface Gym {
   interface GymNearbyResponse {
     results: Gym[];
   }
-  const API_BASE_URL = "http://127.0.0.1:8000";
+  // const API_BASE_URL = "http://127.0.0.1:8000";
+  import { API_BASE_URL } from '../config';
   
   export const fetchNearbyGyms = async (lat: number, lon: number, radius: number = 5): Promise<GymNearbyResponse> => {
     const response = await fetch(`${API_BASE_URL}/gym/nearby/?lat=${lat}&lon=${lon}&radius=${radius}`);

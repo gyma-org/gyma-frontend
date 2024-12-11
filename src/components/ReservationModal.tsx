@@ -5,6 +5,7 @@ import PersianCalendar from "./PersianCalendar";
 import TimeSelector from "./TimeSelector";
 import { bookGymSession } from "../api/Booking"
 import { useAuth } from "@/context/AuthContext";
+import { API_BASE_URL } from '../config';
 
 interface ReservationModalProps {
   open: boolean;
@@ -14,12 +15,12 @@ interface ReservationModalProps {
 }
 
 const ReservationModal: React.FC<ReservationModalProps> = ({ open, onClose, gymId, gymSex }) => {
-  const API_BASE_URL = "http://127.0.0.1:8000/";
+  // const API_BASE_URL = "http://127.0.0.1:8000/";
   
   const fetchGymSessions = async (gymId: string, gymSex: string, date: string): Promise<any[]> => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}schedules/get_schedule_for_next_60_days/?gym=${gymId}&date=${date}&sex=${gymSex}`
+        `${API_BASE_URL}/schedules/get_schedule_for_next_60_days/?gym=${gymId}&date=${date}&sex=${gymSex}`
       );
       if (!response.ok) throw new Error("Failed to fetch gym sessions");
       return await response.json();
@@ -68,23 +69,19 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ open, onClose, gymI
     }
 
     try {
-      // Call bookGymSession to get the HTML form
-      const htmlForm = await bookGymSession(selectedTime.id, authTokens.access);
+      // Call bookGymSession to get the redirect URL
+      const result = await bookGymSession(selectedTime.id, authTokens.access);
 
-      // Create a new window to submit the form
-      const newWindow = window.open();
-
-      if (newWindow) {
-        newWindow.document.write(htmlForm); // Write the form to the new window
-        newWindow.document.close(); // Close the document to allow form submission
-
-        // Cast to HTMLFormElement to access the submit method
-        const formElement = newWindow.document.getElementById('id_form') as HTMLFormElement;
-        formElement?.submit(); // Submit the form to the payment gateway
+      // Check if the result contains a redirect URL
+      if (typeof result === "object" && result.redirect_url) {
+          // Open the redirect URL in a new window
+          window.open(result.redirect_url, "_blank");
+      } else {
+          console.error("Unexpected response from bookGymSession:", result);
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Error booking gym session:", error);
-    }
+  }
   };
 
   const availableTimeSlots = sessions

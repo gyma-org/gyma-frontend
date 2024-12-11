@@ -11,12 +11,13 @@ interface SendOtpResponse {
   }
   
   // Base URL for API requests
-  const API_BASE_URL = "http://127.0.0.1:9000";
+  // const API_USER_URL = "http://127.0.0.1:9000";
+  import { API_USER_URL } from '../config';
   
   // Function to send OTP with updated handling for cooldown period
   export const sendOtp = async (phoneNumber: string): Promise<SendOtpResponse> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/verification/send-opt-verification/`, {
+      const response = await fetch(`${API_USER_URL}/verification/send-opt-verification/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ interface SendOtpResponse {
   
 export const verifyOtp = async (data: { user_phone_number: string; otp: string }): Promise<VerifyOtpResponse> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/verification/verify-otp/`, {
+      const response = await fetch(`${API_USER_URL}/verification/verify-otp/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

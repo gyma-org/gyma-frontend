@@ -8,8 +8,8 @@ import { listGyms } from '../../api/gymList';
 import { GymListResponse } from '../../types/gymList'; 
 import Link from 'next/link'; 
 
-const GALLERY_BASE_URL = `${API_BASE_URL}/media/media/gallery/`;
-const PROFILE_BASE_URL = `${API_BASE_URL}/media/profile/`;
+const GALLERY_BASE_URL = `${API_BASE_URL}/medias/media/gallery/`;
+const PROFILE_BASE_URL = `${API_BASE_URL}/medias/profile/`;
 
 const Favorite = () => {
   const [gyms, setGyms] = useState<GymListResponse[]>([]);  // State to store the list of gyms

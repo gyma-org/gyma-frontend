@@ -23,7 +23,7 @@ interface ProfileProviderProps {
 }
 
 export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) => {
-  const { authTokens } = useAuth();
+  const { authTokens, logoutUser } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
       setError(null);
       try {
         if (authTokens?.access) {
-          const data = await fetchProfile(authTokens.access);
+          const data = await fetchProfile(authTokens.access, logoutUser);
           setProfile(data);
         }
       } catch (error: any) {
@@ -48,7 +48,7 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
     if (authTokens) {
       getProfile();
     }
-  }, [authTokens]);
+  }, [authTokens, logoutUser]);
 
   return (
     <ProfileContext.Provider value={{ profile, loading, error }}>

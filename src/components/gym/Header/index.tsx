@@ -45,7 +45,10 @@ const Header = () => {
           justifyContent: "space-between",
         }}
       >
-        <IconButton sx={{ bgcolor: "#41414140" }}>
+        <IconButton 
+        sx={{ bgcolor: "#41414140" }}
+        onClick={handleBackClick} 
+        >
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M5.33325 12C5.33325 8.22876 5.33325 6.34315 6.50483 5.17157C7.6764 4 9.56201 4 13.3333 4H18.6666C22.4378 4 24.3234 4 25.495 5.17157C26.6666 6.34315 26.6666 8.22876 26.6666 12V21.1035C26.6666 24.6812 26.6666 26.47 25.5409 27.0172C24.4151 27.5644 23.0086 26.4592 20.1953 24.2488L19.295 23.5413C17.7131 22.2985 16.9222 21.6771 15.9999 21.6771C15.0777 21.6771 14.2867 22.2985 12.7049 23.5413L11.8045 24.2488C8.99132 26.4592 7.58471 27.5644 6.45897 27.0172C5.33325 26.47 5.33325 24.6812 5.33325 21.1035V12Z"
@@ -54,7 +57,10 @@ const Header = () => {
             />
           </svg>
         </IconButton>
-        <IconButton sx={{ bgcolor: "#41414140" }}>
+        <IconButton 
+        sx={{ bgcolor: "#41414140" }}
+        onClick={handleBackClick} 
+        >
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M24 8L8 24"
