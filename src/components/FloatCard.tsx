@@ -1,5 +1,6 @@
 import { Box, CardMedia, IconButton, Rating, Typography } from "@mui/material";
 import React from "react";
+import { API_BASE_URL } from "@/config";
 
 interface FloatCardProps {
   name: string;
@@ -93,7 +94,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
 
       {/* Card image */}
       <CardMedia
-        image={profile}
+        image={`${API_BASE_URL}/medias/profile/${profile}`}
         sx={{
           mr: 1,
           height: "100%",

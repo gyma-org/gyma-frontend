@@ -4,10 +4,21 @@ import { getGymDetails } from "@/api/gymDetails";
 import { GymDetails } from "@/types/gymDetails"; 
 import { Address, Comments, Description, GYMHeader, ImageSlider, Specifications } from "@/components/gym";
 
+// Defining the props with parameters for gym id
 interface GymPageProps {
   params: {
-    id: number; // Gym code from the URL
+    id: string; // Gym code from the URL
   };
+}
+
+// Static paths generation for dynamic routes (gym pages)
+export async function generateStaticParams() {
+  // Sample data for static paths generation; replace this with actual data fetching logic
+  const gymCodes = ["e086ba93-9c6f-4d11-8f52-ee152654abcf"]; // Replace this with actual gym codes from your data source
+
+  return gymCodes.map((id) => ({
+    id: id.toString(),
+  }));
 }
 
 const GymPage: React.FC<GymPageProps> = async ({ params }) => {
@@ -34,7 +45,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         pb: 8,
       }}
     >
-      <GYMHeader/>
+      <GYMHeader />
       <ImageSlider images={gymDetails.gallery} />
       <Specifications 
         features={gymDetails.features}
@@ -44,9 +55,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         gymSex={gymDetails.sex}
       />
       <Description text={gymDetails.description} />
-      <Address
-        location={gymDetails.address} 
-      />
+      <Address location={gymDetails.address} />
       <Comments />
     </Grid>
   );

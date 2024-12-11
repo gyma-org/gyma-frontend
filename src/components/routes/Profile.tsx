@@ -29,11 +29,11 @@ import jMoment from "jalali-moment";
 import { API_USER_URL } from "@/config";
 import { ArrowBack, Edit } from "@mui/icons-material";
 
-const PROFILE_BASE_URL = `${API_USER_URL}/media/profile/`;
-const BANNER_BASE_URL = `${API_USER_URL}/media/banner/`;
+const PROFILE_BASE_URL = `${API_USER_URL}/medias/profile/`;
+const BANNER_BASE_URL = `${API_USER_URL}/medias/banner/`;
 
 const Profile = () => {
-  const { authTokens } = useAuth(); // Access authTokens from ProfileContext
+  const { authTokens, logoutUser } = useAuth();
   const [UserProfile, setProfile] = useState<UserProfile | null>(null);
   const [wallet, setWallet] = useState<UserWallet | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -109,8 +109,8 @@ const Profile = () => {
         // Ensure there's an access token
         try {
           // Fetch profile and wallet in parallel
-          const profileData = await fetchProfile(authTokens.access);
-          const walletData = await fetchUserWallet(authTokens.access); // Get wallet data
+          const profileData = await fetchProfile(authTokens.access, logoutUser); 
+          const walletData = await fetchUserWallet(authTokens.access);  // Get wallet data
 
           setProfile(profileData);
           setWallet(walletData);
@@ -126,7 +126,7 @@ const Profile = () => {
     };
 
     getProfile();
-  }, [authTokens]); // Re-run when authTokens change
+  }, [authTokens, logoutUser]); // Re-run when authTokens change
 
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -163,9 +163,9 @@ const Profile = () => {
         const response = await updateUserProfile(authTokens.access, formDataToSend);
 
         if (response.success) {
-          setError(null); // Clear any previous errors
-          // Refresh the profile to display the updated values
-          await fetchProfile(authTokens.access); // Fetch the latest profile data from the server
+        setError(null); // Clear any previous errors
+        // Refresh the profile to display the updated values
+        await fetchProfile(authTokens.access, logoutUser); // Fetch the latest profile data from the server
         }
       } catch (error: any) {
         setError(error.message);

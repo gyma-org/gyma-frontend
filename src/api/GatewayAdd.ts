@@ -1,9 +1,10 @@
 import { GoToGatewayRequest } from "../types/GatewayAdd";
 
-const API_BASE_URL = "https://backuser.gyma.app/wallet"; // Replace with your actual backend URL
+// const API_USER_URL = "http://127.0.0.1:9000/wallet"; // Replace with your actual backend URL
+import { API_USER_URL } from '../config';
 
 export async function goToGateway(data: GoToGatewayRequest, token: string): Promise<string> {
-  const response = await fetch(`${API_BASE_URL}/go-to-gateway/`, {
+  const response = await fetch(`${API_USER_URL}/wallet/go-to-gateway/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

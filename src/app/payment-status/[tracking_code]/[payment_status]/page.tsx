@@ -5,6 +5,23 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Head from 'next/head';
 
+// Adding the generateStaticParams function to support static generation
+export async function generateStaticParams() {
+  // Here you would fetch your data, such as a list of tracking codes and payment statuses
+  const paymentDetails = [
+    { tracking_code: "ABC123", payment_status: "success" },
+    { tracking_code: "XYZ456", payment_status: "failed" },
+    { tracking_code: "LMN789", payment_status: "unknown" },
+    // Add more static params here for other dynamic routes
+  ];
+
+  // Return static paths with params for each dynamic segment
+  return paymentDetails.map((payment) => ({
+    tracking_code: payment.tracking_code,
+    payment_status: payment.payment_status,
+  }));
+}
+
 interface PaymentStatusPageProps {
   params: {
     tracking_code: string;

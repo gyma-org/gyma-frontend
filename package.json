@@ -6,6 +6,7 @@
     "dev": "next dev -p 5001",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "next lint"
   },
   "dependencies": {

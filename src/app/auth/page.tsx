@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { FormEventHandler, useState } from "react";
+import { useRouter } from 'next/navigation'
 import * as Yup from "yup";
+
 import {
   Box,
   InputBase,
@@ -21,14 +22,14 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
-
 import { Button as MuiButton, Container as MuiContainer } from "@mui/material";
-import { ErrorMessage, Field, Formik } from "formik";
+import { ErrorMessage, Field, Formik, FormikHelpers } from "formik";
 import ForgotPassword from "@/components/Authorization/ForgotPassword";
 import Verification from "@/components/Authorization/Verification";
 import { useAuth } from "@/context/AuthContext";
 import { RegisterValues } from "@/types/RegisterValues";
 import { verifyOtp, VerificationData } from "../../api/Verification";
+import { Console } from "console";
 
 interface SignUpContainerProps {
   signingIn?: boolean;
@@ -76,7 +77,9 @@ const SignUpSchema = Yup.object().shape({
     .nullable()
     .oneOf([Yup.ref("password"), null], "کلمات عبور باید مطابقت داشته باشند.")
     .required("تکرار کلمه عبور ضروری است."),
-  sex: Yup.string().oneOf(["men", "women"], "لطفا جنسیت را انتخاب کنید.").required("جنسیت ضروری است."),
+  sex: Yup.string()
+  .oneOf(["men", "women"], "لطفا جنسیت را انتخاب کنید.")
+  .required("جنسیت ضروری است."),
 });
 
 const SignInSchema = Yup.object().shape({
@@ -297,7 +300,7 @@ const LoginSignup: React.FC = () => {
         // If status code is 400, navigate to the phone verification page
         router.push("/phoneverification");
       } else {
-        console.log("Logged in!");
+        console.log("Logged in!")
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -308,7 +311,7 @@ const LoginSignup: React.FC = () => {
   //   setShowCodeVerification(true);
   // };
 
-  const handleRegister = async (values: RegisterValues) => {
+  const handleRegister = async (values: RegisterValues ) => {
     console.log("Form values: ", values);
 
     const phoneNumber = values.phone_number;
@@ -318,7 +321,7 @@ const LoginSignup: React.FC = () => {
       setSnackbarMessage("ثبت نام اولیه با موفقیت انجام شد.");
       setSnackbarSeverity("success");
       setOpenSnackbar(true);
-      setOpenVerification(true);
+      setOpenVerification(true); 
       setUserPhoneNumber(phoneNumber);
     } else {
       console.error("Registration error:", response.errors);
@@ -443,72 +446,26 @@ const LoginSignup: React.FC = () => {
                   component="div">
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mt: 1,
-                    justifyContent: "space-between",
-                    width: "80%",
-                  }}>
-                  <Field name="sex">
-                    {({ field, form }: any) => (
-                      <FormControl
-                        fullWidth
-                        error={form.touched.sex && Boolean(form.errors.sex)}>
-                        <ToggleButtonGroup
-                          sx={{
-                            direction: "ltr",
-                            borderRadius: 5,
-                            height: 40,
-                          }}
-                          value={field.value || ""}
-                          exclusive
-                          onChange={(_, value) => {
-                            form.setFieldValue(field.name, value);
-                          }}>
-                          <ToggleButton
-                            sx={{
-                              flexGrow: 1,
-                              borderRadius: 5,
-                              "&.Mui-selected": {
-                                backgroundColor: "primary.main",
-                                color: "white",
-                                borderColor: "primary.main",
-                              },
-                              "&.Mui-selected:hover": {
-                                backgroundColor: "primary.dark",
-                              },
-                            }}
-                            value="men"
-                            aria-label="Men">
-                            مرد
-                          </ToggleButton>
-                          <ToggleButton
-                            sx={{
-                              flexGrow: 1,
-                              borderRadius: 5,
-                              "&.Mui-selected": {
-                                backgroundColor: "secondary.main",
-                                color: "white",
-                                borderColor: "secondary.main",
-                              },
-                              "&.Mui-selected:hover": {
-                                backgroundColor: "secondary.dark",
-                              },
-                            }}
-                            value="women"
-                            aria-label="Women">
-                            زن
-                          </ToggleButton>
-                        </ToggleButtonGroup>
-                        {form.touched.sex && form.errors.sex && (
-                          <FormHelperText>{form.errors.sex}</FormHelperText>
-                        )}
-                      </FormControl>
+
+                <Field name="sex">
+                {({ field, form }: any) => (
+                  <FormControl fullWidth error={form.touched.sex && Boolean(form.errors.sex)}>
+                    <InputLabel>جنسیت</InputLabel>
+                    <Select
+                      {...field}
+                      label="جنسیت"
+                      defaultValue=""
+                      // onChange is handled by Formik's Field component automatically
+                    >
+                      <MenuItem value="men">Men</MenuItem>
+                      <MenuItem value="women">Women</MenuItem>
+                    </Select>
+                    {form.touched.sex && form.errors.sex && (
+                      <FormHelperText>{form.errors.sex}</FormHelperText>
                     )}
-                  </Field>
-                </Box>
+                  </FormControl>
+                )}
+                </Field>
 
                 <Field
                   as={Input}
@@ -642,9 +599,7 @@ const LoginSignup: React.FC = () => {
       />
 
       {/* Verification Modal */}
-      <Dialog
-        open={openVerification}
-        onClose={() => setOpenVerification(false)}>
+      <Dialog open={openVerification} onClose={() => setOpenVerification(false)}>
         <DialogTitle>Phone Number Verification</DialogTitle>
         <DialogContent>
           <TextField
@@ -659,27 +614,26 @@ const LoginSignup: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => setOpenVerification(false)}
-            color="primary">
+          <Button onClick={() => setOpenVerification(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleVerify}
-            color="primary">
+          <Button onClick={handleVerify} color="primary">
             Verify
           </Button>
         </DialogActions>
       </Dialog>
 
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000} // Close after 6 seconds
-        onClose={() => setOpenSnackbar(false)}>
+        onClose={() => setOpenSnackbar(false)}
+      >
         <Alert
           onClose={() => setOpenSnackbar(false)}
           severity={snackbarSeverity}
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
