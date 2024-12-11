@@ -3,6 +3,7 @@ import { Vazirmatn } from "next/font/google";
 import "./globals.css";
 
 import Providers from "@/utils/Providers";
+import { AuthProvider } from "@/context/AuthContext";
 
 const vazirmatn = Vazirmatn({ subsets: ["arabic"] });
 
@@ -26,7 +27,9 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/512x512.png" />
       </head>
       <body className={vazirmatn.className}>
-        <Providers>{children}</Providers>
+        <AuthProvider>
+          <Providers>{children}</Providers>
+        </AuthProvider>
       </body>
     </html>
   );

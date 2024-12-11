@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nextjs-frontend:
+    image: nextjs-frontend:latest
+    container_name: nextjs-frontend
+    ports:
+      - "3000:3000"  # Keep this for internal access (dev or Next.js specific port)
+    volumes:
+      - ./out:/usr/share/nginx/html  # Assuming 'out' is your static build folder
+    environment:
+      - NGINX_HOST=gyma.app
+    networks:
+      - frontend_network
+
+networks:
+  frontend_network:
+    driver: bridge

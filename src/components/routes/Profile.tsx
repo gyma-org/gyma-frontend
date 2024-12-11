@@ -1,8 +1,200 @@
-import { Avatar, Box, Button, CardMedia, Container, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, Button, CardMedia, Container, IconButton, Typography, TextField, Modal } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { fetchProfile } from '../../api/profile';
+import { fetchUserWallet } from '../../api/UserWallet';
+import { useAuth } from "@/context/AuthContext";
+import { UserProfile } from "../../types/profile";
+import { UserWallet } from "../../types/UserWallet";
+import { UserUpdate } from "../../types/UserUpdate";
+import { updateUserProfile } from "../../api/UserUpdate";
+import { goToGateway } from "../../api/GatewayAdd";
+import { GoToGatewayRequest } from "../../types/GatewayAdd";
+import { format, differenceInCalendarDays, parseISO } from 'date-fns';
+import { faIR } from 'date-fns/locale';
+import jMoment from 'jalali-moment';
+import { API_USER_URL } from "@/config";
+
+
+const PROFILE_BASE_URL = `${API_USER_URL}/medias/profile/`;
+const BANNER_BASE_URL = `${API_USER_URL}/medias/banner/`;
 
 const Profile = () => {
+  const { authTokens, logoutUser } = useAuth();  // Access authTokens from ProfileContext
+  const [UserProfile, setProfile] = useState<UserProfile | null>(null);
+  const [wallet, setWallet] = useState<UserWallet | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState<any>({ first_name: '', last_name: '', avatar: '', imageUrl: ''});
+  
+  const [rawAmount, setRawAmount] = useState<number | null>(null); // For storing numeric value without commas
+  const [openModal, setOpenModal] = useState(false);
+  const [amount, setAmount] = useState('');
+  const handleOpenModal = () => setOpenModal(true);
+
+  const handleCloseModal = () => setOpenModal(false);
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.target.value.replace(/,/g, ''); // Remove commas if any
+    const numericValue = Number(rawValue);
+    const formattedValue = new Intl.NumberFormat().format(numericValue);
+  
+    setAmount(formattedValue); // Display the formatted value
+    setRawAmount(numericValue); // Store the raw numeric value
+  };
+
+  const handleAddBalance = async () => {
+    if (!authTokens?.access) {
+      setError("No access token found");
+      return;
+    }
+  
+    if (rawAmount === null) {
+      setError("Please enter a valid amount.");
+      return;
+    }
+  
+    const data: GoToGatewayRequest = {
+      price: rawAmount,
+    };
+  
+    try {
+      setLoading(true);
+      const htmlForm = await goToGateway(data, authTokens.access); // Get the HTML response
+      
+      // Create a new window to submit the form
+      const newWindow = window.open();
+      
+      if (newWindow) {
+        newWindow.document.write(htmlForm); // Write the form to the new window
+        newWindow.document.close(); // Close the document to allow form submission
+  
+        // Cast to HTMLFormElement to access the submit method
+        const formElement = newWindow.document.getElementById('id_form') as HTMLFormElement;
+        formElement?.submit(); // Submit the form to the payment gateway
+      }
+  
+      setError(null); // Clear any previous errors
+    } catch (error: any) {
+      console.error("Failed to initiate payment:", error);
+      setError("Failed to initiate payment. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch the profile data on component mount
+  useEffect(() => {
+    const getProfile = async () => {
+      if (authTokens?.access) { // Ensure there's an access token
+        try {
+          // Fetch profile and wallet in parallel
+          const profileData = await fetchProfile(authTokens.access, logoutUser); 
+          const walletData = await fetchUserWallet(authTokens.access);  // Get wallet data
+
+          setProfile(profileData);
+          setWallet(walletData);
+        } catch (error: any) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setError("No access token found");
+        setLoading(false);
+      }
+    };
+
+    getProfile();
+  }, [authTokens, logoutUser]); // Re-run when authTokens change
+
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography color="error">{error}</Typography>;
+
+  // Ensure dateJoined is available
+  const dateJoined = UserProfile?.date_joined || ''; // Default to empty string if undefined
+
+  // Parse the date and calculate days since joining
+  let daysSinceJoined = 0;
+  let formattedJoinDate = '';
+  
+  if (dateJoined) {
+    const joinedDate = parseISO(dateJoined);
+    daysSinceJoined = differenceInCalendarDays(new Date(), joinedDate);
+    formattedJoinDate = format(joinedDate, 'yyyy/MM/dd', { locale: faIR });
+    formattedJoinDate = jMoment(joinedDate).locale('fa').format('YYYY/MM/DD'); // Use the appropriate format for your needs
+  }
+
+  const handleEdit = () => {
+    setEditMode((prevMode) => !prevMode);
+  };
+
+  const handleSubmit = async () => {
+    if (authTokens?.access) {
+      try {
+        setLoading(true);
+        const formDataToSend = new FormData();
+        formDataToSend.append('first_name', formData.first_name || UserProfile?.first_name);
+        formDataToSend.append('last_name', formData.last_name || UserProfile?.last_name);
+        formDataToSend.append('profile', formData.avatar);  // Send the actual file, not just the URL
+        formDataToSend.append('banner', formData.coverImage);
+        console.log()
+
+        const response = await updateUserProfile(authTokens.access, formDataToSend);
+
+        if (response.success) {
+        setError(null); // Clear any previous errors
+        // Refresh the profile to display the updated values
+        await fetchProfile(authTokens.access, logoutUser); // Fetch the latest profile data from the server
+        }
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+        setEditMode(false); // Exit edit mode after save
+      }
+    } else {
+      setError('No access token found');
+      setLoading(false);
+    }
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    console.log(file);  // Check if file is correctly captured
+    if (file) {
+      setFormData({ ...formData, avatar: file });
+    }
+  };
+
+  const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData({ ...formData, coverImage: file });
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.type === "file") {
+      // If the input is a file input, handle it differently
+      const file = e.target.files?.[0];
+      if (file) {
+        // Update formData for file (for file inputs)
+        setFormData({
+          ...formData,
+          [e.target.name]: file,
+        });
+      }
+    } else {
+      // For regular text inputs
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+      });
+    }
+  };
+
   return (
     <Grid container maxWidth={700} mx="auto" sx={{ p: 1, pb: 13 }}>
       {/* User Card */}
@@ -17,31 +209,58 @@ const Profile = () => {
           mx: "auto",
           position: "relative",
         }}>
-        <CardMedia
-          sx={{
-            width: "100%",
-            aspectRatio: "4 / 1",
-            borderRadius: "18px",
-          }}
-          image="https://placehold.co/600x400/F95A00/F95A00"
-        />
-        <Avatar
-          sx={{
-            height: { xs: 100, md: 150 },
-            width: { xs: 100, md: 150 },
-            border: "5px solid #fff",
-            position: "absolute",
-            bottom: "40%",
-            right: 40,
-          }}
-          src="https://placehold.co/600x400/F95A00/F95A00"
-        />
+          <Box>
+              <CardMedia
+                sx={{
+                  width: '100%',
+                  aspectRatio: '4 / 1',
+                  borderRadius: '18px',
+                  marginTop: 2,
+                }}
+                image={formData.coverImage || `${BANNER_BASE_URL}${UserProfile?.banner}` || "https://placehold.co/600x400/F95A00/F95A00"}
+                />
+            </Box>
+            <Avatar
+              sx={{
+              height: { xs: 100, md: 150 },
+              width: { xs: 100, md: 150 },
+              border: "5px solid #fff",
+              position: "relative",
+              mt: -5,
+              mr: 2,
+              }}
+              src={formData.avatar || `${PROFILE_BASE_URL}${UserProfile?.profile}` || 'https://placehold.co/600x400/F95A00/F95A00'}
+              />
+          {editMode && (
+          <Box sx={{ mt: 2 }}>
+            <Button variant="contained" component="label">
+            تغییر بنر
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleCoverImageChange}
+            />
+          </Button>
+
+            <Button variant="contained" component="label"sx={{ ml: 2 }}>
+              تغییر تصویر پروفایل
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleAvatarChange}
+              />
+            </Button>
+          </Box>
+        )}
         <Box
           sx={{
             p: { xs: 1, md: 3 },
           }}>
           <Box sx={{ display: "flex", justifyContent: "start" }}>
             <IconButton
+              onClick={handleEdit}
               sx={{
                 height: { xs: "32px", md: "56px" },
                 width: { xs: "32px", md: "56px" },
@@ -82,13 +301,57 @@ const Profile = () => {
               py: 1,
             }}>
             <Typography sx={{ fontWeight: 700, fontSize: { xs: 13, md: 24 }, color: "#6B7387" }}>
-              {"+98 910 597 2669"}
+              {UserProfile?.phone_number || "+98 910 597 2669"}
             </Typography>
-            <Typography sx={{ fontWeight: 700, fontSize: { xs: 18, md: 32 } }}>{"رضا بوذرجمهری"}</Typography>
+            {editMode ? (
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              padding: { xs: 2, md: 4 }, // Add padding for smaller screens
+              width: '100%', // Ensure the form takes full width on mobile
+            }}>
+              <TextField
+                label="نام"
+                value={formData?.first_name || UserProfile?.first_name || ''}
+                onChange={handleChange}
+                name="first_name"
+                fullWidth
+                margin="normal"
+                sx={{ fontSize: { xs: '14px', sm: '16px' } }} // Adjust font size for mobile
+              />
+              <TextField
+                label="نام خانوادگی"
+                value={formData?.last_name || UserProfile?.last_name || ''}
+                onChange={handleChange}
+                name="last_name"
+                fullWidth
+                margin="normal"
+                sx={{ fontSize: { xs: '14px', sm: '16px' } }} // Adjust font size for mobile
+              />
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                sx={{
+                  mt: 2,
+                  fontSize: { xs: '14px', sm: '16px' }, // Adjust button font size for mobile
+                  padding: { xs: '8px', sm: '12px' }, // Adjust button padding for mobile
+                }}
+              >
+                ذخبره تغییرات
+              </Button>
+            </Box>
+          ) : (
+            <Typography sx={{ fontWeight: 700, fontSize: { xs: 18, md: 32 } }}>
+              {`${UserProfile?.first_name || "User"} ${UserProfile?.last_name || "Name"}`}
+            </Typography>
+          )}
+            <Typography variant="body1">{UserProfile?.email || "user@example.com"}</Typography>
           </Box>
           <Box sx={{ direction: "rtl", pt: 2 }}>
             <Typography sx={{ fontWeight: 500, fontSize: { xs: 12, md: 20 } }}>
-              {"از تاریخ 1403/07/01 همراه جیما بودی!"}
+              {`از تاریخ ${formattedJoinDate} همراه جیما بودی!`}
             </Typography>
             <Typography sx={{ fontWeight: 500, fontSize: { xs: 12, md: 20 } }}>
               {"تا الان 120 تا رزرو از 13 باشگاه انجام دادی!"}
@@ -96,6 +359,7 @@ const Profile = () => {
           </Box>
         </Box>
       </Box>
+      
 
       {/* User Wallet */}
       <Grid
@@ -158,7 +422,7 @@ const Profile = () => {
             right: "30%",
           }}>
           <Typography variant="h3" fontWeight="bold" color="#fff">
-            {"۱۲۴۰۰۰"}
+            {`${wallet?.balance}`}
           </Typography>
           <svg width="26" height="26" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -179,7 +443,9 @@ const Profile = () => {
             "&: hover": {
               bgcolor: "#fffe",
             },
-          }}>
+          }}
+          onClick={handleOpenModal}
+          >
           <Typography variant="subtitle1" color="#000" fontWeight={600}>
             {"افزایش موجودی"}
           </Typography>
@@ -196,6 +462,44 @@ const Profile = () => {
           </svg>
         </Button>
       </Grid>
+
+      {/* Modal for Adding Balance */}
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: '12px',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+            مبلغ به ریال اضافه کنید
+          </Typography>
+          <TextField
+            label="مقدار به ریال"
+            variant="outlined"
+            fullWidth
+            value={amount}
+            onChange={handleAmountChange}
+            type="text"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+            onClick={handleAddBalance}
+          >
+            تایید
+          </Button>
+        </Box>
+      </Modal>
 
       {/* Buttons */}
       <Grid

@@ -44,7 +44,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
             <CardMedia
               component="img"
               sx={{ width: "100%", height: "100%", objectFit: "cover", aspectRatio: "4 / 3" }}
-              image={`${API_BASE_URL}/media/media/gallery/${image}`} // Use the full URL or CDN path
+              image={`${API_BASE_URL}/medias/gallery/${image}`} // Use the full URL or CDN path
               title={`Gallery Image ${index + 1}`}
             />
           </SwiperSlide>

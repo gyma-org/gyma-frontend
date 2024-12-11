@@ -13,6 +13,7 @@ const nextConfig = {
   images: {
     domains: ["194.5.188.48"], // image host
   },
+  // output: 'export',
   ...pwaConfig,
 };
 

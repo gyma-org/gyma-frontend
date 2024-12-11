@@ -8,24 +8,29 @@ import ReservationModal from "@/components/ReservationModal";
 interface SpecificationsProps {
   gymName: string;
   location: string;
-  rating: number;
-  attributes: string[];
-  workingHours: {
-    men: string;
-    women: string;
-  };
-  price: number;
+  // rating: number;
+  // attributes: string[];
+  // workingHours: {
+    // men: string;
+    // women: string;
+  // };
+  // price: number;
   features: string[];
+  gymId: string;
+  // sex: string;
+  gymSex: string;
 }
 
-const index: React.FC<SpecificationsProps> = ({
+const Specifications: React.FC<SpecificationsProps> = ({
   gymName,
   location,
-  rating,
-  attributes,
-  workingHours,
-  price,
+  // rating,
+  // attributes,
+  // workingHours,
+  // price,
   features,
+  gymId,
+  // sex
 }) => {
   const [showReservationModal, setShowReservationModal] = useState<boolean>(false);
   return (
@@ -268,9 +273,11 @@ const index: React.FC<SpecificationsProps> = ({
       <ReservationModal
         open={showReservationModal}
         onClose={() => setShowReservationModal(false)}
+        gymId={gymId}
+        gymSex="men"
       />
     </>
   );
 };
 
-export default index;
+export default Specifications;

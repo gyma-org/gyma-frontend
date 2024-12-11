@@ -8,8 +8,8 @@ import { listGyms } from '../../api/gymList';
 import { GymListResponse } from '../../types/gymList'; 
 import Link from 'next/link'; 
 
-const GALLERY_BASE_URL = `${API_BASE_URL}/media/media/gallery/`;
-const PROFILE_BASE_URL = `${API_BASE_URL}/media/media/profile/`;
+const GALLERY_BASE_URL = `${API_BASE_URL}/medias/media/gallery/`;
+const PROFILE_BASE_URL = `${API_BASE_URL}/medias/profile/`;
 
 const Favorite = () => {
   const [gyms, setGyms] = useState<GymListResponse[]>([]);  // State to store the list of gyms
@@ -38,9 +38,9 @@ const Favorite = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const handleGymClick = (gym_code: string) => {
+  const handleGymClick = (gym_id: number) => {
     // Navigate to the gym details page
-    window.location.href = `/gyms/${gym_code}`;
+    window.location.href = `/gyms/${gym_id}`;
   };
 
   return (
@@ -74,7 +74,7 @@ const Favorite = () => {
             address={gym.address}
             city={gym.city}
             profile={gym.profile ? `${PROFILE_BASE_URL}${gym.profile}` : undefined}
-            onClick={() => handleGymClick(gym.gym_code)}  // Pass the click handler
+            onClick={() => handleGymClick(gym.id)}  // Pass the click handler
           />
         ))}
       </Grid>

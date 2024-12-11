@@ -1,10 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "jalali-moment";
 import styles from "./PersianCalendar.module.css";
 
-const PersianCalendar = ({ handleSetDate }: { handleSetDate: (date: string) => void }) => {
+interface GymSession {
+  id: number;
+  date: string;
+  price: number;
+  start_time: string; // Add this
+  end_time: string;
+}
+
+interface PersianCalendarProps {
+  handleSetDate: (data: { date: string; startTime: string; endTime: string }) => void;
+  sessions: GymSession[];
+  currentMonth: moment.Moment;
+}
+
+const PersianCalendar: React.FC<PersianCalendarProps> = ({
+  handleSetDate,
+  sessions,
+  currentMonth,
+}) => {
   const [currentDate, setCurrentDate] = useState(moment().locale("fa"));
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(null);
+
+  useEffect(() => {
+    console.log("Sessions: ", sessions);
+  }, [sessions]);
+
+  const convertToJalaliWithIntl = (date: string): string => {
+    const d = new Date(date); // Convert string to Date object
+    return new Intl.DateTimeFormat('fa-IR').format(d); // Format to Jalali
+  };
+
+  const getSessionForDate = (date: string) => {
+    const jalaliDate = convertToJalaliWithIntl(date);
+    console.log("Searching for session on date: ", jalaliDate);
+    const session = sessions.find(session => {
+      const sessionJalaliDate = convertToJalaliWithIntl(session.date);
+      return sessionJalaliDate === jalaliDate;
+    });
+    console.log("Found session: ", session);
+    return session;
+  };
 
   const renderCalendar = (date: moment.Moment) => {
     const startOfMonth = date.clone().startOf("jMonth");
@@ -12,8 +50,8 @@ const PersianCalendar = ({ handleSetDate }: { handleSetDate: (date: string) => v
     const monthYear = date.format("jMMMM jYYYY");
 
     const daysGrid: React.ReactNode[] = [];
-
     const firstDayOfWeek = (startOfMonth.day() + 1) % 7;
+    const today = moment().locale("fa"); // Get today's date
 
     for (let i = 0; i < firstDayOfWeek; i++) {
       daysGrid.push(
@@ -26,17 +64,41 @@ const PersianCalendar = ({ handleSetDate }: { handleSetDate: (date: string) => v
 
     for (let day = 1; day <= endOfMonth.jDate(); day++) {
       const dayMoment = moment(date).jDate(day);
+      const formattedDate = dayMoment.format("YYYY-MM-DD");
+      const session = getSessionForDate(formattedDate);
+
+      const isAvailable = !!session;
+      const isSelected = selectedDate?.isSame(dayMoment);
+      const isBeforeToday = dayMoment.isBefore(today, 'day'); // Check if it's before today
+      const isToday = dayMoment.isSame(today, 'day'); // Check if it's today
+
+      const isDisabled = isBeforeToday || !isAvailable; // Disable if before today or no session
+
       daysGrid.push(
         <div
           key={day}
           className={styles.dayContainer}>
           <button
-            className={`${styles.dayButton} ${selectedDate?.isSame(dayMoment) ? styles.selected : ""}`}
-            onClick={() => {
+            className={`${styles.dayButton} 
+              ${isSelected ? styles.selected : ""}
+              ${isAvailable ? styles.hasSession : styles.noSession} 
+              ${isBeforeToday ? styles.disabled : ""}
+              ${isToday ? styles.today : ""}`} // Apply classes conditionally
+            onClick={(e) => {
+              // Prevent click if disabled
+              if (isDisabled) {
+                e.preventDefault();
+                return;
+              }
+
+              // Otherwise, allow the selection
               setSelectedDate(dayMoment);
-            }}>
+            }}
+            disabled={isDisabled} // Disable the button for unavailable days
+            data-session-id={session?.id}
+          >
             <div className={styles.dayNumber}>{day}</div>
-            <div className={styles.price}>120</div>
+            {isAvailable && <div className={styles.price}>{session?.price} تومان</div>}
           </button>
         </div>
       );
@@ -54,17 +116,17 @@ const PersianCalendar = ({ handleSetDate }: { handleSetDate: (date: string) => v
       <div className={styles.calendarHeader}>
         <button
           onClick={() => {
-            setCurrentDate(currentDate.clone().subtract(1, "jMonth"));
-            setSelectedDate(null);
-          }}>
+            setCurrentDate(currentDate.clone().subtract(1, "month"));
+          }}
+        >
           ماه قبل
         </button>
         <h3>{monthYear}</h3>
         <button
           onClick={() => {
-            setCurrentDate(currentDate.clone().add(1, "jMonth"));
-            setSelectedDate(null);
-          }}>
+            setCurrentDate(currentDate.clone().add(1, "month"));
+          }}
+        >
           ماه بعد
         </button>
       </div>
@@ -80,10 +142,21 @@ const PersianCalendar = ({ handleSetDate }: { handleSetDate: (date: string) => v
       <button
         className={styles.reserveButton}
         onClick={() => {
-          if (selectedDate) {
-            handleSetDate(selectedDate.format("jYYYY/jMM/jDD"));
+            if (selectedDate) {
+                const session = getSessionForDate(selectedDate.format("YYYY-MM-DD"));
+                if (session) {
+                  console.log("Selected Date: ", selectedDate.format("jYYYY/jMM/jDD"));
+                  console.log("Session Start Time: ", session.start_time); // Corrected property name
+                  console.log("Session End Time: ", session.end_time); // Corrected property name
+                  handleSetDate({
+                    date: selectedDate.format("jYYYY/jMM/jDD"),
+                    startTime: session.start_time, // Use `start_time`
+                    endTime: session.end_time, // Use `end_time`
+                  });
+                }
+              }
           }
-        }}
+        }
         disabled={!selectedDate}>
         انتخاب ساعت
       </button>

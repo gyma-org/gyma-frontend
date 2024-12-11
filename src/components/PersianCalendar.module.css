@@ -18,7 +18,7 @@
 
 .calendarHeader button {
   padding: 5px 15px;
-  background-color: #f95a00;
+  background-color: #F95A00;
   color: white;
   border: none;
   border-radius: 5px;
@@ -27,7 +27,7 @@
 }
 
 .calendarHeader button:hover {
-  background-color: #f95a00;
+  background-color: #F95A00;
 }
 
 /* h3 {
@@ -40,7 +40,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   font-weight: bold;
-  color: #f95a00;
+  color: #F95A00;
   margin-bottom: 10px;
 }
 
@@ -62,7 +62,7 @@
   width: 40px;
   height: 40px;
   text-align: center;
-  background-color: #f5f5f5;
+  background-color: #F5F5F5;
   /* border: 1px solid #ccc; */
   border-radius: 5px;
   cursor: pointer;
@@ -70,12 +70,12 @@
 }
 
 .dayButton:hover {
-  background-color: #f95a00;
+  background-color: #F95A00;
   color: white;
 }
 
 .selected {
-  background-color: #f95a00;
+  background-color: #F95A00;
   color: white;
 }
 
@@ -91,7 +91,7 @@
 .reserveButton {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #f95a00;
+  background-color: #F95A00;
   color: white;
   border: none;
   border-radius: 5px;
@@ -105,5 +105,27 @@
 }
 
 .reserveButton:hover:not(:disabled) {
-  background-color: #f95a00;
+  background-color: #F95A00;
+}
+
+/* Add a style for the current day */
+.today {
+  background-color: #ff5722; /* Different color for today */
+  color: white;
+  font-weight: bold;
+  border: 1px solid #ff5722;
+}
+
+/* Add a style for disabled (unclickable) days */
+.disabled {
+  background-color: #f5f5f5; /* Light gray background for disabled days */
+  color: #ccc; /* Light gray text */
+  cursor: not-allowed; /* Not-allowed cursor */
+}
+
+/* Add a faded style for days with no session */
+.noSession {
+  background-color: #f5f5f5; /* Light gray background */
+  color: #bbb; /* Faded text */
+  cursor: not-allowed; /* Make it unclickable */
 }
