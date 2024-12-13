@@ -2,8 +2,7 @@ import React, { useState, useRef } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { NearMe } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import FloatCard from "../FloatCard";
 
 const Transition = React.forwardRef(function Transition(
@@ -59,20 +58,23 @@ export default function NearbyGyms({
 
   return (
     <div>
-      <IconButton
+      <Button
         sx={{
           display: { xs: "flex", md: "none" },
           position: "fixed",
-          bottom: 100,
-          right: 16,
+          bottom: 120,
+          py: 1,
+          px: 2,
+          borderRadius: 4,
+          left: 16,
           zIndex: 9,
           bgcolor: "#fff",
-          boxShadow: "0px 0px 5px #00000040",
+          boxShadow: "0px 0px 5px #00000060",
         }}
         color="primary"
         onClick={handleClickOpen}>
         <Typography>{"باشگاه های اطراف"}</Typography>
-      </IconButton>
+      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}

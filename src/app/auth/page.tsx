@@ -278,14 +278,12 @@ const LoginSignup: React.FC = () => {
   const router = useRouter();
 
   const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [showCodeVerification, setShowCodeVerification] = useState(false);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
-  const [openVerification, setOpenVerification] = useState(false); // State for showing the modal
-  const [verificationCode, setVerificationCode] = useState<string>("");
+  const [openVerification, setOpenVerification] = useState(false);
   const [userPhoneNumber, setUserPhoneNumber] = useState<string>(""); // Capture phone number here
 
   const { registerUser, loginUser } = useAuth();
@@ -328,10 +326,10 @@ const LoginSignup: React.FC = () => {
     }
   };
 
-  const handleVerify = async () => {
+  const handleVerify = async ({ code }: { code: string }) => {
     const data: VerificationData = {
       user_phone_number: userPhoneNumber, // Use the captured phone number here
-      otp: verificationCode,
+      otp: code,
     };
 
     const verificationResponse = await verifyOtp(data);
@@ -633,45 +631,16 @@ const LoginSignup: React.FC = () => {
           </OverlayContainer>
         )}
       </Container>
-      <Verification
-        open={showCodeVerification}
-        onClose={() => setShowCodeVerification(false)}
-      />
       <ForgotPassword
         open={showForgotPassword}
         onClose={() => setShowForgotPassword(false)}
       />
 
-      {/* Verification Modal */}
-      <Dialog
+      <Verification
         open={openVerification}
-        onClose={() => setOpenVerification(false)}>
-        <DialogTitle>Phone Number Verification</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Enter Verification Code"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setOpenVerification(false)}
-            color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleVerify}
-            color="primary">
-            Verify
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onClose={() => setOpenVerification(false)}
+        onSubmit={handleVerify}
+      />
 
       <Snackbar
         open={openSnackbar}
