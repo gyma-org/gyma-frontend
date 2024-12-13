@@ -10,15 +10,10 @@ import {
   styled,
   useTheme,
   useMediaQuery,
-  TextField,
   FormControl,
   FormHelperText,
   Snackbar,
   Alert,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
@@ -292,8 +287,7 @@ const LoginSignup: React.FC = () => {
     try {
       const response = await loginUser(values); // call loginUser from context
       if (response.status_code === 400) {
-        // If status code is 400, navigate to the phone verification page
-        router.push("/phoneverification");
+        setOpenVerification(true);
       } else {
         console.log("Logged in!");
       }
