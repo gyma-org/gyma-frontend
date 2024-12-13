@@ -16,11 +16,7 @@ interface PersianCalendarProps {
   currentMonth: moment.Moment;
 }
 
-const PersianCalendar: React.FC<PersianCalendarProps> = ({
-  handleSetDate,
-  sessions,
-  currentMonth,
-}) => {
+const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessions, currentMonth }) => {
   const [currentDate, setCurrentDate] = useState(moment().locale("fa"));
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(null);
 
@@ -30,13 +26,13 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({
 
   const convertToJalaliWithIntl = (date: string): string => {
     const d = new Date(date); // Convert string to Date object
-    return new Intl.DateTimeFormat('fa-IR').format(d); // Format to Jalali
+    return new Intl.DateTimeFormat("fa-IR").format(d); // Format to Jalali
   };
 
   const getSessionForDate = (date: string) => {
     const jalaliDate = convertToJalaliWithIntl(date);
     console.log("Searching for session on date: ", jalaliDate);
-    const session = sessions.find(session => {
+    const session = sessions.find((session) => {
       const sessionJalaliDate = convertToJalaliWithIntl(session.date);
       return sessionJalaliDate === jalaliDate;
     });
@@ -69,8 +65,8 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({
 
       const isAvailable = !!session;
       const isSelected = selectedDate?.isSame(dayMoment);
-      const isBeforeToday = dayMoment.isBefore(today, 'day'); // Check if it's before today
-      const isToday = dayMoment.isSame(today, 'day'); // Check if it's today
+      const isBeforeToday = dayMoment.isBefore(today, "day"); // Check if it's before today
+      const isToday = dayMoment.isSame(today, "day"); // Check if it's today
 
       const isDisabled = isBeforeToday || !isAvailable; // Disable if before today or no session
 
@@ -95,10 +91,11 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({
               setSelectedDate(dayMoment);
             }}
             disabled={isDisabled} // Disable the button for unavailable days
-            data-session-id={session?.id}
-          >
+            data-session-id={session?.id}>
             <div className={styles.dayNumber}>{day}</div>
-            {isAvailable && <div className={styles.price}>{session?.price} تومان</div>}
+            {isAvailable && (
+              <div className={styles.price}>{session.price ? Math.floor(session?.price / 1000) : ""}</div>
+            )}
           </button>
         </div>
       );
@@ -117,16 +114,14 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({
         <button
           onClick={() => {
             setCurrentDate(currentDate.clone().subtract(1, "month"));
-          }}
-        >
+          }}>
           ماه قبل
         </button>
         <h3>{monthYear}</h3>
         <button
           onClick={() => {
             setCurrentDate(currentDate.clone().add(1, "month"));
-          }}
-        >
+          }}>
           ماه بعد
         </button>
       </div>
@@ -142,21 +137,20 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({
       <button
         className={styles.reserveButton}
         onClick={() => {
-            if (selectedDate) {
-                const session = getSessionForDate(selectedDate.format("YYYY-MM-DD"));
-                if (session) {
-                  console.log("Selected Date: ", selectedDate.format("jYYYY/jMM/jDD"));
-                  console.log("Session Start Time: ", session.start_time); // Corrected property name
-                  console.log("Session End Time: ", session.end_time); // Corrected property name
-                  handleSetDate({
-                    date: selectedDate.format("jYYYY/jMM/jDD"),
-                    startTime: session.start_time, // Use `start_time`
-                    endTime: session.end_time, // Use `end_time`
-                  });
-                }
-              }
+          if (selectedDate) {
+            const session = getSessionForDate(selectedDate.format("YYYY-MM-DD"));
+            if (session) {
+              console.log("Selected Date: ", selectedDate.format("jYYYY/jMM/jDD"));
+              console.log("Session Start Time: ", session.start_time); // Corrected property name
+              console.log("Session End Time: ", session.end_time); // Corrected property name
+              handleSetDate({
+                date: selectedDate.format("jYYYY/jMM/jDD"),
+                startTime: session.start_time, // Use `start_time`
+                endTime: session.end_time, // Use `end_time`
+              });
+            }
           }
-        }
+        }}
         disabled={!selectedDate}>
         انتخاب ساعت
       </button>

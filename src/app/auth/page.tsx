@@ -270,7 +270,6 @@ const LoginSignup: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [signIn, toggle] = useState(true);
-  const router = useRouter();
 
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
