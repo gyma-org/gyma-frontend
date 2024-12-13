@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid2";
 // import Mapp from "@/components/map/index"
 import Search from "../Search";
 import dynamic from "next/dynamic";
-import NearbyGyms from "../map/NearbyGym";
 
 const Mapp = dynamic(() => import("@/components/map/index"), { ssr: false });
 
@@ -34,7 +33,6 @@ const Map = () => {
       <Grid mt={12}>
         <Mapp />
       </Grid>
-      <NearbyGyms />
     </Grid>
   );
 };

@@ -5,6 +5,7 @@ import "./index.css";
 import React, { useEffect, useRef, useState } from "react";
 import { fetchNearbyGyms, Gym } from "../../api/gymMap";
 import FloatCard from "../FloatCard";
+import NearbyGyms from "./NearbyGym";
 
 const Mapp = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -163,6 +164,8 @@ const Mapp = () => {
           bgcolor: "#fff",
           zIndex: 100,
           border: "2px solid #FF9100",
+          width: "100%",
+          maxWidth: 440,
         }}>
         <Typography align="center">{"باشگاه های نزدیک"}</Typography>
         {gyms.map((gym) => (
@@ -172,10 +175,15 @@ const Mapp = () => {
             address={gym.address}
             city={gym.city}
             profile={gym.profile}
-            onClick={() => handleGymClick(gym.id)}  // Pass the click handler
+            onClick={() => handleGymClick(gym.id)} // Pass the click handler
+            maxWidth={400}
           />
         ))}
       </Box>
+      <NearbyGyms
+        gyms={gyms}
+        handleGymClick={handleGymClick}
+      />
       <Box
         sx={{ width: "100%", height: "78vh" }}
         ref={mapContainerRef}

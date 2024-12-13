@@ -4,6 +4,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { NearMe } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
+import FloatCard from "../FloatCard";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -18,7 +19,13 @@ const Transition = React.forwardRef(function Transition(
   );
 });
 
-export default function NearbyGyms() {
+export default function NearbyGyms({
+  gyms,
+  handleGymClick,
+}: {
+  gyms: any[];
+  handleGymClick: (gym_id: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [dialogHeight, setDialogHeight] = useState("50vh");
   const startY = useRef(0);
@@ -95,6 +102,7 @@ export default function NearbyGyms() {
               height: 5,
               borderRadius: 5,
               mt: 1.5,
+              mb: 1,
               width: 40,
               mx: "auto",
               bgcolor: "#88f",
@@ -103,6 +111,22 @@ export default function NearbyGyms() {
               alignItems: "end",
             }}
           />
+          <Typography
+            align="center"
+            my={1}>
+            {"باشگاه های نزدیک"}
+          </Typography>
+          {gyms.map((gym) => (
+            <FloatCard
+              key={gym.gym_code}
+              name={gym.name}
+              address={gym.address}
+              city={gym.city}
+              profile={gym.profile}
+              onClick={() => handleGymClick(gym.id)}
+              maxWidth={400}
+            />
+          ))}
         </div>
       </Dialog>
     </div>
