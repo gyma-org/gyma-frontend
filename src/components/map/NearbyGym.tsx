@@ -25,18 +25,13 @@ export default function NearbyGyms({
   gyms: any[];
   handleGymClick: (gym_id: string) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const [dialogHeight, setDialogHeight] = useState("50vh");
+  const [dialogHeight, setDialogHeight] = useState(14);
   const startY = useRef(0);
-  const isFullScreen = dialogHeight === "100vh";
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const touchMoveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleClose = () => {
-    setOpen(false);
-    setDialogHeight("50vh");
+    setDialogHeight(14);
   };
 
   const handleTouchStart = (event: React.TouchEvent) => {
@@ -47,18 +42,29 @@ export default function NearbyGyms({
     const currentY = event.touches[0].clientY;
     const diffY = startY.current - currentY;
 
-    if (diffY > 50 && !isFullScreen) {
-      setDialogHeight("100vh");
-    } else if (diffY < -50 && isFullScreen) {
-      setDialogHeight("50vh");
-    } else if (diffY < -100 && !isFullScreen) {
-      handleClose();
-    }
+    if (touchMoveTimeout.current) return;
+
+    touchMoveTimeout.current = setTimeout(() => {
+      if (diffY > 200 && !isFullScreen) {
+        setDialogHeight(100);
+        setIsFullScreen(true);
+      } else if (diffY > 50 && !isFullScreen) {
+        setDialogHeight(dialogHeight === 50 ? 100 : 50);
+      } else if (diffY < -50) {
+        if (dialogHeight === 100) {
+          setDialogHeight(50);
+          setIsFullScreen(false);
+        } else {
+          setDialogHeight(14);
+        }
+      }
+      touchMoveTimeout.current = null;
+    }, 100);
   };
 
   return (
     <div>
-      <Button
+      {/* <Button
         sx={{
           display: { xs: "flex", md: "none" },
           position: "fixed",
@@ -74,11 +80,19 @@ export default function NearbyGyms({
         color="primary"
         onClick={handleClickOpen}>
         <Typography>{"باشگاه های اطراف"}</Typography>
-      </Button>
+      </Button> */}
       <Dialog
-        open={open}
+        open={true}
         TransitionComponent={Transition}
         onClose={handleClose}
+        sx={{
+          "& .MuiPaper-root": {
+            zIndex: 1000,
+          },
+        }}
+        BackdropProps={{
+          style: { backgroundColor: "transparent" },
+        }}
         PaperProps={{
           sx: {
             position: "fixed",
@@ -86,9 +100,9 @@ export default function NearbyGyms({
             margin: 0,
             width: "100%",
             maxWidth: "100%",
-            height: dialogHeight,
-            borderTopLeftRadius: dialogHeight === "50vh" ? 24 : 0,
-            borderTopRightRadius: dialogHeight === "50vh" ? 24 : 0,
+            height: { xs: `${dialogHeight}vh`, md: 0 },
+            borderTopLeftRadius: dialogHeight <= 50 ? 24 : 0,
+            borderTopRightRadius: dialogHeight <= 50 ? 24 : 0,
             transition: "height 0.3s ease",
           },
         }}>

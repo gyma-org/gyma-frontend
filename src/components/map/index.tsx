@@ -21,6 +21,9 @@ const Mapp = () => {
         mapRef.current = new mapboxgl.Map({
           mapType: mapboxgl.Map.mapTypes.neshanVector,
           container: mapContainerRef.current!,
+          mapTypeControllerOptions: {
+            show: false,
+          },
           zoom: 12,
           pitch: 0,
           center: [userLon, userLat],
