@@ -31,7 +31,6 @@ interface UserCredentials {
 }
 
 interface UserData {
-  username: string;
   email: string;
   first_name: string;
   last_name: string;
@@ -68,8 +67,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     try {
       console.log("Refreshing token...");
-      const response = await fetch('https://backuser.gyma.app/auth/token-refresh/', {
-        method: 'POST',
+      const response = await fetch("https://backuser.gyma.app/auth/token-refresh/", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -98,11 +97,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const registerUser = async (userData: RegisterValues) => {
     const formData = new FormData();
 
-    // Append text fields
-    formData.append("username", userData.username);
     formData.append("first_name", userData.first_name);
     formData.append("last_name", userData.last_name);
-    formData.append("email", userData.email);
     formData.append("phone_number", userData.phone_number);
     formData.append("password", userData.password);
     formData.append("sex", userData.sex);
@@ -120,8 +116,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (userData.banner) formData.append("banner", userData.banner);
     console.log(formData);
     try {
-      const response = await fetch('https://backuser.gyma.app/user/add-user/', {
-        method: 'POST',
+      const response = await fetch("https://backuser.gyma.app/user/add-user/", {
+        method: "POST",
         body: formData, // Use FormData directly as body
       });
 
@@ -139,8 +135,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const loginUser = async (credentials: UserCredentials) => {
     try {
-      const response = await fetch('https://backuser.gyma.app/auth/login/', {
-        method: 'POST',
+      const response = await fetch("https://backuser.gyma.app/auth/login/", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -181,12 +177,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const REFRESH_INTERVAL = 1000 * 60 * 2; // 2 minutes
     let interval: NodeJS.Timeout;
     let secondsPassed = 0; // Initialize counter for seconds
-  
+
     if (authTokens) {
       interval = setInterval(() => {
         secondsPassed += 1; // Increment the seconds counter
         console.log(`Seconds passed: ${secondsPassed}`);
-  
+
         // Check if it's time to refresh the token
         if (secondsPassed >= REFRESH_INTERVAL / 1000) {
           console.log("Refreshing token now...");
@@ -195,7 +191,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       }, 1000); // Set interval to 1 second
     }
-  
+
     return () => clearInterval(interval); // Cleanup on unmount
   }, [authTokens, updateToken]);
 
