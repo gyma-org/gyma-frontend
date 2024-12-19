@@ -46,8 +46,6 @@ interface PanelProps {
 }
 
 interface SignUpValues {
-  username: string;
-  email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -61,10 +59,8 @@ interface SignInValues {
 }
 
 const SignUpSchema = Yup.object().shape({
-  username: Yup.string().required("نام کاربری ضروری است."),
   first_name: Yup.string().required("نام ضروری است."),
   last_name: Yup.string().required("نام ضروری است."),
-  email: Yup.string().email("ایمیل معتبر نیست.").required("ایمیل ضروری است."),
   phone_number: Yup.string().required("شماره تلفن ضرروی است."),
   password: Yup.string().min(6, "حداقل ۶ کاراکتر.").required("کلمه عبور ضروری است."),
   confirmPassword: Yup.string()
@@ -75,7 +71,7 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const SignInSchema = Yup.object().shape({
-  identifier: Yup.string().required("نام کاربری ضروری است."),
+  identifier: Yup.string().required("وارد کردن شماره تلفن اجباری است."),
   password: Yup.string().required("کلمه عبور ضروری است."),
 });
 
@@ -361,11 +357,9 @@ const LoginSignup: React.FC = () => {
           signingIn={signIn}>
           <Formik
             initialValues={{
-              username: "",
               first_name: "",
               last_name: "",
               phone_number: "",
-              email: "",
               sex: "",
               password: "",
               confirmPassword: "",
@@ -375,17 +369,6 @@ const LoginSignup: React.FC = () => {
             {({ handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <Title>{"ساخت حساب کاربری"}</Title>
-                <Field
-                  as={Input}
-                  name="username"
-                  type="text"
-                  placeholder="نام کاربری"
-                />
-                <ErrorMessage
-                  name="username"
-                  component="div">
-                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
-                </ErrorMessage>
 
                 <Field
                   as={Input}
@@ -407,18 +390,6 @@ const LoginSignup: React.FC = () => {
                 />
                 <ErrorMessage
                   name="last_name"
-                  component="div">
-                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
-                </ErrorMessage>
-
-                <Field
-                  as={Input}
-                  name="email"
-                  type="email"
-                  placeholder="ایمیل"
-                />
-                <ErrorMessage
-                  name="email"
                   component="div">
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
@@ -552,8 +523,13 @@ const LoginSignup: React.FC = () => {
                   as={Input}
                   name="identifier"
                   type="text"
-                  placeholder="ایمیل"
+                  placeholder="شماره تلفن"
                 />
+                <ErrorMessage
+                  name="identifier"
+                  component="div">
+                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
+                </ErrorMessage>
                 <Field
                   as={Input}
                   name="password"
@@ -579,8 +555,8 @@ const LoginSignup: React.FC = () => {
           <Form>
             <Title>{"ورود"}</Title>
             <Input
-              type="email"
-              placeholder="ایمیل"
+              type="text"
+              placeholder="شماره تلقن"
             />
             <Input
               type="password"

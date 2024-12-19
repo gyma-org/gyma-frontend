@@ -1,22 +1,8 @@
 import React, { useState, useRef } from "react";
-import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import FloatCard from "../FloatCard";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children: React.ReactElement },
-  ref: React.Ref<unknown>
-) {
-  return (
-    <Slide
-      direction="up"
-      ref={ref}
-      {...props}
-    />
-  );
-});
 
 export default function NearbyGyms({
   gyms,
@@ -63,48 +49,21 @@ export default function NearbyGyms({
   };
 
   return (
-    <div>
-      {/* <Button
+    <>
+      <Box
         sx={{
-          display: { xs: "flex", md: "none" },
+          zIndex: 1000,
           position: "fixed",
-          bottom: 120,
-          py: 1,
-          px: 2,
-          borderRadius: 4,
-          left: 16,
-          zIndex: 9,
-          bgcolor: "#fff",
-          boxShadow: "0px 0px 5px #00000060",
-        }}
-        color="primary"
-        onClick={handleClickOpen}>
-        <Typography>{"باشگاه های اطراف"}</Typography>
-      </Button> */}
-      <Dialog
-        open={true}
-        TransitionComponent={Transition}
-        onClose={handleClose}
-        sx={{
-          "& .MuiPaper-root": {
-            zIndex: 1000,
-          },
-        }}
-        BackdropProps={{
-          style: { backgroundColor: "transparent" },
-        }}
-        PaperProps={{
-          sx: {
-            position: "fixed",
-            bottom: 0,
-            margin: 0,
-            width: "100%",
-            maxWidth: "100%",
-            height: { xs: `${dialogHeight}vh`, md: 0 },
-            borderTopLeftRadius: dialogHeight <= 50 ? 24 : 0,
-            borderTopRightRadius: dialogHeight <= 50 ? 24 : 0,
-            transition: "height 0.3s ease",
-          },
+          bottom: 0,
+          right: 0,
+          left: 0,
+          margin: 0,
+          backgroundColor: "white",
+          height: { xs: `${dialogHeight}vh`, md: 0 },
+          borderTopLeftRadius: dialogHeight <= 50 ? 24 : 0,
+          borderTopRightRadius: dialogHeight <= 50 ? 24 : 0,
+          transition: "height 0.3s ease",
+          boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
         }}>
         <div
           style={{
@@ -144,7 +103,7 @@ export default function NearbyGyms({
             />
           ))}
         </div>
-      </Dialog>
-    </div>
+      </Box>
+    </>
   );
 }

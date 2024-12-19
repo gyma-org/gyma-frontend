@@ -9,7 +9,6 @@ import { API_BASE_URL } from "@/config";
 
 import "./swiper.css";
 
-// Define the props interface for TypeScript
 interface ImageSliderProps {
   images: string[];
 }
@@ -24,8 +23,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
         aspectRatio: "4 / 3",
         borderRadius: { xs: 0, md: 8 },
         overflow: "hidden",
-      }}
-    >
+      }}>
       <Swiper
         style={{
           position: "absolute",
@@ -37,14 +35,13 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
         grabCursor={true}
         effect={"creative"}
         modules={[Pagination]}
-        className="mySwiper"
-      >
+        className="mySwiper">
         {images.map((image, index) => (
           <SwiperSlide key={index}>
             <CardMedia
               component="img"
-              sx={{ width: "100%", height: "100%", objectFit: "cover", aspectRatio: "4 / 3" }}
-              image={`${API_BASE_URL}/medias/gallery/${image}`} // Use the full URL or CDN path
+              sx={{ width: "100%", objectFit: "cover", aspectRatio: "4 / 3" }}
+              image={`${API_BASE_URL}/medias/gallery/${image}`}
               title={`Gallery Image ${index + 1}`}
             />
           </SwiperSlide>
