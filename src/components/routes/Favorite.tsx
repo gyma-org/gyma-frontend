@@ -4,35 +4,35 @@ import Grid from "@mui/material/Grid2";
 import Search from "../Search";
 import FloatCard from "../FloatCard";
 import { API_BASE_URL } from "@/config";
-import { listGyms } from '../../api/gymList';
-import { GymListResponse } from '../../types/gymList'; 
-import Link from 'next/link'; 
+import { listGyms } from "../../api/gymList";
+import { GymListResponse } from "../../types/gymList";
+import Link from "next/link";
 
 const GALLERY_BASE_URL = `${API_BASE_URL}/medias/media/gallery/`;
 const PROFILE_BASE_URL = `${API_BASE_URL}/medias/profile/`;
 
 const Favorite = () => {
-  const [gyms, setGyms] = useState<GymListResponse[]>([]);  // State to store the list of gyms
-  const [loading, setLoading] = useState<boolean>(true);  // Loading state
-  const [error, setError] = useState<string | null>(null);  // Error state
+  const [gyms, setGyms] = useState<GymListResponse[]>([]); // State to store the list of gyms
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
   useEffect(() => {
     const fetchGyms = async () => {
       try {
-        const data = await listGyms();  // Call the API function
-        setGyms(data);  // Update state with the fetched gyms
+        const data = await listGyms(); // Call the API function
+        setGyms(data); // Update state with the fetched gyms
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message);  // Set the error message
+          setError(err.message); // Set the error message
         } else {
-          setError("An unknown error occurred");  // Fallback for unknown errors
+          setError("An unknown error occurred"); // Fallback for unknown errors
         }
       } finally {
-        setLoading(false);  // Stop loading
+        setLoading(false); // Stop loading
       }
     };
 
-    fetchGyms();  // Fetch gyms on component mount
+    fetchGyms(); // Fetch gyms on component mount
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -44,7 +44,9 @@ const Favorite = () => {
   };
 
   return (
-    <Grid mx="auto" sx={{ p: 1, direction: "rtl" }}>
+    <Grid
+      mx="auto"
+      sx={{ p: 1, direction: "rtl" }}>
       {/* Search component */}
       <Box
         sx={{
@@ -68,13 +70,13 @@ const Favorite = () => {
         container
         spacing={3}>
         {gyms.map((gym) => (
-          <FloatCard 
+          <FloatCard
             key={gym.id}
             name={gym.name}
             address={gym.address}
             city={gym.city}
             profile={gym.profile ? `${gym.profile}` : undefined}
-            onClick={() => handleGymClick(gym.id)}  // Pass the click handler
+            onClick={() => handleGymClick(gym.id)}
           />
         ))}
       </Grid>

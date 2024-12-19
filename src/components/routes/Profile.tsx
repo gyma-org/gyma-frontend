@@ -109,8 +109,8 @@ const Profile = () => {
         // Ensure there's an access token
         try {
           // Fetch profile and wallet in parallel
-          const profileData = await fetchProfile(authTokens.access, logoutUser); 
-          const walletData = await fetchUserWallet(authTokens.access);  // Get wallet data
+          const profileData = await fetchProfile(authTokens.access, logoutUser);
+          const walletData = await fetchUserWallet(authTokens.access); // Get wallet data
 
           setProfile(profileData);
           setWallet(walletData);
@@ -154,20 +154,20 @@ const Profile = () => {
       try {
         setLoading(true);
         const formDataToSend = new FormData();
-  
+
         formDataToSend.append("first_name", formData.first_name || UserProfile?.first_name);
         formDataToSend.append("last_name", formData.last_name || UserProfile?.last_name);
-  
+
         if (formData.avatar) {
           formDataToSend.append("profile", formData.avatar); // Attach the file if present
         }
-  
+
         if (formData.coverImage) {
           formDataToSend.append("banner", formData.coverImage); // Attach banner only if available
         }
-  
+
         const response = await updateUserProfile(authTokens.access, formDataToSend);
-  
+
         if (response.success) {
           setError(null);
           await fetchProfile(authTokens.access, logoutUser); // Refresh profile data
@@ -195,7 +195,7 @@ const Profile = () => {
       }));
     }
   };
-  
+
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {

@@ -13,10 +13,9 @@ interface GymSession {
 interface PersianCalendarProps {
   handleSetDate: (data: { date: string; startTime: string; endTime: string }) => void;
   sessions: GymSession[];
-  currentMonth: moment.Moment;
 }
 
-const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessions, currentMonth }) => {
+const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessions }) => {
   const [currentDate, setCurrentDate] = useState(moment().locale("fa"));
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(null);
 
@@ -152,7 +151,7 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessio
           }
         }}
         disabled={!selectedDate}>
-        انتخاب ساعت
+        انتخاب
       </button>
     </div>
   );

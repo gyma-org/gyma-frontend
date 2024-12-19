@@ -361,11 +361,9 @@ const LoginSignup: React.FC = () => {
           signingIn={signIn}>
           <Formik
             initialValues={{
-              username: "",
               first_name: "",
               last_name: "",
               phone_number: "",
-              email: "",
               sex: "",
               password: "",
               confirmPassword: "",
@@ -375,18 +373,6 @@ const LoginSignup: React.FC = () => {
             {({ handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <Title>{"ساخت حساب کاربری"}</Title>
-                <Field
-                  as={Input}
-                  name="username"
-                  type="text"
-                  placeholder="نام کاربری"
-                />
-                <ErrorMessage
-                  name="username"
-                  component="div">
-                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
-                </ErrorMessage>
-
                 <Field
                   as={Input}
                   name="first_name"
@@ -407,18 +393,6 @@ const LoginSignup: React.FC = () => {
                 />
                 <ErrorMessage
                   name="last_name"
-                  component="div">
-                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
-                </ErrorMessage>
-
-                <Field
-                  as={Input}
-                  name="email"
-                  type="email"
-                  placeholder="ایمیل"
-                />
-                <ErrorMessage
-                  name="email"
                   component="div">
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
@@ -552,8 +526,13 @@ const LoginSignup: React.FC = () => {
                   as={Input}
                   name="identifier"
                   type="text"
-                  placeholder="ایمیل"
+                  placeholder="شماره تلفن"
                 />
+                <ErrorMessage
+                  name="identifier"
+                  component="div">
+                  {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
+                </ErrorMessage>
                 <Field
                   as={Input}
                   name="password"
@@ -579,8 +558,8 @@ const LoginSignup: React.FC = () => {
           <Form>
             <Title>{"ورود"}</Title>
             <Input
-              type="email"
-              placeholder="ایمیل"
+              type="text"
+              placeholder="شماره تلفن"
             />
             <Input
               type="password"
