@@ -1,0 +1,139 @@
+name: Deploy Next.js Frontend
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on changes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Install SSH private key for access to production server
+      - name: Install SSH private key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY_FRONT_VPS }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 5.75.207.205 >> ~/.ssh/known_hosts
+
+      # Step 3: Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t nextjs-frontend .
+
+      # Step 4: Save the Docker image as a tarball
+      - name: Save Docker image as tarball
+        run: |
+          docker save nextjs-frontend:latest -o nextjs-frontend.tar
+
+      # Transfer the image tarball to the production server
+      - name: Transfer image tarball to production server
+        run: |
+          scp nextjs-frontend.tar root@5.75.207.205:/root/
+
+      # Verify tarball presence on production server
+      - name: Verify tarball on production server
+        run: |
+          ssh root@5.75.207.205 "ls -lh /root/nextjs-frontend.tar"
+
+      # Load the Docker image on the production server
+      - name: Load Docker image on production server
+        run: |
+          ssh root@5.75.207.205 "docker load -i /root/nextjs-frontend.tar"
+
+      # Step 7: Stop and remove existing Docker containers if they exist
+      - name: Stop and remove existing Docker containers
+        run: |
+          ssh root@5.75.207.205 "
+          containers=(nextjs-frontend certbot)
+          for container in \${containers[@]}; do
+            if [ \$(docker ps -q -f name=\$container) ]; then
+              echo \"Stopping and removing container: \$container\"
+              docker stop \$container
+              docker rm \$container
+            elif [ \$(docker ps -aq -f name=\$container) ]; then
+              echo \"Removing stopped container: \$container\"
+              docker rm \$container
+            fi
+          done"
+
+      # # Step 9: Transfer Nginx configuration to the server
+      # - name: Transfer Nginx configuration
+      #   run: |
+      #     ssh root@5.75.207.205 'if [ ! -f /etc/nginx/sites-available/gyma ]; then
+      #       scp nginx_gyma.app.conf root@5.75.207.205:/etc/nginx/sites-available/gyma;
+      #     else
+      #       echo "Nginx configuration already exists. Skipping transfer.";
+      #     fi'
+
+      - name: Generate SSL Certificate
+        run: |
+          ssh root@5.75.207.205 <<'EOF'
+            DOMAIN="gyma.app"
+            if [ ! -f /etc/letsencrypt/live/$DOMAIN/fullchain.pem ]; then
+              echo "Stopping Nginx to generate SSL certificate..."
+              systemctl stop nginx
+              certbot certonly --standalone -d $DOMAIN --non-interactive --agree-tos -m gymadevelopment@gmail.com
+              echo "Starting Nginx after SSL certificate generation..."
+              systemctl start nginx
+            else
+              echo "SSL certificate already exists for $DOMAIN."
+            fi
+          EOF
+
+      # Step 10: Link the configuration in sites-enabled
+      # - name: Enable Nginx configuration
+      #   run: |
+      #     ssh root@5.75.207.205 '
+      #       # Check if the default configuration exists and remove it
+      #       if [ -L /etc/nginx/sites-enabled/default ]; then
+      #         echo "Removing default configuration from sites-enabled.";
+      #         unlink /etc/nginx/sites-enabled/default;
+      #       fi
+
+      #       # Check if the gyma configuration already exists in sites-enabled
+      #       if [ ! -L /etc/nginx/sites-enabled/gyma ]; then
+      #         echo "Linking gyma configuration to sites-enabled.";
+      #         ln -s /etc/nginx/sites-available/gyma /etc/nginx/sites-enabled/;
+      #       else
+      #         echo "Gyma configuration already exists in sites-enabled. Skipping link creation.";
+      #       fi';
+
+      # Step 11: Test Nginx configuration
+      - name: Test Nginx configuration
+        run: |
+          ssh root@5.75.207.205 "nginx -t"
+      
+      # Step 12: Reload or start Nginx
+      - name: Reload or start Nginx
+        run: |
+          ssh root@5.75.207.205 '
+            # Check if Nginx is running
+            if systemctl is-active --quiet nginx; then
+              echo "Nginx is running. Reloading Nginx configuration.";
+              systemctl reload nginx;
+            else
+              echo "Nginx is not running. Starting Nginx.";
+              systemctl start nginx;
+            fi'
+      
+      # Step 13: Deploy Docker container with docker-compose
+      - name: Deploy Docker container with docker-compose
+        run: |
+          # Copy the docker-compose.yml to the server
+          scp docker-compose.yml root@5.75.207.205:/root/
+      
+          ssh root@5.75.207.205 <<'EOF'
+            cd /root
+            # Ensure the container is stopped and removed before bringing up the new one
+            docker-compose down
+      
+            # Start the container with docker-compose
+            docker-compose up -d
+          EOF
