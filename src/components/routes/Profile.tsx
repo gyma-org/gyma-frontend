@@ -154,24 +154,29 @@ const Profile = () => {
       try {
         setLoading(true);
         const formDataToSend = new FormData();
+  
         formDataToSend.append("first_name", formData.first_name || UserProfile?.first_name);
         formDataToSend.append("last_name", formData.last_name || UserProfile?.last_name);
-        formDataToSend.append("profile", formData.avatar); // Send the actual file, not just the URL
-        formDataToSend.append("banner", formData.coverImage);
-        console.log();
-
+  
+        if (formData.avatar) {
+          formDataToSend.append("profile", formData.avatar); // Attach the file if present
+        }
+  
+        if (formData.coverImage) {
+          formDataToSend.append("banner", formData.coverImage); // Attach banner only if available
+        }
+  
         const response = await updateUserProfile(authTokens.access, formDataToSend);
-
+  
         if (response.success) {
-        setError(null); // Clear any previous errors
-        // Refresh the profile to display the updated values
-        await fetchProfile(authTokens.access, logoutUser); // Fetch the latest profile data from the server
+          setError(null);
+          await fetchProfile(authTokens.access, logoutUser); // Refresh profile data
         }
       } catch (error: any) {
         setError(error.message);
       } finally {
         setLoading(false);
-        setEditMode(false); // Exit edit mode after save
+        setEditMode(false); // Exit edit mode
       }
     } else {
       setError("No access token found");
@@ -181,16 +186,25 @@ const Profile = () => {
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file); // Check if file is correctly captured
     if (file) {
-      setFormData({ ...formData, avatar: file });
+      const previewUrlAvatar = URL.createObjectURL(file);
+      setFormData((prevFormData: any) => ({
+        ...prevFormData, // Retain other fields
+        avatar: file, // Update avatar field
+        previewAvatar: previewUrlAvatar, // Add avatar preview
+      }));
     }
   };
-
+  
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData({ ...formData, coverImage: file });
+      const previewUrlCover = URL.createObjectURL(file);
+      setFormData((prevFormData: any) => ({
+        ...prevFormData, // Retain other fields
+        coverImage: file, // Update cover image field
+        previewCover: previewUrlCover, // Add cover image preview
+      }));
     }
   };
 
@@ -243,7 +257,7 @@ const Profile = () => {
               position: "relative",
             }}
             image={
-              formData.coverImage ||
+              formData.previewCover ||
               `${BANNER_BASE_URL}${UserProfile?.banner}` ||
               "https://placehold.co/600x400/F95A00/F95A00"
             }>
@@ -259,7 +273,8 @@ const Profile = () => {
                   height: { xs: 24, md: 30 },
                   width: { xs: 24, md: 30 },
                   bgcolor: "#F95A00",
-                }}>
+                }}
+                component="label">
                 <Edit sx={{ fontSize: { xs: 12, md: 20 }, color: "#fff" }} />
                 <input
                   type="file"
@@ -282,7 +297,7 @@ const Profile = () => {
               top: "-60%",
             }}
             src={
-              formData.avatar ||
+              formData.previewAvatar ||
               `${PROFILE_BASE_URL}${UserProfile?.profile}` ||
               "https://placehold.co/600x400/F95A00/F95A00"
             }

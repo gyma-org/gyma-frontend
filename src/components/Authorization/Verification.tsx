@@ -60,10 +60,10 @@ const Title = styled(Typography)({
 });
 
 const CodeSchema = Yup.object().shape({
-  code: Yup.string().required("وارد کردن کد الزامی است.").min(6, "کد نباید کمتر از 6 رقم باشد."),
+  code: Yup.string().required("وارد کردن کد الزامی است.").min(5, "کد نباید کمتر از 5 رقم باشد."),
 });
 
-export default function Verification({ open, onClose, onSubmit, length = 6 }: ForgotPasswordProps) {
+export default function Verification({ open, onClose, onSubmit, length = 5 }: ForgotPasswordProps) {
   const formik = useFormik({
     initialValues: {
       code: "",
