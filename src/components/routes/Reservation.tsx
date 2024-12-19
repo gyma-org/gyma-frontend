@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Checkbox, Container, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useAuth } from "@/context/AuthContext";
 import { getBookingList } from "@/api/Booked";
-import { booked, BookingListResponse } from '@/types/booked';
+import { booked } from "@/types/booked";
 import Search from "../Search";
 import ReservationCard from "../ReservationCard";
 
 const Reservation = () => {
-  
   const [showOutDate, setShowOutDate] = useState(false);
   const [currentBookings, setCurrentBookings] = useState<booked[]>([]);
   const [pastBookings, setPastBookings] = useState<booked[]>([]);
@@ -23,7 +22,7 @@ const Reservation = () => {
           console.error("Auth tokens are null. Cannot fetch bookings.");
           return;
         }
-  
+
         setLoading(true);
         const data = await getBookingList(authTokens.access, logoutUser);
         setCurrentBookings(data.current_bookings);
@@ -34,7 +33,7 @@ const Reservation = () => {
         setLoading(false);
       }
     };
-  
+
     fetchBookings();
   }, [authTokens, logoutUser]);
 
@@ -226,7 +225,10 @@ const Reservation = () => {
         }}>
         {/* Map through currentBookings and pass each booking to ReservationCard */}
         {currentBookings.map((booking) => (
-          <ReservationCard key={booking.confirmation_code} booking={booking} />
+          <ReservationCard
+            key={booking.confirmation_code}
+            booking={booking}
+          />
         ))}
       </Grid>
       {showOutDate && (
@@ -250,7 +252,11 @@ const Reservation = () => {
             }}>
             {/* Map through pastBookings and pass each booking to ReservationCard */}
             {pastBookings.map((booking) => (
-              <ReservationCard key={booking.confirmation_code} booking={booking} outdate={true} />
+              <ReservationCard
+                key={booking.confirmation_code}
+                booking={booking}
+                outdate={true}
+              />
             ))}
           </Grid>
         </>
