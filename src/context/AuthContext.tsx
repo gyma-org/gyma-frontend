@@ -1,8 +1,8 @@
-"use client";
-import { createContext, useState, useContext, useEffect, useCallback, ReactNode } from "react";
-import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
-import { RegisterValues } from "@/types/RegisterValues";
+'use client'
+import { createContext, useState, useContext, useEffect, useCallback, ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
+import { jwtDecode } from 'jwt-decode';
+import { RegisterValues } from '@/types/RegisterValues';
 
 interface AuthTokens {
   access: string;
@@ -18,9 +18,7 @@ interface AuthContextType {
   user: User | null;
   authTokens: AuthTokens | null;
   registerUser: (userData: RegisterValues) => Promise<{ success: boolean; errors?: any }>;
-  loginUser: (
-    credentials: UserCredentials
-  ) => Promise<{ success: boolean; status_code: number; message: string }>;
+  loginUser: (credentials: UserCredentials) => Promise<{ success: boolean; status_code: number; message: string }>;
   logoutUser: () => void;
   loading: boolean;
 }
@@ -31,6 +29,7 @@ interface UserCredentials {
 }
 
 interface UserData {
+  username: string;
   email: string;
   first_name: string;
   last_name: string;
@@ -52,11 +51,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
 
   const logoutUser = useCallback(() => {
-    localStorage.removeItem("authTokens");
-    document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    localStorage.removeItem('authTokens');
+    document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     setAuthTokens(null);
     setUser(null);
-    router.push("/auth");
+    router.push('/auth');
   }, [router]);
 
   const updateToken = useCallback(async () => {
@@ -67,10 +66,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     try {
       console.log("Refreshing token...");
-      const response = await fetch("https://backuser.gyma.app/auth/token-refresh/", {
-        method: "POST",
+      const response = await fetch('https://backuser.gyma.app/auth/token-refresh/', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ refresh: authTokens.refresh }),
       });
@@ -79,15 +78,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (response.ok) {
         setAuthTokens(data);
         setUser(jwtDecode<User>(data.access));
-        localStorage.setItem("authTokens", JSON.stringify(data));
-        document.cookie = `auth_token=${data.access}; path=/; max-age=${
-          60 * 60 * 24 * 7
-        }; SameSite=Strict; Secure`;
+        localStorage.setItem('authTokens', JSON.stringify(data));
+        document.cookie = `auth_token=${data.access}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Strict; Secure`;
       } else {
         logoutUser();
       }
     } catch (error) {
-      console.error("Token refresh error:", error);
+      console.error('Token refresh error:', error);
       logoutUser();
     } finally {
       setLoading(false);
@@ -95,15 +92,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [authTokens, logoutUser]);
 
   const registerUser = async (userData: RegisterValues) => {
+
     const formData = new FormData();
 
+    // Append text fields
+    formData.append("username", userData.username);
     formData.append("first_name", userData.first_name);
     formData.append("last_name", userData.last_name);
+    formData.append("email", userData.email);
     formData.append("phone_number", userData.phone_number);
     formData.append("password", userData.password);
     formData.append("sex", userData.sex);
-    console.log(formData);
-
+    console.log(formData)
+    
     formData.forEach((value, key) => {
       console.log(`${key}: ${value}`);
     });
@@ -114,10 +115,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Append files if provided
     if (userData.profile) formData.append("profile", userData.profile);
     if (userData.banner) formData.append("banner", userData.banner);
-    console.log(formData);
+    console.log(formData)
     try {
-      const response = await fetch("https://backuser.gyma.app/user/add-user/", {
-        method: "POST",
+      const response = await fetch('https://backuser.gyma.app/user/add-user/', {
+        method: 'POST',
         body: formData, // Use FormData directly as body
       });
 
@@ -128,17 +129,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return { success: false, errors: data };
       }
     } catch (error) {
-      console.error("Registration error:", error);
-      return { success: false, errors: { non_field_errors: ["An unexpected error occurred"] } };
+      console.error('Registration error:', error);
+      return { success: false, errors: { non_field_errors: ['An unexpected error occurred'] } };
     }
   };
 
   const loginUser = async (credentials: UserCredentials) => {
     try {
-      const response = await fetch("https://backuser.gyma.app/auth/login/", {
-        method: "POST",
+      const response = await fetch('https://backuser.gyma.app/auth/login/', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
       });
@@ -148,23 +149,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (response.ok) {
         setAuthTokens(data);
         setUser(jwtDecode<User>(data.access));
-        localStorage.setItem("authTokens", JSON.stringify(data));
-        document.cookie = `auth_token=${data.access}; path=/; max-age=${
-          60 * 60 * 24 * 7
-        }; SameSite=Strict; Secure`;
-        router.push("/");
-        return { success: true, status_code: response.status, message: "Login successful" }; // success response
+        localStorage.setItem('authTokens', JSON.stringify(data));
+        document.cookie = `auth_token=${data.access}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Strict; Secure`;
+        router.push('/');
+        return { success: true, status_code: response.status, message: 'Login successful' }; // success response
       } else {
-        return { success: false, status_code: response.status, message: data.detail || "Login failed" }; // error response
+        return { success: false, status_code: response.status, message: data.detail || 'Login failed' }; // error response
       }
     } catch (error: any) {
-      console.error("Login error:", error);
-      return { success: false, status_code: 500, message: error.message || "An unexpected error occurred" }; // error response
+      console.error('Login error:', error);
+      return { success: false, status_code: 500, message: error.message || 'An unexpected error occurred' }; // error response
     }
   };
 
   useEffect(() => {
-    const storedTokens = localStorage.getItem("authTokens");
+    const storedTokens = localStorage.getItem('authTokens');
     if (storedTokens) {
       const tokens = JSON.parse(storedTokens);
       setAuthTokens(tokens);
@@ -177,12 +176,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const REFRESH_INTERVAL = 1000 * 60 * 2; // 2 minutes
     let interval: NodeJS.Timeout;
     let secondsPassed = 0; // Initialize counter for seconds
-
+  
     if (authTokens) {
       interval = setInterval(() => {
         secondsPassed += 1; // Increment the seconds counter
         console.log(`Seconds passed: ${secondsPassed}`);
-
+  
         // Check if it's time to refresh the token
         if (secondsPassed >= REFRESH_INTERVAL / 1000) {
           console.log("Refreshing token now...");
@@ -191,7 +190,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       }, 1000); // Set interval to 1 second
     }
-
+  
     return () => clearInterval(interval); // Cleanup on unmount
   }, [authTokens, updateToken]);
 
@@ -210,7 +209,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

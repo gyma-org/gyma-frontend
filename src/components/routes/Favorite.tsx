@@ -73,7 +73,7 @@ const Favorite = () => {
             name={gym.name}
             address={gym.address}
             city={gym.city}
-            profile={gym.profile ? `${PROFILE_BASE_URL}${gym.profile}` : undefined}
+            profile={gym.profile ? `${gym.profile}` : undefined}
             onClick={() => handleGymClick(gym.id)}  // Pass the click handler
           />
         ))}

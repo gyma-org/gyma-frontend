@@ -1,12 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Checkbox, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-
+import { useAuth } from "@/context/AuthContext";
+import { getBookingList } from "@/api/Booked";
+import { booked, BookingListResponse } from '@/types/booked';
 import Search from "../Search";
 import ReservationCard from "../ReservationCard";
 
 const Reservation = () => {
+  
   const [showOutDate, setShowOutDate] = useState(false);
+  const [currentBookings, setCurrentBookings] = useState<booked[]>([]);
+  const [pastBookings, setPastBookings] = useState<booked[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { authTokens, logoutUser } = useAuth();
+
+  // Fetch bookings on component mount
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        if (!authTokens) {
+          console.error("Auth tokens are null. Cannot fetch bookings.");
+          return;
+        }
+  
+        setLoading(true);
+        const data = await getBookingList(authTokens.access, logoutUser);
+        setCurrentBookings(data.current_bookings);
+        setPastBookings(data.past_bookings);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchBookings();
+  }, [authTokens, logoutUser]);
+
   return (
     <Grid
       mx="auto"
@@ -193,7 +224,10 @@ const Reservation = () => {
           mx: "auto",
           justifyContent: { xs: "center", md: "space-between" },
         }}>
-        <ReservationCard />
+        {/* Map through currentBookings and pass each booking to ReservationCard */}
+        {currentBookings.map((booking) => (
+          <ReservationCard key={booking.confirmation_code} booking={booking} />
+        ))}
       </Grid>
       {showOutDate && (
         <>
@@ -214,10 +248,10 @@ const Reservation = () => {
               mx: "auto",
               justifyContent: { xs: "center", md: "space-between" },
             }}>
-            <ReservationCard outdate={true} />
-            <ReservationCard outdate={true} />
-            <ReservationCard outdate={true} />
-            <ReservationCard outdate={true} />
+            {/* Map through pastBookings and pass each booking to ReservationCard */}
+            {pastBookings.map((booking) => (
+              <ReservationCard key={booking.confirmation_code} booking={booking} outdate={true} />
+            ))}
           </Grid>
         </>
       )}
