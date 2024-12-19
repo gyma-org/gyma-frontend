@@ -1,15 +1,19 @@
 import React from "react";
-
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { API_BASE_URL } from "@/config";
+import { Avatar, Box, IconButton, Typography, CardMedia } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-
+import { booked } from '../../types/booked';
 import styles from "./Card.module.css";
+import moment from 'moment';
+import 'moment-jalaali';
 
 interface ReservationCardIFace {
   outdate?: boolean;
+  booking: booked;
 }
 
-const ReservationCard = ({ outdate = false }: ReservationCardIFace) => {
+const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => {
+  const persianDate = moment(booking.booking_date).local().format('jYYYY/jMM/jDD');
   return (
     <Grid
       display="flex"
@@ -29,11 +33,11 @@ const ReservationCard = ({ outdate = false }: ReservationCardIFace) => {
               <Typography fontSize="12px">{"تاریخ رزرو"}</Typography>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
-              <Typography sx={{ fontWeight: 500, fontSize: "15px" }}>{"رضا بوذرجمهری"}</Typography>
-              <Typography sx={{ color: "#4785ff", fontWeight: 500, fontSize: "15px" }}>
-                {"16:00 - 1403/04/04"}
-              </Typography>
-            </Box>
+            <Typography sx={{ fontWeight: 500, fontSize: "15px" }}>{booking.user_name}</Typography>
+            <Typography sx={{ color: "#4785ff", fontWeight: 500, fontSize: "15px" }}>
+              {`${persianDate} - ${booking.use_date}`}
+            </Typography>
+          </Box>
           </Box>
           <Box
             sx={{
@@ -50,14 +54,14 @@ const ReservationCard = ({ outdate = false }: ReservationCardIFace) => {
                   fontSize: 14,
                   fontWeight: 700,
                 }}>
-                {"باشگاه خوبای اون خیابونه"}
+                {booking.gym_name}
               </Typography>
               <Typography
                 sx={{
                   fontSize: 12,
                   fontWeight: 500,
                 }}>
-                {"آدرس : ....."}
+                {booking.gym_address}
               </Typography>
               <Box
                 display="flex"
@@ -68,7 +72,7 @@ const ReservationCard = ({ outdate = false }: ReservationCardIFace) => {
                   variant="h6"
                   fontWeight="bold"
                   color="black">
-                  {"۱۲۴۰۰۰"}
+                  {booking.final_price}
                 </Typography>
                 <svg
                   width="18"
@@ -83,8 +87,8 @@ const ReservationCard = ({ outdate = false }: ReservationCardIFace) => {
                 </svg>
               </Box>
             </Box>
-            <Avatar
-              variant="rounded"
+            <CardMedia
+              image={`${API_BASE_URL}/medias/profile/${booking.profile}`}
               sx={{
                 height: 60,
                 width: 60,
