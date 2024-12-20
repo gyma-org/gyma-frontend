@@ -3,7 +3,7 @@ name: Deploy Next.js Frontend
 on:
   push:
     branches:
-      - main  # Trigger deployment on changes to the main branch
+      - release  # Trigger deployment on changes to the main branch
 
 jobs:
   deploy:
