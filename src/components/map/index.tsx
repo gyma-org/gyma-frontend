@@ -1,6 +1,6 @@
 import mapboxgl from "@neshan-maps-platform/mapbox-gl";
 import { Marker } from "mapbox-gl";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import "./index.css";
 import React, { useEffect, useRef, useState } from "react";
 import { fetchNearbyGyms, Gym } from "../../api/gymMap";
@@ -14,45 +14,45 @@ const Mapp = () => {
   const [userMarker, setUserMarker] = useState<Marker | null>(null); // State to store user marker
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null); // Store clicked location
   const [gymMarkers, setGymMarkers] = useState<Marker[]>([]); // Track gym markers to remove them
+  const [locationDenied, setLocationDenied] = useState(false);
+
+  const initializeMap = (userLat: number, userLon: number) => {
+    mapRef.current = new mapboxgl.Map({
+      mapType: mapboxgl.Map.mapTypes.neshanVector,
+      container: mapContainerRef.current!,
+      mapTypeControllerOptions: {
+        show: false,
+      },
+      zoom: 12,
+      pitch: 0,
+      center: [userLon, userLat],
+      minZoom: 2,
+      maxZoom: 21,
+      trackResize: true,
+      mapKey: "web.659fc6316bb54b98b27499e3972b294e",
+      poi: false,
+      traffic: false,
+    }) as unknown as mapboxgl.Map;
+
+    mapRef.current.on("load", () => {
+      fetchNearbyGyms(userLat, userLon)
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setGyms(data);
+            addMarkersToMap(data);
+          } else {
+            console.error("Invalid gym data format:", data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching gyms:", error);
+        });
+    });
+    handleClickOnMap();
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined" && mapContainerRef.current) {
-      const initializeMap = (userLat: number, userLon: number) => {
-        mapRef.current = new mapboxgl.Map({
-          mapType: mapboxgl.Map.mapTypes.neshanVector,
-          container: mapContainerRef.current!,
-          mapTypeControllerOptions: {
-            show: false,
-          },
-          zoom: 12,
-          pitch: 0,
-          center: [userLon, userLat],
-          minZoom: 2,
-          maxZoom: 21,
-          trackResize: true,
-          mapKey: "web.659fc6316bb54b98b27499e3972b294e",
-          poi: false,
-          traffic: false,
-        }) as unknown as mapboxgl.Map;
-
-        mapRef.current.on("load", () => {
-          fetchNearbyGyms(userLat, userLon)
-            .then((data) => {
-              console.log("Fetched gym data:", data);
-              if (Array.isArray(data)) {
-                setGyms(data);
-                addMarkersToMap(data);
-              } else {
-                console.error("Invalid gym data format:", data);
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching gyms:", error);
-            });
-        });
-        handleClickOnMap();
-      };
-
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -62,16 +62,17 @@ const Mapp = () => {
           },
           (error) => {
             console.error("Error getting location:", error);
-            const defaultLat = 35.6892;
+            setLocationDenied(true); // Show the location denied box
+            const defaultLat = 35.6892; // Tehran
             const defaultLon = 51.389;
             initializeMap(defaultLat, defaultLon);
           }
         );
       } else {
         console.error("Geolocation is not supported by this browser.");
-        // Fallback to a default location if geolocation is not supported
-        const defaultLat = 35.6892; // Example: Tehran's latitude
-        const defaultLon = 51.389; // Example: Tehran's longitude
+        setLocationDenied(true); // Show the location denied box
+        const defaultLat = 35.6892; // Tehran
+        const defaultLon = 51.389;
         initializeMap(defaultLat, defaultLon);
       }
     }
@@ -114,6 +115,21 @@ const Mapp = () => {
     }
   };
 
+  const handleRequestLocation = () => {
+    setLocationDenied(false); // Hide the box before re-requesting
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+        initializeMap(userLat, userLon);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        setLocationDenied(true); // Show the box again if denied
+      }
+    );
+  };
+
   const clearGymMarkers = () => {
     // Remove previous gym markers
     gymMarkers.forEach((marker) => marker.remove());
@@ -154,6 +170,30 @@ const Mapp = () => {
 
   return (
     <Box sx={{ display: "flex", height: "100%", position: "relative" }}>
+      {locationDenied && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            bgcolor: "#fff",
+            borderRadius: "8px",
+            p: 2,
+            zIndex: 200,
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            سرویس موقعیت یابی توسط شما غیر فعال شده است.
+          </Typography>
+          <Button variant="outlined" color="primary" onClick={handleRequestLocation} sx={{ mr: 1 }}>
+            فعال سازی سرویس موقعیت یابی
+          </Button>
+          <Button variant="text" color="secondary" onClick={() => setLocationDenied(false)}>
+            بستن
+          </Button>
+        </Box>
+      )}
       <Box
         sx={{
           display: { xs: "none", md: "flex" },
