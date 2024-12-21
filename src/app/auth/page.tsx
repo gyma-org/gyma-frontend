@@ -46,8 +46,8 @@ interface PanelProps {
 }
 
 interface SignUpValues {
-  username: string;
-  email: string;
+  // username: string;
+  // email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -61,10 +61,10 @@ interface SignInValues {
 }
 
 const SignUpSchema = Yup.object().shape({
-  username: Yup.string().required("نام کاربری ضروری است."),
+  // username: Yup.string().required("نام کاربری ضروری است."),
   first_name: Yup.string().required("نام ضروری است."),
   last_name: Yup.string().required("نام ضروری است."),
-  email: Yup.string().email("ایمیل معتبر نیست.").required("ایمیل ضروری است."),
+  // email: Yup.string().email("ایمیل معتبر نیست.").required("ایمیل ضروری است."),
   phone_number: Yup.string().required("شماره تلفن ضرروی است."),
   password: Yup.string().min(6, "حداقل ۶ کاراکتر.").required("کلمه عبور ضروری است."),
   confirmPassword: Yup.string()
