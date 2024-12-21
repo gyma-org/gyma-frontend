@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { API_BASE_URL } from "@/config";
 import { bookGymSession } from "@/api/Booking";
 import moment from "jalali-moment";
+import { EditCalendarRounded } from "@mui/icons-material";
 
 interface SpecificationsProps {
   gymName: string;
@@ -38,7 +39,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
   // sex
 }) => {
   const [showReservationModal, setShowReservationModal] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(moment().format("jYYYY/jMM/jDD"));
   const [sessions, setSessions] = useState<any[]>([]);
   const { authTokens } = useAuth();
 
@@ -304,32 +305,93 @@ const Specifications: React.FC<SpecificationsProps> = ({
               pb: selectedDate ? 1 : 0,
               pl: { xs: 1, md: 4 },
             }}>
-            <Button
-              variant="contained"
-              onClick={() => setShowReservationModal(true)}
+            <Box
               sx={{
-                borderRadius: "16px",
-                bgcolor: "#F95A00",
-                px: { xs: 4, md: 7 },
-                py: { xs: 1, md: 1.5 },
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
               }}>
-              <Typography
-                noWrap
-                variant="h5"
-                fontWeight="bold"
+              <Box sx={{ display: "flex" }}>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    selectedDate !== moment().format("jYYYY/jMM/jDD")
+                      ? setSelectedDate(moment().format("jYYYY/jMM/jDD"))
+                      : ""
+                  }
+                  sx={{
+                    borderRadius: "0 16px 16px 0",
+                    bgcolor: selectedDate === moment().format("jYYYY/jMM/jDD") ? "#F95A00" : "#bbb",
+                    px: { xs: 1, md: 3 },
+                    py: { xs: 1, md: 1.5 },
+                  }}>
+                  <Typography
+                    noWrap
+                    variant="h5"
+                    fontWeight="bold"
+                    sx={{
+                      fontSize: { xs: 16, md: 24 },
+                    }}>
+                    {/* {selectedDate === moment().format("jYYYY/jMM/jDD")
+                      ? "امروز"
+                      : selectedDate || "انتخاب تاریخ"} */}
+                    {"امروز"}
+                  </Typography>
+                </Button>
+                <Button
+                  variant="contained"
+                  // disabled={selectedDate === moment().add(1, "days").format("jYYYY/jMM/jDD")}
+                  onClick={() =>
+                    selectedDate !== moment().add(1, "days").format("jYYYY/jMM/jDD")
+                      ? setSelectedDate(moment().add(1, "days").format("jYYYY/jMM/jDD"))
+                      : ""
+                  }
+                  sx={{
+                    borderRadius: "16px 0 0 16px",
+                    bgcolor:
+                      selectedDate === moment().add(1, "days").format("jYYYY/jMM/jDD") ? "#F95A00" : "#ccc",
+                    px: { xs: 1, md: 3 },
+                    py: { xs: 1, md: 1.5 },
+                  }}>
+                  <Typography
+                    noWrap
+                    variant="h5"
+                    fontWeight="bold"
+                    sx={{
+                      fontSize: { xs: 16, md: 24 },
+                    }}>
+                    {"فردا"}
+                  </Typography>
+                </Button>
+              </Box>
+
+              {/* {selectedDate === moment().format("jYYYY/jMM/jDD") && ( */}
+              <Button
+                variant="contained"
+                onClick={() => setShowReservationModal(true)}
                 sx={{
-                  fontSize: { xs: 20, md: 24 },
+                  borderRadius: "16px",
+                  bgcolor: "#fff",
+                  color: "#F95A00",
+                  boxShadow: 0,
+                  border: "2px solid #F95A00",
+                  px: { xs: 0, md: 1 },
+                  py: { xs: 1, md: 1.5 },
                 }}>
-                {selectedDate || "انتخاب تاریخ"}
-              </Typography>
-            </Button>
+                <EditCalendarRounded fontSize="small" />
+              </Button>
+              {/* )} */}
+            </Box>
             <Box
               display="flex"
               alignItems="center"
               gap={1}>
               <Typography
                 variant="h4"
-                fontWeight="bold">
+                fontWeight="bold"
+                sx={{
+                  fontSize: { xs: 24, md: 34 },
+                }}>
                 {"۱۲۴۰۰۰"}
               </Typography>
               <svg
