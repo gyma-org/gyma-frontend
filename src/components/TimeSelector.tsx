@@ -7,6 +7,7 @@ interface TimeSlot {
   start_time: string;
   end_time: string;
   price: number;
+  // is_full: boolean;
 }
 
 const TimeSelector = ({
@@ -68,7 +69,7 @@ const TimeSelector = ({
             mt: 1, // Add spacing between buttons
           }}
           onClick={() => setSelectedTimeID(time.id)}
-          disabled={time.is_full}> {/* Assuming 'is_full' indicates full sessions */}
+          > {/* Assuming 'is_full' indicates full sessions */}
           <Typography>
             {time.start_time} - {time.end_time}
           </Typography>
