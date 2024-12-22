@@ -12,8 +12,10 @@ export async function bookGymSession(scheduleCode: number, token: string): Promi
     });
 
     if (!response.ok) {
-        throw new Error("Failed to initiate gateway request");
-      }
+      const errorResponse = await response.json();
+      // Throw a new error with the message from the response
+      throw new Error(errorResponse?.message || "Failed to initiate gateway request");
+    }
     
       const result = await response.json(); // The response is an HTML string
       return result; // Return the HTML string directly

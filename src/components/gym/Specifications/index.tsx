@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, Button, Rating, Typography } from "@mui/material";
+import { Box, Button, Rating, Typography, Snackbar, Alert } from "@mui/material";
 import ReservationModal from "@/components/ReservationModal";
 import TimeSelector from "@/components/TimeSelector";
 import { useAuth } from "@/context/AuthContext";
@@ -43,6 +43,11 @@ const Specifications: React.FC<SpecificationsProps> = ({
   const [sessions, setSessions] = useState<any[]>([]);
   const { authTokens } = useAuth();
 
+  // State for the temporarely Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+
   const fetchGymSessions = async (gymId: string, gymSex: string, date: string): Promise<any[]> => {
     try {
       const response = await fetch(
@@ -77,27 +82,45 @@ const Specifications: React.FC<SpecificationsProps> = ({
       id: session.id,
       start_time: session.start_time,
       end_time: session.end_time,
+      price: session.price,
     }));
 
-  const handleSetTime = async (selectedTime: { id: number; start_time: string; end_time: string }) => {
+  const handleSetTime = async (selectedTime: { id: number; start_time: string; end_time: string; price:number; }) => {
     if (!authTokens) {
       console.error("User is not authenticated.");
       return;
     }
 
     try {
-      // Call bookGymSession to get the redirect URL
       const result = await bookGymSession(selectedTime.id, authTokens.access);
-
-      // Check if the result contains a redirect URL
+    
       if (typeof result === "object" && result.redirect_url) {
-        // Open the redirect URL in a new window
+        // Redirect the user
         window.open(result.redirect_url, "_blank");
+    
+        // Display success message
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Session booked successfully!");
       } else {
+        // Handle unexpected response
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Unexpected response. Please try again.");
         console.error("Unexpected response from bookGymSession:", result);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error booking gym session:", error);
+    
+      let errorMessage = "Failed to book session. Please try again."; // Default message
+    
+      // Check if the error is an instance of Error
+      if (error instanceof Error) {
+        errorMessage = error.message; // The message from the error (e.g., API message)
+      }
+    
+      setSnackbarSeverity("error");
+      setSnackbarMessage(errorMessage); // Set the message to be displayed in the Snackbar
+    } finally {
+      setOpenSnackbar(true); // Show the Snackbar
     }
   };
 
@@ -423,6 +446,20 @@ const Specifications: React.FC<SpecificationsProps> = ({
         gymId={gymId}
         gymSex="men"
       />
+
+    <Snackbar
+      open={openSnackbar}
+      autoHideDuration={6000} // Close after 6 seconds
+      onClose={() => setOpenSnackbar(false)}
+      >
+      <Alert
+        onClose={() => setOpenSnackbar(false)}
+        severity={snackbarSeverity}
+        sx={{ width: "100%" }}
+      >
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
     </>
   );
 };

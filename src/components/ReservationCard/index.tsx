@@ -4,8 +4,7 @@ import { Avatar, Box, IconButton, Typography, CardMedia } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { booked } from '../../types/booked';
 import styles from "./Card.module.css";
-import moment from 'moment';
-import 'moment-jalaali';
+import moment from "jalali-moment";
 
 interface ReservationCardIFace {
   outdate?: boolean;
@@ -13,7 +12,13 @@ interface ReservationCardIFace {
 }
 
 const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => {
-  const persianDate = moment(booking.booking_date).local().format('jYYYY/jMM/jDD');
+
+  const convertToJalali = (gregorianDate: string | Date): string => {
+    return moment(gregorianDate, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD');
+  };
+
+  const persianDate = convertToJalali(booking.gym_session_date);
+  console.log(persianDate);
   return (
     <Grid
       display="flex"
@@ -35,7 +40,7 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
             <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
             <Typography sx={{ fontWeight: 500, fontSize: "15px" }}>{booking.user_name}</Typography>
             <Typography sx={{ color: "#4785ff", fontWeight: 500, fontSize: "15px" }}>
-              {`${persianDate} - ${booking.use_date}`}
+              {`${persianDate} - ${booking.start_time} تا ${booking.end_time}`}
             </Typography>
           </Box>
           </Box>
@@ -134,7 +139,7 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
                     width: 40,
                   }}
                 />
-                <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>{"145278"}</Typography>
+                <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>{booking.confirmation_code}</Typography>
                 <IconButton
                   sx={{
                     bgcolor: "#F4F4F4",
