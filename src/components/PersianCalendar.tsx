@@ -11,7 +11,7 @@ interface GymSession {
 }
 
 interface PersianCalendarProps {
-  handleSetDate: (data: { date: string; startTime: string; endTime: string }) => void;
+  handleSetDate: (data: { date: string; startTime: string; endTime: string; price: number; }) => void;
   sessions: GymSession[];
 }
 
@@ -21,11 +21,11 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessio
 
   useEffect(() => {
     console.log("Sessions: ", sessions);
+    console.log("Today's Jalali Date:", moment().locale("fa").format("jYYYY/jMM/jDD"));
   }, [sessions]);
 
   const convertToJalaliWithIntl = (date: string): string => {
-    const d = new Date(date); // Convert string to Date object
-    return new Intl.DateTimeFormat("fa-IR").format(d); // Format to Jalali
+    return moment(date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD");
   };
 
   const getSessionForDate = (date: string) => {
@@ -146,6 +146,7 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessio
                 date: selectedDate.format("jYYYY/jMM/jDD"),
                 startTime: session.start_time, // Use `start_time`
                 endTime: session.end_time, // Use `end_time`
+                price: session.price
               });
             }
           }

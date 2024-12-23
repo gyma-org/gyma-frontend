@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, Button, Rating, Typography } from "@mui/material";
+import { Box, Button, Rating, Typography, Snackbar, Alert } from "@mui/material";
 import ReservationModal from "@/components/ReservationModal";
 import TimeSelector from "@/components/TimeSelector";
 import { useAuth } from "@/context/AuthContext";
 import { API_BASE_URL } from "@/config";
 import { bookGymSession } from "@/api/Booking";
 import moment from "jalali-moment";
+import { EditCalendarRounded } from "@mui/icons-material";
 
 interface SpecificationsProps {
   gymName: string;
@@ -38,9 +39,14 @@ const Specifications: React.FC<SpecificationsProps> = ({
   // sex
 }) => {
   const [showReservationModal, setShowReservationModal] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(moment().format("jYYYY/jMM/jDD"));
   const [sessions, setSessions] = useState<any[]>([]);
-  const { authTokens } = useAuth();
+  const { authTokens, logoutUser } = useAuth();
+
+  // State for the temporarely Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
   const fetchGymSessions = async (gymId: string, gymSex: string, date: string): Promise<any[]> => {
     try {
@@ -76,27 +82,46 @@ const Specifications: React.FC<SpecificationsProps> = ({
       id: session.id,
       start_time: session.start_time,
       end_time: session.end_time,
+      price: session.price,
     }));
 
-  const handleSetTime = async (selectedTime: { id: number; start_time: string; end_time: string }) => {
+  const handleSetTime = async (selectedTime: { id: number; start_time: string; end_time: string; price:number; }) => {
     if (!authTokens) {
       console.error("User is not authenticated.");
+      logoutUser();
       return;
     }
 
     try {
-      // Call bookGymSession to get the redirect URL
-      const result = await bookGymSession(selectedTime.id, authTokens.access);
-
-      // Check if the result contains a redirect URL
+      const result = await bookGymSession(selectedTime.id, authTokens.access, logoutUser);
+    
       if (typeof result === "object" && result.redirect_url) {
-        // Open the redirect URL in a new window
+        // Redirect the user
         window.open(result.redirect_url, "_blank");
+    
+        // Display success message
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Session booked successfully!");
       } else {
+        // Handle unexpected response
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Unexpected response. Please try again.");
         console.error("Unexpected response from bookGymSession:", result);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error booking gym session:", error);
+    
+      let errorMessage = "Failed to book session. Please try again."; // Default message
+    
+      // Check if the error is an instance of Error
+      if (error instanceof Error) {
+        errorMessage = error.message; // The message from the error (e.g., API message)
+      }
+    
+      setSnackbarSeverity("error");
+      setSnackbarMessage(errorMessage); // Set the message to be displayed in the Snackbar
+    } finally {
+      setOpenSnackbar(true); // Show the Snackbar
     }
   };
 
@@ -304,32 +329,93 @@ const Specifications: React.FC<SpecificationsProps> = ({
               pb: selectedDate ? 1 : 0,
               pl: { xs: 1, md: 4 },
             }}>
-            <Button
-              variant="contained"
-              onClick={() => setShowReservationModal(true)}
+            <Box
               sx={{
-                borderRadius: "16px",
-                bgcolor: "#F95A00",
-                px: { xs: 4, md: 7 },
-                py: { xs: 1, md: 1.5 },
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
               }}>
-              <Typography
-                noWrap
-                variant="h5"
-                fontWeight="bold"
+              <Box sx={{ display: "flex" }}>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    selectedDate !== moment().format("jYYYY/jMM/jDD")
+                      ? setSelectedDate(moment().format("jYYYY/jMM/jDD"))
+                      : ""
+                  }
+                  sx={{
+                    borderRadius: "0 16px 16px 0",
+                    bgcolor: selectedDate === moment().format("jYYYY/jMM/jDD") ? "#F95A00" : "#bbb",
+                    px: { xs: 1, md: 3 },
+                    py: { xs: 1, md: 1.5 },
+                  }}>
+                  <Typography
+                    noWrap
+                    variant="h5"
+                    fontWeight="bold"
+                    sx={{
+                      fontSize: { xs: 16, md: 24 },
+                    }}>
+                    {/* {selectedDate === moment().format("jYYYY/jMM/jDD")
+                      ? "امروز"
+                      : selectedDate || "انتخاب تاریخ"} */}
+                    {"امروز"}
+                  </Typography>
+                </Button>
+                <Button
+                  variant="contained"
+                  // disabled={selectedDate === moment().add(1, "days").format("jYYYY/jMM/jDD")}
+                  onClick={() =>
+                    selectedDate !== moment().add(1, "days").format("jYYYY/jMM/jDD")
+                      ? setSelectedDate(moment().add(1, "days").format("jYYYY/jMM/jDD"))
+                      : ""
+                  }
+                  sx={{
+                    borderRadius: "16px 0 0 16px",
+                    bgcolor:
+                      selectedDate === moment().add(1, "days").format("jYYYY/jMM/jDD") ? "#F95A00" : "#ccc",
+                    px: { xs: 1, md: 3 },
+                    py: { xs: 1, md: 1.5 },
+                  }}>
+                  <Typography
+                    noWrap
+                    variant="h5"
+                    fontWeight="bold"
+                    sx={{
+                      fontSize: { xs: 16, md: 24 },
+                    }}>
+                    {"فردا"}
+                  </Typography>
+                </Button>
+              </Box>
+
+              {/* {selectedDate === moment().format("jYYYY/jMM/jDD") && ( */}
+              <Button
+                variant="contained"
+                onClick={() => setShowReservationModal(true)}
                 sx={{
-                  fontSize: { xs: 20, md: 24 },
+                  borderRadius: "16px",
+                  bgcolor: "#fff",
+                  color: "#F95A00",
+                  boxShadow: 0,
+                  border: "2px solid #F95A00",
+                  px: { xs: 0, md: 1 },
+                  py: { xs: 1, md: 1.5 },
                 }}>
-                {selectedDate || "انتخاب تاریخ"}
-              </Typography>
-            </Button>
+                <EditCalendarRounded fontSize="small" />
+              </Button>
+              {/* )} */}
+            </Box>
             <Box
               display="flex"
               alignItems="center"
               gap={1}>
               <Typography
                 variant="h4"
-                fontWeight="bold">
+                fontWeight="bold"
+                sx={{
+                  fontSize: { xs: 24, md: 34 },
+                }}>
                 {"۱۲۴۰۰۰"}
               </Typography>
               <svg
@@ -361,6 +447,20 @@ const Specifications: React.FC<SpecificationsProps> = ({
         gymId={gymId}
         gymSex="men"
       />
+
+    <Snackbar
+      open={openSnackbar}
+      autoHideDuration={6000} // Close after 6 seconds
+      onClose={() => setOpenSnackbar(false)}
+      >
+      <Alert
+        onClose={() => setOpenSnackbar(false)}
+        severity={snackbarSeverity}
+        sx={{ width: "100%" }}
+      >
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
     </>
   );
 };

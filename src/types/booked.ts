@@ -8,9 +8,12 @@ export interface booked {
     user_name: string;
     profile: string;
     final_price: number;
+    gym_session_date: string | Date;
     confirmation_code: string;
     used: boolean;
     use_date: string | null;
+    start_time: string;
+    end_time: string;
   }
   
   export interface BookingListResponse {

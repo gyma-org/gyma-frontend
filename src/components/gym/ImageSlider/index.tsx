@@ -22,6 +22,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
         width: "100%",
         aspectRatio: "4 / 3",
         borderRadius: { xs: 0, md: 8 },
+        pt: 1,
         overflow: "hidden",
       }}>
       <Swiper
@@ -40,7 +41,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           <SwiperSlide key={index}>
             <CardMedia
               component="img"
-              sx={{ width: "100%", objectFit: "cover", aspectRatio: "4 / 3" }}
+              sx={{ width: "100%", objectFit: "contain", aspectRatio: "4 / 3" }}
               image={`${API_BASE_URL}/medias/gallery/${image}`}
               title={`Gallery Image ${index + 1}`}
             />
