@@ -37,6 +37,8 @@ const Reservation = () => {
     fetchBookings();
   }, [authTokens, logoutUser]);
 
+  if (loading) return <Typography>Loading...</Typography>;
+
   return (
     <Grid
       mx="auto"

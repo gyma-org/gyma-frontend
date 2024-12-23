@@ -41,7 +41,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
   const [showReservationModal, setShowReservationModal] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(moment().format("jYYYY/jMM/jDD"));
   const [sessions, setSessions] = useState<any[]>([]);
-  const { authTokens } = useAuth();
+  const { authTokens, logoutUser } = useAuth();
 
   // State for the temporarely Snackbar
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -88,11 +88,12 @@ const Specifications: React.FC<SpecificationsProps> = ({
   const handleSetTime = async (selectedTime: { id: number; start_time: string; end_time: string; price:number; }) => {
     if (!authTokens) {
       console.error("User is not authenticated.");
+      logoutUser();
       return;
     }
 
     try {
-      const result = await bookGymSession(selectedTime.id, authTokens.access);
+      const result = await bookGymSession(selectedTime.id, authTokens.access, logoutUser);
     
       if (typeof result === "object" && result.redirect_url) {
         // Redirect the user
