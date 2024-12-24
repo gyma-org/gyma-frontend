@@ -54,18 +54,31 @@ const Profile = () => {
   const handleCloseModal = () => setOpenModal(false);
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = event.target.value.replace(/,/g, ""); // Remove commas if any
+    const inputElement = event.target;
+    const rawValue = inputElement.value.replace(/,/g, ""); // Remove commas
+  
+    // Check if the rawValue is a valid number
     if (rawValue === "" || isNaN(Number(rawValue))) {
       setAmount(""); // Clear the formatted value
-      setRawAmount(0); // Reset the raw numeric value to 0 or another default value
+      setRawAmount(0); // Reset the raw numeric value
       return;
     }
   
     const numericValue = Number(rawValue);
     const formattedValue = new Intl.NumberFormat().format(numericValue);
   
+    // Get the current cursor position before updating the value
+    const cursorPosition = inputElement.selectionStart ?? 0;
+  
+    // Update the state
     setAmount(formattedValue); // Display the formatted value
     setRawAmount(numericValue); // Store the raw numeric value
+  
+    // Restore the cursor position to the correct place
+    const newCursorPosition = cursorPosition + (formattedValue.length - rawValue.length);
+    setTimeout(() => {
+      inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
+    }, 0); // Use a timeout to apply after React's state updates
   };
 
   const handleAddBalance = async () => {
@@ -663,6 +676,10 @@ const Profile = () => {
             value={amount}
             onChange={handleAmountChange}
             type="text"
+            inputProps={{
+              inputMode: "numeric", // Ensures the numeric keypad is displayed
+              pattern: "[0-9]*",    // Limits input to digits only
+            }}
           />
           <Button
             variant="contained"
