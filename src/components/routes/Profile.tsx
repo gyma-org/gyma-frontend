@@ -53,26 +53,6 @@ const Profile = () => {
 
   const handleCloseModal = () => setOpenModal(false);
 
-  const numberToWords = (num: number): string => {
-    if (num === 0) return "صفر تومان";
-    if (num < 1000) return `${num} تومان`;
-  
-    const units = ["", "هزار", "میلیون", "میلیارد"];
-    let unitIndex = 0;
-    let result = "";
-  
-    while (num > 0) {
-      const part = num % 1000;
-      if (part > 0) {
-        result = `${part} ${units[unitIndex]} ${result}`.trim();
-      }
-      unitIndex++;
-      num = Math.floor(num / 1000);
-    }
-  
-    return result + " تومان";
-  };
-
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = event.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
 
@@ -690,8 +670,6 @@ const Profile = () => {
               pattern: "[0-9]*",    // Limits input to digits only
             }}
           />
-          {/* Display the converted value below the input */}
-          <p>{rawAmount > 0 ? numberToWords(rawAmount) : ""}</p>
           <Button
             variant="contained"
             color="primary"
