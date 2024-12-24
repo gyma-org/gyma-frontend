@@ -16,6 +16,7 @@ import {
   Alert,
   ToggleButtonGroup,
   ToggleButton,
+  CircularProgress,
 } from "@mui/material";
 import { Button as MuiButton, Container as MuiContainer } from "@mui/material";
 import { ErrorMessage, Field, Formik, FormikHelpers } from "formik";
@@ -46,8 +47,8 @@ interface PanelProps {
 }
 
 interface SignUpValues {
-  // username: string;
-  // email: string;
+  username: string;
+  email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -61,10 +62,10 @@ interface SignInValues {
 }
 
 const SignUpSchema = Yup.object().shape({
-  // username: Yup.string().required("نام کاربری ضروری است."),
+  username: Yup.string().required("نام کاربری ضروری است."),
   first_name: Yup.string().required("نام ضروری است."),
   last_name: Yup.string().required("نام ضروری است."),
-  // email: Yup.string().email("ایمیل معتبر نیست.").required("ایمیل ضروری است."),
+  email: Yup.string().email("ایمیل معتبر نیست.").required("ایمیل ضروری است."),
   phone_number: Yup.string().required("شماره تلفن ضرروی است."),
   password: Yup.string().min(6, "حداقل ۶ کاراکتر.").required("کلمه عبور ضروری است."),
   confirmPassword: Yup.string()
@@ -280,18 +281,27 @@ const LoginSignup: React.FC = () => {
   const [openVerification, setOpenVerification] = useState(false);
   const [userPhoneNumber, setUserPhoneNumber] = useState<string>(""); // Capture phone number here
 
+  const [loading, setLoading] = useState(false);
+
   const { registerUser, loginUser } = useAuth();
 
   const handleLogin = async (values: { identifier: string; password: string }) => {
+    setLoading(true); // Start loading
     try {
-      const response = await loginUser(values); // call loginUser from context
+      const response = await loginUser(values);
+      setLoading(false); // Stop loading
       if (response.status_code === 400) {
         setOpenVerification(true);
       } else {
-        console.log("Logged in!");
+        setSnackbarMessage("Login not successful!");
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
       }
     } catch (error) {
-      console.error("Login error:", error);
+      setLoading(false); // Stop loading
+      setSnackbarMessage("Login failed. Please try again.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     }
   };
 
@@ -500,10 +510,13 @@ const LoginSignup: React.FC = () => {
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
 
-                <Button
+                {/* <Button
                   fullWidth
                   type="submit">
                   {"ساخت حساب"}
+                </Button> */}
+                <Button fullWidth type="submit" disabled={loading}>
+                  {loading ? <CircularProgress size={20} color="inherit" /> : "ساخت حساب"}
                 </Button>
               </Form>
             )}
@@ -544,10 +557,8 @@ const LoginSignup: React.FC = () => {
                   component="div">
                   {(msg: string) => <span style={{ color: "red", fontSize: 10 }}>{msg}</span>}
                 </ErrorMessage>
-                <Button
-                  fullWidth
-                  type="submit">
-                  {"ورود"}
+                <Button fullWidth type="submit" disabled={loading}>
+                  {loading ? <CircularProgress size={20} color="inherit" /> : "ورود"}
                 </Button>
                 <Anchor onClick={() => setShowForgotPassword(true)}>
                   {"کلمه عبور خود را فراموش کردید؟"}
