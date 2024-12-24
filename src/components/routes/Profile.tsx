@@ -53,35 +53,42 @@ const Profile = () => {
 
   const handleCloseModal = () => setOpenModal(false);
 
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputElement = event.target;
-    const rawValue = inputElement.value.replace(/,/g, ""); // Remove commas
+  const numberToWords = (num: number): string => {
+    if (num === 0) return "صفر تومان";
+    if (num < 1000) return `${num} تومان`;
   
-    // Check if the rawValue is a valid number
+    const units = ["", "هزار", "میلیون", "میلیارد"];
+    let unitIndex = 0;
+    let result = "";
+  
+    while (num > 0) {
+      const part = num % 1000;
+      if (part > 0) {
+        result = `${part} ${units[unitIndex]} ${result}`.trim();
+      }
+      unitIndex++;
+      num = Math.floor(num / 1000);
+    }
+  
+    return result + " تومان";
+  };
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+  
+    // Check if the input is valid
     if (rawValue === "" || isNaN(Number(rawValue))) {
-      setAmount(""); // Clear the formatted value
+      setAmount(""); // Clear the input
       setRawAmount(0); // Reset the raw numeric value
       return;
     }
   
     const numericValue = Number(rawValue);
-    const formattedValue = new Intl.NumberFormat().format(numericValue);
-  
-    // Capture cursor position
-    const cursorPosition = inputElement.selectionStart ?? 0;
-  
-    // Calculate the new cursor position after adding commas
-    const rawCharsBeforeCursor = inputElement.value.slice(0, cursorPosition).replace(/,/g, "").length;
-    const newCursorPosition = formattedValue.slice(0, rawCharsBeforeCursor).length;
+    const wordValue = numberToWords(numericValue);
   
     // Update the state
-    setAmount(formattedValue); // Display the formatted value
+    setAmount(wordValue); // Display the value in words
     setRawAmount(numericValue); // Store the raw numeric value
-  
-    // Restore cursor position
-    setTimeout(() => {
-      inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
-    }, 0); // Ensure this runs after React renders the updates
   };
 
   const handleAddBalance = async () => {
