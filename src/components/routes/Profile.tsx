@@ -67,18 +67,21 @@ const Profile = () => {
     const numericValue = Number(rawValue);
     const formattedValue = new Intl.NumberFormat().format(numericValue);
   
-    // Get the current cursor position before updating the value
+    // Capture cursor position
     const cursorPosition = inputElement.selectionStart ?? 0;
+  
+    // Calculate the new cursor position after adding commas
+    const rawCharsBeforeCursor = inputElement.value.slice(0, cursorPosition).replace(/,/g, "").length;
+    const newCursorPosition = formattedValue.slice(0, rawCharsBeforeCursor).length;
   
     // Update the state
     setAmount(formattedValue); // Display the formatted value
     setRawAmount(numericValue); // Store the raw numeric value
   
-    // Restore the cursor position to the correct place
-    const newCursorPosition = cursorPosition + (formattedValue.length - rawValue.length);
+    // Restore cursor position
     setTimeout(() => {
       inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
-    }, 0); // Use a timeout to apply after React's state updates
+    }, 0); // Ensure this runs after React renders the updates
   };
 
   const handleAddBalance = async () => {
