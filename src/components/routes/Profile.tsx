@@ -55,9 +55,15 @@ const Profile = () => {
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = event.target.value.replace(/,/g, ""); // Remove commas if any
+    if (rawValue === "" || isNaN(Number(rawValue))) {
+      setAmount(""); // Clear the formatted value
+      setRawAmount(0); // Reset the raw numeric value to 0 or another default value
+      return;
+    }
+  
     const numericValue = Number(rawValue);
     const formattedValue = new Intl.NumberFormat().format(numericValue);
-
+  
     setAmount(formattedValue); // Display the formatted value
     setRawAmount(numericValue); // Store the raw numeric value
   };
