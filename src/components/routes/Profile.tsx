@@ -75,19 +75,18 @@ const Profile = () => {
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = event.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-  
+
     // Check if the input is valid
     if (rawValue === "" || isNaN(Number(rawValue))) {
       setAmount(""); // Clear the input
       setRawAmount(0); // Reset the raw numeric value
       return;
     }
-  
+
     const numericValue = Number(rawValue);
-    const wordValue = numberToWords(numericValue);
-  
+
     // Update the state
-    setAmount(wordValue); // Display the value in words
+    setAmount(rawValue); // Display the number in the input field
     setRawAmount(numericValue); // Store the raw numeric value
   };
 
@@ -691,6 +690,8 @@ const Profile = () => {
               pattern: "[0-9]*",    // Limits input to digits only
             }}
           />
+          {/* Display the converted value below the input */}
+          <p>{rawAmount > 0 ? numberToWords(rawAmount) : ""}</p>
           <Button
             variant="contained"
             color="primary"
