@@ -89,7 +89,7 @@ jobs:
 
       # Step 10: Link the configuration in sites-enabled
       # - name: Enable Nginx configuration
-      #   run: |
+      #   run: | 
       #     ssh root@5.75.207.205 '
       #       # Check if the default configuration exists and remove it
       #       if [ -L /etc/nginx/sites-enabled/default ]; then
