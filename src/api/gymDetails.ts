@@ -1,6 +1,6 @@
 import { GymDetails } from '../types/gymDetails';
 import { API_BASE_URL } from '../config';
-// export const API_BASE_URL = 'http://127.0.0.1:8000';
+// export const API_BASE_URL = 'http://127.0.0.1:8080';
 
 // Function to get gym details by gym code
 export const getGymDetails = async (gym_id: string): Promise<GymDetails | null> => {
