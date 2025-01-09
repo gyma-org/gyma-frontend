@@ -37,8 +37,8 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               <Typography fontSize="12px">{"تاریخ رزرو"}</Typography>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
-              <Typography sx={{ fontWeight: 500, fontSize: "15px" }}>{booking.user_name}</Typography>
-              <Typography sx={{ color: "#4785ff", fontWeight: 500, fontSize: "15px" }}>
+              <Typography sx={{ fontWeight: 500, fontSize: "12px" }}>{booking.user_name}</Typography>
+              <Typography sx={{ color: "#4785ff", fontWeight: 500, fontSize: "12px" }}>
                 {`${persianDate} - ${booking.start_time} تا ${booking.end_time}`}
               </Typography>
             </Box>
