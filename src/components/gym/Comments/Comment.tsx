@@ -38,7 +38,6 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
             sx={{
               fontWeight: 600,
               fontSize: { xs: 14, md: 20 },
-              mb: { xs: 1, md: 4 },
             }}>{`${writer} در ${moment(created_at).format("jYYYY/jMM/jDD")} گفته : `}</Typography>
           <Rating
             sx={{
@@ -51,6 +50,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
           <Typography
             variant="body2"
             sx={{
+              mt: { xs: 1, md: 3 },
               fontWeight: 600,
               fontSize: { xs: 10, md: 16 },
               color: "#838383",
