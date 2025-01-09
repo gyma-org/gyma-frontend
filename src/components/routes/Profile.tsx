@@ -54,17 +54,19 @@ const Profile = () => {
   const handleCloseModal = () => setOpenModal(false);
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = event.target.value.replace(/,/g, ""); // Remove commas if any
+    const rawValue = event.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+
+    // Check if the input is valid
     if (rawValue === "" || isNaN(Number(rawValue))) {
-      setAmount(""); // Clear the formatted value
-      setRawAmount(0); // Reset the raw numeric value to 0 or another default value
+      setAmount(""); // Clear the input
+      setRawAmount(0); // Reset the raw numeric value
       return;
     }
-  
+
     const numericValue = Number(rawValue);
-    const formattedValue = new Intl.NumberFormat().format(numericValue);
-  
-    setAmount(formattedValue); // Display the formatted value
+
+    // Update the state
+    setAmount(rawValue); // Display the number in the input field
     setRawAmount(numericValue); // Store the raw numeric value
   };
 
@@ -663,6 +665,10 @@ const Profile = () => {
             value={amount}
             onChange={handleAmountChange}
             type="text"
+            inputProps={{
+              inputMode: "numeric", // Ensures the numeric keypad is displayed
+              pattern: "[0-9]*",    // Limits input to digits only
+            }}
           />
           <Button
             variant="contained"
