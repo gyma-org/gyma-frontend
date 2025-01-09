@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { getCommentsView } from "@/api/CommentView";
-import { Typography, CircularProgress, Alert } from "@mui/material";
+import { Typography, CircularProgress, Alert, Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { CommentView, CommentData } from "@/types/CommentView";
 import Comment from "./Comment";
@@ -22,7 +22,7 @@ const Comments: React.FC<CommentProps> = ({ gymid }) => {
       setError(null);
       try {
         const data = await getCommentsView(gymid);
-        console.log(data?.comments)
+        console.log(data?.comments);
         setComments(data?.comments || []);
       } catch (err) {
         setError("Failed to load comments.");
@@ -36,7 +36,9 @@ const Comments: React.FC<CommentProps> = ({ gymid }) => {
 
   if (loading) {
     return (
-      <Grid size={12} sx={{ p: 2 }}>
+      <Grid
+        size={12}
+        sx={{ p: 2 }}>
         <CircularProgress />
       </Grid>
     );
@@ -44,7 +46,9 @@ const Comments: React.FC<CommentProps> = ({ gymid }) => {
 
   if (error) {
     return (
-      <Grid size={12} sx={{ p: 2 }}>
+      <Grid
+        size={12}
+        sx={{ p: 2 }}>
         <Alert severity="error">{error}</Alert>
       </Grid>
     );
@@ -56,27 +60,37 @@ const Comments: React.FC<CommentProps> = ({ gymid }) => {
       sx={{
         p: 2,
       }}>
-      <Typography variant="h5" fontWeight="bold" pb={3}>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        pb={3}>
         {"نظرات : "}
       </Typography>
       {comments.length > 0 ? (
         comments.map((comment) => (
           <div key={comment.comment.id}>
             {/* Render the comment */}
-            <Comment key={comment.comment.id} data={comment.comment} />
-            
-            {/* Render replies */}
+            <Comment
+              key={comment.comment.id}
+              data={comment.comment}
+              replies={comment.replies}
+            />
+
+            {/* Render replies
             {comment.replies && comment.replies.length > 0 && (
-              <div style={{ marginLeft: "20px" }}>
+              <Box sx={{ mr: "20px" }}>
                 {comment.replies.map((reply) => (
-                  <Comment key={reply.id} data={reply} />
+                  <Comment
+                    key={reply.id}
+                    data={reply}
+                  />
                 ))}
-              </div>
-            )}
+              </Box>
+            )} */}
           </div>
         ))
       ) : (
-        <Typography variant="body1">No comments available.</Typography>
+        <Typography variant="body1">هیج نظری تا حالا برای این باشگاه ثبت نشده است.</Typography>
       )}
     </Grid>
   );

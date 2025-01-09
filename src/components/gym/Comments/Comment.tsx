@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Rating, Typography } from "@mui/material";
+import moment from "jalali-moment";
 
 interface CommentProps {
   data: {
@@ -8,12 +9,13 @@ interface CommentProps {
     created_at: string;
     content: string;
     avatar_url: string;
-    replies?: CommentProps["data"][];
+    rate: string;
   };
+  replies?: CommentProps["data"][];
 }
 
-const Comment: React.FC<CommentProps> = ({ data }) => {
-  const { writer, created_at, content, avatar_url, replies } = data;
+const Comment: React.FC<CommentProps> = ({ data, replies }) => {
+  const { writer, created_at, content, avatar_url, rate } = data;
 
   return (
     <Box
@@ -24,7 +26,10 @@ const Comment: React.FC<CommentProps> = ({ data }) => {
         pb: { xs: 1, md: 2 },
         mb: { xs: 1, md: 2 },
       }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center">
         <Box
           sx={{
             mx: { xs: 1, md: 3 },
@@ -34,7 +39,15 @@ const Comment: React.FC<CommentProps> = ({ data }) => {
               fontWeight: 600,
               fontSize: { xs: 14, md: 20 },
               mb: { xs: 1, md: 4 },
-            }}>{`${writer} در ${created_at} گفته : `}</Typography>
+            }}>{`${writer} در ${moment(created_at).format("jYYYY/jMM/jDD")} گفته : `}</Typography>
+          <Rating
+            sx={{
+              direction: "ltr",
+            }}
+            value={parseFloat(rate)}
+            precision={0.5}
+            readOnly
+          />
           <Typography
             variant="body2"
             sx={{
@@ -55,12 +68,48 @@ const Comment: React.FC<CommentProps> = ({ data }) => {
         />
       </Box>
 
-      {/* Render Replies */}
       {replies && replies.length > 0 && (
-        <Box mt={2} ml={4} pl={2} borderLeft="1px solid #ddd">
-          {replies.map((reply) => (
-            <Comment key={reply.writer + reply.created_at} data={reply} />
-          ))}
+        <Box
+          mt={2}
+          mr={4}
+          pr={2}>
+          {replies.map((reply) => {
+            return (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{
+                  bgcolor: "#ddd",
+                  borderRadius: 2,
+                  p: 1,
+                  mb: { xs: 1, md: 2 },
+                }}>
+                <Box
+                  sx={{
+                    mx: { xs: 1, md: 3 },
+                  }}>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: 14, md: 20 },
+                      mb: { xs: 1, md: 2 },
+                    }}>{`${reply.writer} در ${moment(reply.created_at).format(
+                    "jYYYY/jMM/jDD"
+                  )} در جواب گفته : `}</Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: 10, md: 16 },
+                      color: "#838383",
+                    }}>
+                    {reply.content}
+                  </Typography>
+                </Box>
+              </Box>
+            );
+          })}
         </Box>
       )}
     </Box>
@@ -68,4 +117,3 @@ const Comment: React.FC<CommentProps> = ({ data }) => {
 };
 
 export default Comment;
-
