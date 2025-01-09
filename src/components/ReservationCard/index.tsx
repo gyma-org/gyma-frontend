@@ -2,7 +2,7 @@ import React from "react";
 import { API_BASE_URL } from "@/config";
 import { Avatar, Box, IconButton, Typography, CardMedia } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { booked } from '../../types/booked';
+import { booked } from "../../types/booked";
 import styles from "./Card.module.css";
 import moment from "jalali-moment";
 
@@ -12,9 +12,8 @@ interface ReservationCardIFace {
 }
 
 const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => {
-
   const convertToJalali = (gregorianDate: string | Date): string => {
-    return moment(gregorianDate, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD');
+    return moment(gregorianDate, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
   };
 
   const persianDate = convertToJalali(booking.gym_session_date);
@@ -38,11 +37,11 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               <Typography fontSize="12px">{"تاریخ رزرو"}</Typography>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
-            <Typography sx={{ fontWeight: 500, fontSize: "15px" }}>{booking.user_name}</Typography>
-            <Typography sx={{ color: "#4785ff", fontWeight: 500, fontSize: "15px" }}>
-              {`${persianDate} - ${booking.start_time} تا ${booking.end_time}`}
-            </Typography>
-          </Box>
+              <Typography sx={{ fontWeight: 500, fontSize: "15px" }}>{booking.user_name}</Typography>
+              <Typography sx={{ color: "#4785ff", fontWeight: 500, fontSize: "15px" }}>
+                {`${persianDate} - ${booking.start_time} تا ${booking.end_time}`}
+              </Typography>
+            </Box>
           </Box>
           <Box
             sx={{
@@ -56,14 +55,14 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               <Typography
                 sx={{
                   mt: "5px",
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: 700,
                 }}>
                 {booking.gym_name}
               </Typography>
               <Typography
                 sx={{
-                  fontSize: 12,
+                  fontSize: 10,
                   fontWeight: 500,
                 }}>
                 {booking.gym_address}
@@ -72,9 +71,11 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
                 display="flex"
                 alignItems="center"
                 justifyContent="end"
+                mt={1}
                 gap={0.5}>
                 <Typography
                   variant="h6"
+                  fontSize={18}
                   fontWeight="bold"
                   color="black">
                   {booking.final_price}
@@ -139,7 +140,9 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
                     width: 40,
                   }}
                 />
-                <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>{booking.confirmation_code}</Typography>
+                <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>
+                  {booking.confirmation_code}
+                </Typography>
                 <IconButton
                   sx={{
                     bgcolor: "#F4F4F4",

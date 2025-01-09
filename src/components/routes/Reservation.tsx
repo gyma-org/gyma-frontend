@@ -223,7 +223,8 @@ const Reservation = () => {
         maxWidth={1400}
         sx={{
           mx: "auto",
-          justifyContent: { xs: "center", md: "space-between" },
+          justifyContent: { xs: "center", md: "start" },
+          gap: 3,
         }}>
         {/* Map through currentBookings and pass each booking to ReservationCard */}
         {currentBookings.map((booking) => (
