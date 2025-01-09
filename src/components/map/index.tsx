@@ -2,6 +2,7 @@ import mapboxgl from "@neshan-maps-platform/mapbox-gl";
 import { Marker } from "mapbox-gl";
 import { Box, Button, Typography } from "@mui/material";
 import "./index.css";
+import myLocationIcon from "@/assets/mylocation.svg";
 import React, { useEffect, useRef, useState } from "react";
 import { fetchNearbyGyms, Gym } from "../../api/gymMap";
 import FloatCard from "../FloatCard";
@@ -93,8 +94,15 @@ const Mapp = () => {
           newMarker.remove();
         }
 
+        const markerElement = document.createElement('div');
+        markerElement.className = 'marker';
+        markerElement.style.backgroundImage = `url(/icons/mylocation.svg)`; // Use the SVG as the background image
+        markerElement.style.backgroundSize = 'contain'; // Ensure the image is fully contained
+        markerElement.style.width = '50px'; // Set width of the marker
+        markerElement.style.height = '50px'; // Set height of the marker
+
         // Add new user marker
-        newMarker = new mapboxgl.Marker({ color: "blue" }).setLngLat([lng, lat]).addTo(map);
+        newMarker = new mapboxgl.Marker(markerElement).setLngLat([lng, lat]).addTo(map);
 
         // Update marker and selected location state
         setUserMarker(newMarker);

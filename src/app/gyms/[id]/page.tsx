@@ -1,7 +1,6 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
 import { getGymDetails } from "@/api/gymDetails";
-import { GymDetails } from "@/types/gymDetails"; 
 import { Address, Comments, Description, GYMHeader, ImageSlider, Specifications } from "@/components/gym";
 
 // Defining the props with parameters for gym id
@@ -56,7 +55,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
       />
       <Description text={gymDetails.description} />
       <Address location={gymDetails.address} />
-      <Comments />
+      <Comments gymid={gymDetails.id} />
     </Grid>
   );
 };
