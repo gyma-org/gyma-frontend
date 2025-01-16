@@ -52,7 +52,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
             sx={{
               mt: { xs: 1, md: 3 },
               fontWeight: 600,
-              fontSize: { xs: 10, md: 16 },
+              fontSize: { xs: 12, md: 18 },
               color: "#838383",
             }}>
             {content}
@@ -69,50 +69,49 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
       </Box>
 
       {replies && replies.length > 0 && (
-  <Box
-    mt={2}
-    mr={4}
-    pr={2}>
-    {replies.map((reply, index) => {
-      return (
         <Box
-          key={reply.created_at || index} // Add a unique key here
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{
-            bgcolor: "#ddd",
-            borderRadius: 2,
-            p: 1,
-            mb: { xs: 1, md: 2 },
-          }}>
-          <Box
-            sx={{
-              mx: { xs: 1, md: 3 },
-            }}>
-            <Typography
-              sx={{
-                fontWeight: 600,
-                fontSize: { xs: 14, md: 20 },
-                mb: { xs: 1, md: 2 },
-              }}>{`${reply.writer} در ${moment(reply.created_at).format(
-              "jYYYY/jMM/jDD"
-            )} در جواب گفته : `}</Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                fontWeight: 600,
-                fontSize: { xs: 10, md: 16 },
-                color: "#838383",
-              }}>
-              {reply.content}
-            </Typography>
-          </Box>
+          mt={2}
+          mr={4}
+          pr={2}>
+          {replies.map((reply) => {
+            return (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{
+                  bgcolor: "#ddd",
+                  borderRadius: 2,
+                  p: 1,
+                  mb: { xs: 1, md: 2 },
+                }}>
+                <Box
+                  sx={{
+                    mx: { xs: 1, md: 3 },
+                  }}>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: 14, md: 20 },
+                      mb: { xs: 1, md: 2 },
+                    }}>{`${reply.writer} در ${moment(reply.created_at).format(
+                    "jYYYY/jMM/jDD"
+                  )} در جواب گفته : `}</Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: 12, md: 18 },
+                      color: "#838383",
+                    }}>
+                    {reply.content}
+                  </Typography>
+                </Box>
+              </Box>
+            );
+          })}
         </Box>
-      );
-    })}
-  </Box>
-)}
+      )}
     </Box>
   );
 };

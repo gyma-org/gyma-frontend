@@ -6,6 +6,7 @@ import { getBookingList } from "@/api/Booked";
 import { booked } from "@/types/booked";
 import Search from "../Search";
 import ReservationCard from "../ReservationCard";
+import { Loading } from "../Loading";
 
 const Reservation = () => {
   const [showOutDate, setShowOutDate] = useState(false);
@@ -38,7 +39,7 @@ const Reservation = () => {
     fetchBookings();
   }, [authTokens, logoutUser]);
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (loading) return <Loading />;
 
   return (
     <Grid

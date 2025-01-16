@@ -7,6 +7,7 @@ import { API_BASE_URL } from "@/config";
 import { listGyms } from "../../api/gymList";
 import { GymListResponse } from "../../types/gymList";
 import Link from "next/link";
+import { Loading } from "../Loading";
 
 const GALLERY_BASE_URL = `${API_BASE_URL}/medias/media/gallery/`;
 const PROFILE_BASE_URL = `${API_BASE_URL}/medias/profile/`;
@@ -35,7 +36,7 @@ const Favorite = () => {
     fetchGyms(); // Fetch gyms on component mount
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Error: {error}</p>;
 
   const handleGymClick = (gym_id: number) => {

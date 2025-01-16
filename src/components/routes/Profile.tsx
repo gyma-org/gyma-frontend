@@ -28,6 +28,7 @@ import { faIR } from "date-fns/locale";
 import jMoment from "jalali-moment";
 import { API_USER_URL } from "@/config";
 import { ArrowBack, Edit } from "@mui/icons-material";
+import { Loading } from "../Loading";
 
 const PROFILE_BASE_URL = `${API_USER_URL}/medias/profile/`;
 const BANNER_BASE_URL = `${API_USER_URL}/medias/banner/`;
@@ -136,7 +137,7 @@ const Profile = () => {
     getProfile();
   }, [authTokens, logoutUser]); // Re-run when authTokens change
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (loading) return <Loading />;
   if (error) return <Typography color="error">{error}</Typography>;
 
   // Ensure dateJoined is available
@@ -667,7 +668,7 @@ const Profile = () => {
             type="text"
             inputProps={{
               inputMode: "numeric", // Ensures the numeric keypad is displayed
-              pattern: "[0-9]*",    // Limits input to digits only
+              pattern: "[0-9]*", // Limits input to digits only
             }}
           />
           <Button
