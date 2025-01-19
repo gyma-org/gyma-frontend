@@ -1,5 +1,6 @@
 export interface GymDetails {
     id: string;
+    gym_id: string;
     name: string;
     gym_code: string;
     owner_firstname: string;

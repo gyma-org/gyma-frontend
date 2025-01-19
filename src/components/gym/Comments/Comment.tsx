@@ -19,6 +19,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
 
   return (
     <Box
+      key={data.writer}
       display="flex"
       flexDirection="column"
       sx={{
