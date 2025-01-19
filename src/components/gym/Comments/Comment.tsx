@@ -76,6 +76,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
           {replies.map((reply) => {
             return (
               <Box
+                key={reply.writer}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
