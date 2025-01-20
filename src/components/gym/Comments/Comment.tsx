@@ -19,7 +19,6 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
 
   return (
     <Box
-      key={data.writer}
       display="flex"
       flexDirection="column"
       sx={{
@@ -53,7 +52,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
             sx={{
               mt: { xs: 1, md: 3 },
               fontWeight: 600,
-              fontSize: { xs: 10, md: 16 },
+              fontSize: { xs: 12, md: 18 },
               color: "#838383",
             }}>
             {content}
@@ -77,6 +76,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
           {replies.map((reply) => {
             return (
               <Box
+                key={reply.writer}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
@@ -102,7 +102,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
                     variant="body2"
                     sx={{
                       fontWeight: 600,
-                      fontSize: { xs: 10, md: 16 },
+                      fontSize: { xs: 12, md: 18 },
                       color: "#838383",
                     }}>
                     {reply.content}
