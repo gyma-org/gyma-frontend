@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography  } from "@mui/material";
 import Search from "../Search";
 import FloatCard from "../FloatCard";
 import { API_BASE_URL } from "@/config";
@@ -22,10 +22,15 @@ const Favorite = () => {
       const savedGymIds = Cookies.get("savedGymIds"); // Get saved gym IDs from cookies
 
       if (savedGymIds) {
-        // If gym IDs exist in cookies, use them directly
         const gymIds = JSON.parse(savedGymIds);
-        const gymsFromCookie = gymIds.map((gym_id: string) => ({ gym_id })); // Create gym objects from IDs
+        if (gymIds.length === 0) {
+          setLoading(false); // No gyms in cookies, stop loading
+          return;
+        }
+        // If gym IDs exist in cookies, use them directly
+        // const gymIds = JSON.parse(savedGymIds);
 
+        const gymsFromCookie = gymIds.map((gym_id: string) => ({ gym_id })); // Create gym objects from IDs
         setGyms(gymsFromCookie); // Set gyms state with the IDs from cookies
         let fetchedDetailsCount = 0; // Track the number of gym details fetched
 
@@ -64,6 +69,12 @@ const Favorite = () => {
         Cookies.set("savedGymIds", JSON.stringify(gymIds), { expires: 7 }); // Set a 7-day expiration
 
         setGyms(data); // Update state with the fetched gyms
+
+        if (data.length === 0) {
+          setLoading(false); // No gyms fetched, stop loading
+          return;
+        }
+        
         let fetchedDetailsCount = 0; // Track the number of gym details fetched
 
         // Fetch details for each gym
@@ -102,6 +113,26 @@ const Favorite = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+
+  if (gyms.length === 0) {
+    // Display this message if there are no gyms
+    return (
+      <Box
+        mx="auto"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h6">
+          {"شما هنوز هیچ باشگاهی به علاقه‌مندی‌های خود اضافه نکرده‌اید."}
+        </Typography>
+      </Box>
+    );
+  }
 
   const handleGymClick = (gym_id: string) => {
     window.location.href = `/gyms/${gym_id}`;

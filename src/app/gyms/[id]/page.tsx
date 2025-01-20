@@ -44,7 +44,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         pb: 8,
       }}
     >
-      <GYMHeader />
+      <GYMHeader gymId={gymDetails.id} />
       <ImageSlider images={gymDetails.gallery} />
       <Specifications 
         features={gymDetails.features}
