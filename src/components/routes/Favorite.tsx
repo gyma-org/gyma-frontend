@@ -61,6 +61,10 @@ const Favorite = () => {
     };
 
     const fetchFavouriteGyms = async () => {
+      if (!authTokens || !authTokens.access) {
+        console.warn("No authentication token available");
+        return;
+      }
       try {
         const data = await getSavedGyms(authTokens.access); // Fetch saved gyms from API
         const gymIds = data.map((gym) => gym.gym_id.toString()); // Extract gym IDs
@@ -74,7 +78,7 @@ const Favorite = () => {
           setLoading(false); // No gyms fetched, stop loading
           return;
         }
-        
+
         let fetchedDetailsCount = 0; // Track the number of gym details fetched
 
         // Fetch details for each gym
@@ -109,7 +113,7 @@ const Favorite = () => {
     };
 
     fetchGymsFromCookies(); // Check for gyms in cookies and fetch accordingly
-  }, [authTokens.access]);
+  }, [authTokens]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;

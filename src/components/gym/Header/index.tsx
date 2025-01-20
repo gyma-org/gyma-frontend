@@ -32,6 +32,11 @@ const Header: React.FC<HeaderProps> = ({
     if (loading) return; // Prevent multiple clicks
     setLoading(true);
 
+    if (!authTokens || !authTokens.access) {
+      console.warn("No authentication token available");
+      return;
+    }
+
     try {
       const savedGymIds = Cookies.get("savedGymIds") || "[]";
       let gymIds: string[] = JSON.parse(savedGymIds);
