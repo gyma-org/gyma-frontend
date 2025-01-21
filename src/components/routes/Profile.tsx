@@ -89,19 +89,15 @@ const Profile = () => {
     try {
       setLoading(true);
       const htmlForm = await goToGateway(data, authTokens.access); // Get the HTML response
-
-      // Create a new window to submit the form
-      const newWindow = window.open();
-
-      if (newWindow) {
-        newWindow.document.write(htmlForm); // Write the form to the new window
-        newWindow.document.close(); // Close the document to allow form submission
-
-        // Cast to HTMLFormElement to access the submit method
-        const formElement = newWindow.document.getElementById("id_form") as HTMLFormElement;
-        formElement?.submit(); // Submit the form to the payment gateway
-      }
-
+  
+      // Create a temporary form to submit the HTML response
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = htmlForm;
+      document.body.appendChild(tempDiv);
+  
+      const formElement = tempDiv.querySelector("#id_form") as HTMLFormElement;
+      formElement?.submit(); // Submit the form to the payment gateway
+  
       setError(null); // Clear any previous errors
     } catch (error: any) {
       console.error("Failed to initiate payment:", error);
