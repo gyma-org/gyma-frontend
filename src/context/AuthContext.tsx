@@ -3,6 +3,8 @@ import { createContext, useState, useContext, useEffect, useCallback, ReactNode 
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { RegisterValues } from "@/types/RegisterValues";
+import Cookies from "js-cookie";
+import { getSavedGyms } from "@/api/DisplaySavedGyms";
 
 interface AuthTokens {
   access: string;
@@ -154,6 +156,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         document.cookie = `auth_token=${data.access}; path=/; max-age=${
           60 * 60 * 24 * 7
         }; SameSite=Strict; Secure`;
+
+        // Fetch the saved gyms from the API after successful login
+        const savedGyms = await getSavedGyms(data.access); // Fetch saved gyms using the newly obtained access token
+        const gymIds = savedGyms.map((gym) => gym.gym_id.toString()); // Map the gym IDs to strings
+        
+        // Save the gym IDs in cookies
+        Cookies.set("savedGymIds", JSON.stringify(gymIds), { expires: 7 }); // Set the gym IDs in cookies for 7 days
+
         router.push("/");
         return { success: true, status_code: response.status, message: "Login successful" }; // success response
       } else {
