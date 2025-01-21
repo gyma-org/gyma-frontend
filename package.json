@@ -21,7 +21,6 @@
     "date-fns": "^4.1.0",
     "formik": "^2.4.6",
     "jalali-moment": "^3.3.11",
-    "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "moment-jalaali": "^0.10.4",
     "next": "14.2.7",
