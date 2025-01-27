@@ -105,7 +105,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
               variant="h6"
               fontWeight="bold"
               color="black">
-              {price}
+              {"۱۲۴۰۰۰"}
             </Typography>
             <svg
               width="18"
