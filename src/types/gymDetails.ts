@@ -13,6 +13,7 @@ export interface GymDetails {
   lon: number;
   city: string;
   phone_number: string;
+  price: number;
   profile: string;
   gallery: string[];
   video: string;
