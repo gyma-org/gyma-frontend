@@ -97,6 +97,7 @@ export default function NearbyGyms({
               name={gym.name}
               address={gym.address}
               city={gym.city}
+              price={gym.price}
               profile={gym.profile}
               onClick={() => handleGymClick(gym.id)}
               maxWidth={400}
