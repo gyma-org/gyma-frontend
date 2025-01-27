@@ -18,7 +18,7 @@ const GALLERY_BASE_URL = `${API_BASE_URL}/medias/media/gallery/`;
 const PROFILE_BASE_URL = `${API_BASE_URL}/medias/profile/`;
 
 const Favorite = () => {
-  const { authTokens } = useAuth();
+  const { authTokens, logoutUser } = useAuth();
   const [gyms, setGyms] = useState<GymListResponse[]>([]); // State to store the list of gyms
   const [gymDetails, setGymDetails] = useState<Map<string, GymDetails>>(new Map()); // Map for gym details
   const [loading, setLoading] = useState<boolean>(true); // Loading state
@@ -69,6 +69,7 @@ const Favorite = () => {
 
     const fetchFavouriteGyms = async () => {
       if (!authTokens || !authTokens.access) {
+        logoutUser
         console.warn("No authentication token available");
         return;
       }

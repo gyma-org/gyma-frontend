@@ -423,7 +423,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
                 sx={{
                   fontSize: { xs: 24, md: 34 },
                 }}>
-                {"۱۲۴۰۰۰"}
+                {selectedDate}
               </Typography>
               <svg
                 width="22"
