@@ -13,7 +13,7 @@ interface GymPageProps {
 // Static paths generation for dynamic routes (gym pages)
 export async function generateStaticParams() {
   // Sample data for static paths generation; replace this with actual data fetching logic
-  const gymCodes = ["04ed160c-71b9-4d1d-a028-0b0bd10774e0"]; // Replace this with actual gym codes from your data source
+  const gymCodes = ["e086ba93-9c6f-4d11-8f52-ee152654abcf"]; // Replace this with actual gym codes from your data source
 
   return gymCodes.map((id) => ({
     id: id.toString(),
@@ -24,7 +24,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
   const { id } = params; // Get gym code from the URL (dynamic param)
 
   // Fetch gym details using the gym code
-  const gymDetails = await getGymDetails(id);
+  const gymDetails = await getGymDetails(id, { cache: "no-store" });
 
   console.log("Fetched Gym Details:", gymDetails);
 
@@ -52,6 +52,8 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         location={gymDetails.address}
         gymId={gymDetails.id}
         gymSex={gymDetails.sex}
+        working_hours_men={gymDetails.working_hours_men}
+        working_hours_women={gymDetails.working_hours_women}
       />
       <Description text={gymDetails.description} />
       <Address location={gymDetails.address} />
