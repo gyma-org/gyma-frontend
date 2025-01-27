@@ -12,7 +12,7 @@ interface FloatCardProps {
   maxWidth?: number;
 }
 
-const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500 }) => {
+const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500, price }) => {
   return (
     <Box
       onClick={onClick} // Attach the onClick handler here
@@ -105,7 +105,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
               variant="h6"
               fontWeight="bold"
               color="black">
-              {"۱۲۴۰۰۰"}
+              {price}
             </Typography>
             <svg
               width="18"
