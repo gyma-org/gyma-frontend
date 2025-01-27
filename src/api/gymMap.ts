@@ -10,6 +10,7 @@ export interface Gym {
     owner_national_code: string;
     description: string;
     address: string;
+    price: number;
     lat: number;
     lon: number;
     city: string;

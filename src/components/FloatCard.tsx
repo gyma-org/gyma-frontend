@@ -6,6 +6,7 @@ interface FloatCardProps {
   name: string;
   address: string;
   city: string;
+  price: number;
   profile?: string;
   onClick?: () => void;
   maxWidth?: number;
