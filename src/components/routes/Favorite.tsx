@@ -183,7 +183,7 @@ const Favorite = () => {
             name={details?.name || "Unknown Gym"}
             address={details?.address || "Address not available"}
             city={details?.city || "City not specified"}
-            price={details?.price || "Price not specified"}
+            price={details?.price || 0}
             profile={details?.profile ? `${details.profile}` : undefined}
             onClick={() => handleGymClick(gym.gym_id)}
           />
