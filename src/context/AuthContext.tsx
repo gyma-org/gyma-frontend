@@ -158,7 +158,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }; SameSite=Strict; Secure`;
 
         // Fetch the saved gyms from the API after successful login
-        const savedGyms = await getSavedGyms(data.access); // Fetch saved gyms using the newly obtained access token
+        const savedGyms = await getSavedGyms(data.access, logoutUser); // Fetch saved gyms using the newly obtained access token
         const gymIds = savedGyms.map((gym) => gym.gym_id.toString()); // Map the gym IDs to strings
         
         // Save the gym IDs in cookies
