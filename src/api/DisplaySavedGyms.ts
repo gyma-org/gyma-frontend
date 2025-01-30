@@ -7,7 +7,7 @@ export interface Gym {
 }
 
 // Function to fetch saved gyms for a user
-export async function getSavedGyms(token: string): Promise<GymListResponse[]> {
+export async function getSavedGyms(token: string, logoutUser: () => void): Promise<GymListResponse[]> {
   const response = await fetch(`${API_USER_URL}/saved/my_gyms/`, {
     method: "GET",
     headers: {
@@ -17,6 +17,9 @@ export async function getSavedGyms(token: string): Promise<GymListResponse[]> {
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      logoutUser(); // Call logoutUser on unauthorized
+    }
     throw new Error("Failed to fetch saved gyms");
   }
 

@@ -74,7 +74,7 @@ const Favorite = () => {
         return;
       }
       try {
-        const data = await getSavedGyms(authTokens.access); // Fetch saved gyms from API
+        const data = await getSavedGyms(authTokens.access, logoutUser); // Fetch saved gyms from API
         const gymIds = data.map((gym) => gym.gym_id.toString()); // Extract gym IDs
 
         // Save gym IDs to cookies
@@ -121,7 +121,7 @@ const Favorite = () => {
     };
 
     fetchGymsFromCookies(); // Check for gyms in cookies and fetch accordingly
-  }, [authTokens]);
+  }, [authTokens, logoutUser]);
 
   if (loading) return <Loading />;
   if (error) return <p>Error: {error}</p>;
