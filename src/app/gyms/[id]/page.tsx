@@ -56,7 +56,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         working_hours_women={gymDetails.working_hours_women}
       />
       <Description text={gymDetails.description} />
-      <Address location={gymDetails.address} />
+      <Address location={gymDetails.address} lat={gymDetails.lat} lon={gymDetails.lon} />
       <Comments gymid={gymDetails.id} />
     </Grid>
   );
