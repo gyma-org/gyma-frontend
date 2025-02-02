@@ -22,6 +22,7 @@ export interface Gym {
     phone_verified?: boolean;
     features?: string[][];
     sex: string;
+    rate: string;
   }
   
   interface GymNearbyResponse {

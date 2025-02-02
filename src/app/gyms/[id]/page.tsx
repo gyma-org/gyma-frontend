@@ -54,6 +54,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         gymSex={gymDetails.sex}
         working_hours_men={gymDetails.working_hours_men}
         working_hours_women={gymDetails.working_hours_women}
+        rate={gymDetails.rate}
       />
       <Description text={gymDetails.description} />
       <Address location={gymDetails.address} lat={gymDetails.lat} lon={gymDetails.lon} />

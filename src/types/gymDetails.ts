@@ -21,6 +21,7 @@ export interface GymDetails {
   phone_verified: boolean;
   features: string[];
   sex: string;
+  rate: string;
   working_hours_men: {
     off_days: { open: string; close: string };
     working_days: { open: string; close: string };

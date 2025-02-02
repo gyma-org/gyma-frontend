@@ -15,9 +15,10 @@ interface FloatCardProps {
   onClick?: () => void;
   maxWidth?: number;
   gymId: string;
+  rate: string;
 }
 
-const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500, price, gymId }) => {
+const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500, price, gymId, rate }) => {
   const { authTokens } = useAuth();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -149,7 +150,23 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
             alignItems: "center",
             width: "auto",
           }}>
-          <Rating size="small" />
+          {rate ? (
+            <Rating size="small" value={parseFloat(rate)} readOnly />
+          ) : (
+            <Box
+              sx={{
+                display: "inline-block",
+                backgroundColor: "#E0F7FA", // Light cyan for a fresh look
+                color: "#00796B", // Teal for contrast
+                fontWeight: "bold",
+                fontSize: "0.75rem",
+                padding: "2px 8px",
+                borderRadius: "12px",
+              }}
+            >
+              جدید
+            </Box>
+          )}
           <Box
             display="flex"
             alignItems="center"

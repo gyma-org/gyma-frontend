@@ -102,6 +102,7 @@ export default function NearbyGyms({
               gymId={gym.id}
               onClick={() => handleGymClick(gym.id)}
               maxWidth={400}
+              rate={gym.rate}
             />
           ))}
         </div>

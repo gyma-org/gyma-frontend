@@ -235,6 +235,7 @@ const Mapp = () => {
             gymId={gym.id}
             onClick={() => handleGymClick(gym.id)} // Pass the click handler
             maxWidth={400}
+            rate={gym.rate}
           />
         ))}
       </Box>

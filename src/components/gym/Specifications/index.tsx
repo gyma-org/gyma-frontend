@@ -28,6 +28,7 @@ interface SpecificationsProps {
   gymId: string;
   // sex: string;
   gymSex: string;
+  rate: string;
 }
 
 const Specifications: React.FC<SpecificationsProps> = ({
@@ -41,6 +42,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
   features,
   gymId,
   // sex
+  rate,
 }) => {
   const [showReservationModal, setShowReservationModal] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(moment().format("jYYYY/jMM/jDD"));
@@ -191,14 +193,23 @@ const Specifications: React.FC<SpecificationsProps> = ({
             </svg>
             <Typography>{location}</Typography>
           </Box>
-          <Rating
-            sx={{
-              direction: "ltr",
-            }}
-            value={3.5}
-            precision={0.5}
-            readOnly
-          />
+          {rate ? (
+        <Rating size="small" value={parseFloat(rate)} readOnly />
+      ) : (
+        <Box
+          sx={{
+            display: "inline-block",
+            backgroundColor: "#E0F7FA", // Light cyan for a fresh look
+            color: "#00796B", // Teal for contrast
+            fontWeight: "bold",
+            fontSize: "1.25rem",
+            padding: "2px 8px",
+            borderRadius: "12px",
+          }}
+        >
+          جدید
+        </Box>
+      )}
         </Box>
 
         {/* Attributes */}
