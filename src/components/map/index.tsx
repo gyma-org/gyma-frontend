@@ -54,6 +54,12 @@ const Mapp = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined" && mapContainerRef.current) {
+
+      const defaultLat = 35.6892; // Tehran
+      const defaultLon = 51.389;
+      
+      // Initialize the map immediately with default coordinates
+      initializeMap(defaultLat, defaultLon);
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -72,8 +78,7 @@ const Mapp = () => {
       } else {
         console.error("Geolocation is not supported by this browser.");
         setLocationDenied(true); // Show the location denied box
-        const defaultLat = 35.6892; // Tehran
-        const defaultLon = 51.389;
+        
         initializeMap(defaultLat, defaultLon);
       }
     }
@@ -227,6 +232,7 @@ const Mapp = () => {
             city={gym.city}
             profile={gym.profile}
             price={gym.price}
+            gymId={gym.id}
             onClick={() => handleGymClick(gym.id)} // Pass the click handler
             maxWidth={400}
           />

@@ -49,7 +49,7 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
             </Box>
           </Box>
           {/* <Link href={`/gym/${booking.gym_id}`}> */}
-          <Link href="#">
+          <Link href={`/gyms/${booking.gym_id}`}>
             <Box
               sx={{
                 display: "flex",

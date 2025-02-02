@@ -186,6 +186,7 @@ const Favorite = () => {
             price={details?.price || 0}
             profile={details?.profile ? `${details.profile}` : undefined}
             onClick={() => handleGymClick(gym.gym_id)}
+            gymId={gym.gym_id}
           />
           );
         })}
