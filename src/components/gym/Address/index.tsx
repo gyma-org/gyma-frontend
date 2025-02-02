@@ -32,18 +32,23 @@ const Address: React.FC<AddressProps> = ({ location, lat, lon }) => {
   // Function to open the navigation prompt
   const openMaps = () => {
     if (isClient) {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isIOS = /iphone|ipad|ipod/.test(userAgent);
+      const isAndroid = /android/.test(userAgent);
+  
       let mapUrl = "";
-      
-      if (isMobile) {
-        // Universal mobile navigation intent
-        mapUrl = `geo:${lat},${lon}?q=${lat},${lon}`;
+  
+      if (isIOS) {
+        // Open Apple Maps for iPhone users
+        mapUrl = `https://maps.apple.com/?q=${lat},${lon}`;
+      } else if (isAndroid) {
+        // Open Google Maps for Android users
+        mapUrl = `https://maps.google.com/?q=${lat},${lon}`;
       } else {
-        // Fallback for desktop users
+        // Default to Google Maps for desktop users
         mapUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
       }
-
+  
       window.open(mapUrl, "_blank");
     }
   };
