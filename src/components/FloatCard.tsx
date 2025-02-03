@@ -15,7 +15,7 @@ interface FloatCardProps {
   onClick?: () => void;
   maxWidth?: number;
   gymId: string;
-  rate: string;
+  rate: string | null;
 }
 
 const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500, price, gymId, rate }) => {
