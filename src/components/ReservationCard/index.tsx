@@ -160,7 +160,7 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
           color: "#f00",
           position: "absolute",
           zIndex: 10,
-          bottom: -10,
+          bottom: 40,
           right: 30,
           px: 1,
           border: "2px solid #f00",
@@ -170,26 +170,26 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
           {booking.used ? "استفاده شده!" : "استفاده نشد!"}
         </Typography>
       </Typography>
+      {/* Open Comment Modal Button */}
+    <div style={{ marginTop: "50px" }}>
+      <Button
+        variant="outlined"
+        color="primary"
+        fullWidth
+        onClick={handleOpenCommentModal}
+        sx={{
+          mt: 1,
+          borderRadius: "8px",
+          fontWeight: "bold",
+        }}
+      >
+        افزودن نظر
+      </Button>
     </div>
+    </div>
+  
   ) : null}
-
-  {/* Open Comment Modal Button */}
-  <div style={{ marginTop: "50px" }}>
-    <Button
-      variant="outlined"
-      color="primary"
-      fullWidth
-      onClick={handleOpenCommentModal}
-      sx={{
-        mt: 1,
-        borderRadius: "8px",
-        fontWeight: "bold",
-      }}
-    >
-      افزودن نظر
-    </Button>
-  </div>
-
+ 
   {/* Comment Modal */}
   <Modal open={openCommentModal} onClose={handleCloseCommentModal}>
     <Box
