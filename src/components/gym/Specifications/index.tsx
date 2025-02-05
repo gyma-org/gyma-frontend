@@ -325,9 +325,17 @@ const Specifications: React.FC<SpecificationsProps> = ({
           <Box mr={8}>
           {/* مردان */}
           <Typography variant="subtitle1" fontWeight={500}>
-            {`آقایان (روزهای کاری): ${
-              getWorkingHours(working_hours_men)
-                ? `${getWorkingHours(working_hours_men)?.open} الی ${getWorkingHours(working_hours_men)?.close}`
+            {`آقایان (روزهای فرد): ${
+              working_hours_men?.odd?.open && working_hours_men?.odd?.close
+                ? `${working_hours_men.odd.open} الی ${working_hours_men.odd.close}`
+                : `تعطیل`
+            }`}
+          </Typography>
+          
+          <Typography variant="subtitle1" fontWeight={500}>
+            {`آقایان (روزهای زوج): ${
+              working_hours_men?.even?.open && working_hours_men?.even?.close
+                ? `${working_hours_men.even.open} الی ${working_hours_men.even.close}`
                 : `تعطیل`
             }`}
           </Typography>
@@ -342,9 +350,17 @@ const Specifications: React.FC<SpecificationsProps> = ({
           
           {/* بانوان */}
           <Typography variant="subtitle1" fontWeight={500}>
-            {`بانوان (روزهای کاری): ${
-              getWorkingHours(working_hours_women)
-                ? `${getWorkingHours(working_hours_women)?.open} الی ${getWorkingHours(working_hours_women)?.close}`
+            {`بانوان (روزهای فرد): ${
+              working_hours_women?.odd?.open && working_hours_women?.odd?.close
+                ? `${working_hours_women.odd.open} الی ${working_hours_women.odd.close}`
+                : `تعطیل`
+            }`}
+          </Typography>
+          
+          <Typography variant="subtitle1" fontWeight={500}>
+            {`بانوان (روزهای زوج): ${
+              working_hours_women?.even?.open && working_hours_women?.even?.close
+                ? `${working_hours_women.even.open} الی ${working_hours_women.even.close}`
                 : `تعطیل`
             }`}
           </Typography>
