@@ -218,7 +218,7 @@ const Mapp = () => {
           top: 10,
           position: "absolute",
           bgcolor: "#fff",
-          zIndex: 100,
+          zIndex: 1,
           border: "2px solid #FF9100",
           width: "100%",
           maxWidth: 440,

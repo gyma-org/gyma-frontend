@@ -27,8 +27,12 @@ const Reservation = () => {
 
         setLoading(true);
         const data = await getBookingList(authTokens.access, logoutUser);
-        setCurrentBookings(data.current_bookings);
-        setPastBookings(data.past_bookings);
+
+        const current = data.current_bookings.filter(booking => !booking.used);
+        const past = [...data.past_bookings, ...data.current_bookings.filter(booking => booking.used)];
+
+        setCurrentBookings(current);
+        setPastBookings(past);
       } catch (error) {
         console.error("Error fetching bookings:", error);
       } finally {

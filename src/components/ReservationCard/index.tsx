@@ -1,23 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import { API_BASE_URL } from "@/config";
-import { Box, Typography, CardMedia } from "@mui/material";
+import { Box, Typography, CardMedia, TextField, Button, Modal, Rating } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { booked } from "../../types/booked";
+import { CommentAdd } from "../../types/CommentAdd";
+import { addComment } from "../../api/CommentAdd";
 import styles from "./Card.module.css";
 import moment from "jalali-moment";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 interface ReservationCardIFace {
   outdate?: boolean;
+  // used?: boolean;
   booking: booked;
 }
 
 const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => {
+  const { authTokens, logoutUser } = useAuth();
+
+  const [comment, setComment] = useState("");
+  const [rate, setRate] = useState<number | null>(null);
+  const [openCommentModal, setOpenCommentModal] = useState(false);
+
   const convertToJalali = (gregorianDate: string | Date): string => {
     return moment(gregorianDate, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
   };
-
+  
   const persianDate = convertToJalali(booking.gym_session_date);
+
+  const handleOpenCommentModal = () => {
+    setOpenCommentModal(true);
+  };
+  
+  const handleCloseCommentModal = () => {
+    setOpenCommentModal(false);
+  };
+  
+  const handleCommentSubmit = async () => {
+    if (!comment.trim()) return;
+    
+    const newComment: CommentAdd = {
+      gym_id: booking.gym_id,
+      content: comment,
+      rate: rate ?? 0,
+    };
+
+    try {
+      if (!authTokens) {
+        console.error("Auth tokens are null. Cannot fetch bookings.");
+        return;
+      }
+      await addComment(newComment, authTokens.access, logoutUser);
+      setComment("");
+      alert("نظر شما ثبت شد!");
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      alert("خطا در ثبت نظر!");
+    }
+  };
+
   console.log(persianDate);
   return (
     <Grid
@@ -111,85 +153,169 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               />
             </Box>
           </Link>
-          {outdate && (
-            <Typography
-              sx={{
-                color: "#f00",
-                position: "absolute",
-                zIndex: 10,
-                bottom: 0,
-                right: 30,
-                px: 1,
-                border: "2px solid #f00",
-              }}>
-              {"منقضی شد"}
-            </Typography>
-          )}
+  {outdate || booking.used ? (
+    <div style={{ position: "relative" }}>
+      <Typography
+        sx={{
+          color: "#f00",
+          position: "absolute",
+          zIndex: 10,
+          bottom: -10,
+          right: 30,
+          px: 1,
+          border: "2px solid #f00",
+        }}>
+        {"منقضی شد"}
+        <Typography variant="body2">
+          {booking.used ? "استفاده شده!" : "استفاده نشد!"}
+        </Typography>
+      </Typography>
+    </div>
+  ) : null}
+
+  {/* Open Comment Modal Button */}
+  <div style={{ marginTop: "50px" }}>
+    <Button
+      variant="outlined"
+      color="primary"
+      fullWidth
+      onClick={handleOpenCommentModal}
+      sx={{
+        mt: 1,
+        borderRadius: "8px",
+        fontWeight: "bold",
+      }}
+    >
+      افزودن نظر
+    </Button>
+  </div>
+
+  {/* Comment Modal */}
+  <Modal open={openCommentModal} onClose={handleCloseCommentModal}>
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        bgcolor: "white",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: "10px",
+        width: "90%",
+        maxWidth: "400px",
+      }}
+    >
+      <Typography sx={{ fontSize: 16, fontWeight: 700, mb: 2, textAlign: "right" }}>:ثبت نظر شما</Typography>
+      
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="...نظر خود را بنویسید"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        sx={{
+          mb: 2,
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "8px",
+          },
+          textAlign: "right",
+        }}
+        inputProps={{ style: { textAlign: "right" } }}
+      />
+
+<Rating
+  name="simple-controlled"
+  value={rate}
+  onChange={(event, newValue) => {
+    setRate(newValue);
+  }}
+  precision={0.5}
+  max={5}
+  sx={{
+    mb: 2,
+  }}
+/>
+      
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        onClick={handleCommentSubmit}
+        sx={{
+          borderRadius: "8px",
+          fontWeight: "bold",
+        }}
+      >
+        ارسال نظر
+      </Button>
+    </Box>
+  </Modal>
+  </Box>
+  <Box sx={{ height: outdate ? 11 : 20, overflow: "hidden" }}>
+    <div className={styles.rip} />
+  </Box>
+  {!outdate && !booking.used ? (
+    <>
+      <Box
+        sx={{
+          bgcolor: "#fff",
+          pt: 1,
+          borderRadius: "0px 0px 10px 10px",
+        }}>
+        {/* <Box sx={{ bgcolor: "#000", height: 50, mx: 2 }} /> */}
+        <Box
+          display="flex"
+          justifyContent="space-around"
+          alignItems="center"
+          py={1}>
+          {/* <Box
+            sx={{
+              width: 40,
+            }}
+          /> */}
+          <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>
+            {booking.confirmation_code}
+          </Typography>
+          {/* <IconButton
+            sx={{
+              bgcolor: "#F4F4F4",
+            }}>
+            <svg
+              width="25"
+              height="25"
+              viewBox="0 0 25 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M4.96796 13.4338V18.9161C4.96796 20.2916 6.08497 21.408 7.46129 21.408H18.432C19.8083 21.408 20.9253 20.2916 20.9253 18.9161V13.4338"
+                stroke="#A9A9A9"
+                strokeWidth="3"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+              />
+              <path
+                d="M12.9466 4.46289V16.4242"
+                stroke="#A9A9A9"
+                strokeWidth="3"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+              />
+              <path
+                d="M8.95728 12.9355L12.9466 16.9226L16.9359 12.9355"
+                stroke="#A9A9A9"
+                strokeWidth="3"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+              />
+            </svg>
+          </IconButton> */}
         </Box>
-        <Box sx={{ height: outdate ? 11 : 20, overflow: "hidden" }}>
-          <div className={styles.rip} />
-        </Box>
-        {!outdate && (
-          <>
-            <Box
-              sx={{
-                bgcolor: "#fff",
-                pt: 1,
-                borderRadius: "0px 0px 10px 10px",
-              }}>
-              {/* <Box sx={{ bgcolor: "#000", height: 50, mx: 2 }} /> */}
-              <Box
-                display="flex"
-                justifyContent="space-around"
-                alignItems="center"
-                py={1}>
-                {/* <Box
-                  sx={{
-                    width: 40,
-                  }}
-                /> */}
-                <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>
-                  {booking.confirmation_code}
-                </Typography>
-                {/* <IconButton
-                  sx={{
-                    bgcolor: "#F4F4F4",
-                  }}>
-                  <svg
-                    width="25"
-                    height="25"
-                    viewBox="0 0 25 25"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M4.96796 13.4338V18.9161C4.96796 20.2916 6.08497 21.408 7.46129 21.408H18.432C19.8083 21.408 20.9253 20.2916 20.9253 18.9161V13.4338"
-                      stroke="#A9A9A9"
-                      strokeWidth="3"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M12.9466 4.46289V16.4242"
-                      stroke="#A9A9A9"
-                      strokeWidth="3"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M8.95728 12.9355L12.9466 16.9226L16.9359 12.9355"
-                      stroke="#A9A9A9"
-                      strokeWidth="3"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </IconButton> */}
-              </Box>
-            </Box>
-          </>
-        )}
-      </div>
-    </Grid>
+      </Box>
+    </>
+  ): null }
+</div>
+</Grid>
   );
 };
 
