@@ -13,7 +13,9 @@ import { EditCalendarRounded } from "@mui/icons-material";
 
 interface WorkingHours {
   off_days: { open: string; close: string };
-  working_days: { open: string; close: string };
+  odd: { open: string; close: string };
+  even: { open: string; close: string };
+  odd_even: string;
 }
 
 interface SpecificationsProps {
@@ -54,6 +56,21 @@ const Specifications: React.FC<SpecificationsProps> = ({
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
+  const today = new Date();
+  const isOddDay = today.getDate() % 2 !== 0;
+
+  const getWorkingHours = (workingHours: WorkingHours) => {
+    if (workingHours.odd_even === "both") {
+      return workingHours.odd; // Show "odd" hours if gym works on both days
+    } else if (workingHours.odd_even === "odd" && isOddDay) {
+      return workingHours.odd;
+    } else if (workingHours.odd_even === "even" && !isOddDay) {
+      return workingHours.even;
+    } else {
+      return null; // No working hours for today
+    }
+  };
+
   const fetchGymSessions = async (gymId: string, gymSex: string, date: string): Promise<any[]> => {
     try {
       const response = await fetch(
@@ -69,7 +86,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
 
   const [currentMonth, setCurrentMonth] = useState(moment().locale("fa"));
 
-  useEffect(() => {
+  useEffect(() => {   
     // Convert Jalali month to Gregorian before sending the request
     const gregorianMonth = currentMonth.clone().locale("en").format("YYYY-MM-DD");
     fetchGymSessions(gymId, "men", gregorianMonth).then((responseSessions) => {
@@ -306,20 +323,40 @@ const Specifications: React.FC<SpecificationsProps> = ({
             </Typography>
           </Box>
           <Box mr={8}>
+          {/* مردان */}
           <Typography variant="subtitle1" fontWeight={500}>
-          {/* Use optional chaining to avoid errors */}
-          {`آقایان (روزهای کاری): ${working_hours_men.working_days.open} الی ${working_hours_men?.working_days?.close}`}
-        </Typography>
-        <Typography variant="subtitle1" fontWeight={500}>
-          {`آقایان (روزهای تعطیل): ${working_hours_men?.off_days?.open} الی ${working_hours_men?.off_days?.close}`}
-        </Typography>
-        <Typography variant="subtitle1" fontWeight={500}>
-          {`بانوان (روزهای کاری): ${working_hours_women?.working_days?.open} الی ${working_hours_women?.working_days?.close}`}
-        </Typography>
-        <Typography variant="subtitle1" fontWeight={500}>
-          {`بانوان (روزهای تعطیل): ${working_hours_women?.off_days?.open} الی ${working_hours_women?.off_days?.close}`}
-        </Typography>
-          </Box>
+            {`آقایان (روزهای کاری): ${
+              getWorkingHours(working_hours_men)
+                ? `${getWorkingHours(working_hours_men)?.open} الی ${getWorkingHours(working_hours_men)?.close}`
+                : `تعطیل`
+            }`}
+          </Typography>
+          
+          <Typography variant="subtitle1" fontWeight={500}>
+            {`آقایان (روزهای تعطیل): ${
+              working_hours_men?.off_days?.open && working_hours_men?.off_days?.close
+                ? `${working_hours_men.off_days.open} الی ${working_hours_men.off_days.close}`
+                : `موجود نیست`
+            }`}
+          </Typography>
+          
+          {/* بانوان */}
+          <Typography variant="subtitle1" fontWeight={500}>
+            {`بانوان (روزهای کاری): ${
+              getWorkingHours(working_hours_women)
+                ? `${getWorkingHours(working_hours_women)?.open} الی ${getWorkingHours(working_hours_women)?.close}`
+                : `تعطیل`
+            }`}
+          </Typography>
+          
+          <Typography variant="subtitle1" fontWeight={500}>
+            {`بانوان (روزهای تعطیل): ${
+              working_hours_women?.off_days?.open && working_hours_women?.off_days?.close
+                ? `${working_hours_women.off_days.open} الی ${working_hours_women.off_days.close}`
+                : `موجود نیست`
+            }`}
+          </Typography>
+        </Box>
         </Box>
 
         {/* Reservation button */}

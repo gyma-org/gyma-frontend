@@ -24,10 +24,14 @@ export interface GymDetails {
   rate: string;
   working_hours_men: {
     off_days: { open: string; close: string };
-    working_days: { open: string; close: string };
+    odd: { open: string; close: string };
+    even: { open: string; close: string };
+    odd_even: string;
   };
   working_hours_women: {
     off_days: { open: string; close: string };
-    working_days: { open: string; close: string };
+    odd: { open: string; close: string };
+    even: { open: string; close: string };
+    odd_even: string;
   };
 }
