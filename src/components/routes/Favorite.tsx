@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Typography  } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Search from "../Search";
 import FloatCard from "../FloatCard";
 import { API_BASE_URL } from "@/config";
 import { useAuth } from "@/context/AuthContext";
 import { getSavedGyms } from "../../api/DisplaySavedGyms";
 import { GymListResponse } from "../../types/gymList";
+import Link from "next/link";
+import { Loading } from "../Loading";
+import { useAuth } from "@/context/AuthContext";
+import { getSavedGyms } from "../../api/DisplaySavedGyms";
 import { getGymDetails } from "../../api/gymDetails";
 import { GymDetails } from "../../types/gymDetails";
 import Cookies from "js-cookie";
 
+const GALLERY_BASE_URL = `${API_BASE_URL}/medias/media/gallery/`;
+const PROFILE_BASE_URL = `${API_BASE_URL}/medias/profile/`;
+
 const Favorite = () => {
-  const { authTokens } = useAuth();
+  const { authTokens, logoutUser } = useAuth();
   const [gyms, setGyms] = useState<GymListResponse[]>([]); // State to store the list of gyms
   const [gymDetails, setGymDetails] = useState<Map<string, GymDetails>>(new Map()); // Map for gym details
   const [loading, setLoading] = useState<boolean>(true); // Loading state
@@ -62,11 +70,12 @@ const Favorite = () => {
 
     const fetchFavouriteGyms = async () => {
       if (!authTokens || !authTokens.access) {
+        logoutUser
         console.warn("No authentication token available");
         return;
       }
       try {
-        const data = await getSavedGyms(authTokens.access); // Fetch saved gyms from API
+        const data = await getSavedGyms(authTokens.access, logoutUser); // Fetch saved gyms from API
         const gymIds = data.map((gym) => gym.gym_id.toString()); // Extract gym IDs
 
         // Save gym IDs to cookies
@@ -113,9 +122,9 @@ const Favorite = () => {
     };
 
     fetchGymsFromCookies(); // Check for gyms in cookies and fetch accordingly
-  }, [authTokens]);
+  }, [authTokens, logoutUser]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Error: {error}</p>;
 
   if (gyms.length === 0) {
@@ -175,8 +184,11 @@ const Favorite = () => {
             name={details?.name || "Unknown Gym"}
             address={details?.address || "Address not available"}
             city={details?.city || "City not specified"}
+            price={details?.price || 0}
             profile={details?.profile ? `${details.profile}` : undefined}
             onClick={() => handleGymClick(gym.gym_id)}
+            gymId={gym.gym_id}
+            rate={details?.rate || null}
           />
           );
         })}

@@ -14,6 +14,7 @@ export interface booked {
     use_date: string | null;
     start_time: string;
     end_time: string;
+    gym_id: string;
   }
   
   export interface BookingListResponse {

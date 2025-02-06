@@ -24,7 +24,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
   const { id } = params; // Get gym code from the URL (dynamic param)
 
   // Fetch gym details using the gym code
-  const gymDetails = await getGymDetails(id);
+  const gymDetails = await getGymDetails(id, { cache: "no-store" });
 
   console.log("Fetched Gym Details:", gymDetails);
 
@@ -52,9 +52,12 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         location={gymDetails.address}
         gymId={gymDetails.id}
         gymSex={gymDetails.sex}
+        working_hours_men={gymDetails.working_hours_men}
+        working_hours_women={gymDetails.working_hours_women}
+        rate={gymDetails.rate}
       />
       <Description text={gymDetails.description} />
-      <Address location={gymDetails.address} />
+      <Address location={gymDetails.address} lat={gymDetails.lat} lon={gymDetails.lon} />
       <Comments gymid={gymDetails.id} />
     </Grid>
   );

@@ -6,6 +6,7 @@ import { getBookingList } from "@/api/Booked";
 import { booked } from "@/types/booked";
 import Search from "../Search";
 import ReservationCard from "../ReservationCard";
+import { Loading } from "../Loading";
 
 const Reservation = () => {
   const [showOutDate, setShowOutDate] = useState(false);
@@ -26,8 +27,12 @@ const Reservation = () => {
 
         setLoading(true);
         const data = await getBookingList(authTokens.access, logoutUser);
-        setCurrentBookings(data.current_bookings);
-        setPastBookings(data.past_bookings);
+
+        const current = data.current_bookings.filter(booking => !booking.used);
+        const past = [...data.past_bookings, ...data.current_bookings.filter(booking => booking.used)];
+
+        setCurrentBookings(current);
+        setPastBookings(past);
       } catch (error) {
         console.error("Error fetching bookings:", error);
       } finally {
@@ -38,7 +43,7 @@ const Reservation = () => {
     fetchBookings();
   }, [authTokens, logoutUser]);
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (loading) return <Loading />;
 
   return (
     <Grid

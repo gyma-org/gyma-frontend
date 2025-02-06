@@ -1,20 +1,74 @@
 import { Box, CardMedia, IconButton, Rating, Typography } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { saveGym } from "@/api/SaveGym";
+import { removeGym } from "@/api/RemoveGym";
+import { useAuth } from "@/context/AuthContext";
 import { API_BASE_URL } from "@/config";
 
 interface FloatCardProps {
   name: string;
   address: string;
   city: string;
+  price: number;
   profile?: string;
   onClick?: () => void;
   maxWidth?: number;
+  gymId: string;
+  rate: string | null;
 }
 
-const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500 }) => {
+const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500, price, gymId, rate }) => {
+  const { authTokens } = useAuth();
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const savedGymIds = Cookies.get("savedGymIds");
+    if (savedGymIds) {
+      const gymIds: string[] = JSON.parse(savedGymIds);
+      setIsSaved(gymIds.includes(gymId));
+    }
+  }, [gymId]);
+
+  // Handle save/remove gym click
+  const handleSaveClick = async () => {
+    if (loading) return; // Prevent multiple clicks
+    setLoading(true);
+
+    if (!authTokens || !authTokens.access) {
+      console.warn("No authentication token available");
+      return;
+    }
+
+    try {
+      const savedGymIds = Cookies.get("savedGymIds") || "[]";
+      let gymIds: string[] = JSON.parse(savedGymIds);
+
+      if (isSaved) {
+        // Remove gym
+        await removeGym(gymId, authTokens.access);
+        gymIds = gymIds.filter((id) => id !== gymId);
+      } else {
+        // Save gym
+        await saveGym(gymId, authTokens.access);
+        gymIds.push(gymId);
+      }
+
+      // Update cookies and state
+      Cookies.set("savedGymIds", JSON.stringify(gymIds), { expires: 7 });
+      setIsSaved(!isSaved);
+    } catch (error) {
+      console.error("Error saving/removing gym:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <Box
-      onClick={onClick} // Attach the onClick handler here
+       // Attach the onClick handler here
       sx={{
         boxShadow: "0px 0px 5px #00000040",
         direction: "rtl",
@@ -29,16 +83,17 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
       }}>
       {/* Save button */}
       <Box>
-        <IconButton sx={{ p: 0.4, ml: 1 }}>
+        <IconButton sx={{ p: 0.4, ml: 1 }} onClick={handleSaveClick}>
           <svg
             width="24"
             height="24"
             viewBox="0 0 36 36"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg">
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
-              d="M6 13.5C6 9.25736 6 7.13604 7.31802 5.81802C8.63604 4.5 10.7574 4.5 15 4.5H21C25.2426 4.5 27.364 4.5 28.682 5.81802C30 7.13604 30 9.25736 30 13.5V23.7414C30 27.7663 30 29.7788 28.7336 30.3943C27.4671 31.0099 25.8847 29.7665 22.7198 27.2798L21.7069 26.484C19.9274 25.0858 19.0376 24.3867 18 24.3867C16.9624 24.3867 16.0726 25.0858 14.2931 26.484L13.2802 27.2798C10.1153 29.7665 8.53288 31.0099 7.26644 30.3943C6 29.7788 6 27.7663 6 23.7414V13.5Z"
-              fill="#555555"
+              d="M6 13.5C6 9.25736 6 7.13604 7.31802 5.81802C8.63604 4.5 10.7574 4.5 15 4.5H21C25.2426 4.5 27.364 4.5 28.682 5.17157C30 7.13604 30 9.25736 30 13.5V23.7414C30 27.7663 30 29.7788 28.7336 30.3943C27.4671 31.0099 25.8847 29.7665 22.7198 27.2798L21.7069 26.484C19.9274 25.0858 19.0376 24.3867 18 24.3867C16.9624 24.3867 16.0726 25.0858 14.2931 26.484L13.2802 27.2798C10.1153 29.7665 8.53288 31.0099 7.26644 30.3943C6 29.7788 6 27.7663 6 23.7414V13.5Z"
+              fill={isSaved ? "orange" : ""}
               stroke="black"
             />
           </svg>
@@ -46,7 +101,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
       </Box>
 
       {/* Card data */}
-      <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }} onClick={onClick}>
         <Box>
           <Typography
             noWrap
@@ -95,7 +150,23 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
             alignItems: "center",
             width: "auto",
           }}>
-          <Rating size="small" />
+          {rate ? (
+            <Rating size="small" value={parseFloat(rate)} readOnly />
+          ) : (
+            <Box
+              sx={{
+                display: "inline-block",
+                backgroundColor: "#E0F7FA", // Light cyan for a fresh look
+                color: "#00796B", // Teal for contrast
+                fontWeight: "bold",
+                fontSize: "0.75rem",
+                padding: "2px 8px",
+                borderRadius: "12px",
+              }}
+            >
+              جدید
+            </Box>
+          )}
           <Box
             display="flex"
             alignItems="center"
@@ -122,7 +193,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
       </Box>
 
       {/* Card image */}
-      <CardMedia
+      <CardMedia onClick={onClick}
         image={`${API_BASE_URL}/medias/profile/${profile}`}
         sx={{
           mr: 1,

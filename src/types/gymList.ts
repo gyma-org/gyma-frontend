@@ -21,6 +21,7 @@ export interface GymListResponse {
   id: number;
   gym_id: string;
   name: string;
+  price: number;
   gym_code: string;
   owner_firstname: string;
   owner_lastname: string;

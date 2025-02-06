@@ -25,7 +25,7 @@ const Comments: React.FC<CommentProps> = ({ gymid }) => {
         console.log(data?.comments);
         setComments(data?.comments || []);
       } catch (err) {
-        setError("Failed to load comments.");
+        setError("در حال حاضر کامنتی ثبت نشده است");
       } finally {
         setLoading(false);
       }

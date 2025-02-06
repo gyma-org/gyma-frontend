@@ -77,21 +77,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         },
         body: JSON.stringify({ refresh: authTokens.refresh }),
       });
-
+    
+      if (!response.ok) {
+        // Handle specific response status codes
+        if (response.status === 400 || response.status === 401) {
+          console.warn("Invalid or expired refresh token, logging out...");
+          logoutUser();
+        }
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+    
       const data = await response.json();
-      if (response.ok) {
-        setAuthTokens(data);
-        setUser(jwtDecode<User>(data.access));
-        localStorage.setItem("authTokens", JSON.stringify(data));
-        document.cookie = `auth_token=${data.access}; path=/; max-age=${
-          60 * 60 * 24 * 7
-        }; SameSite=Strict; Secure`;
+      setAuthTokens(data);
+      setUser(jwtDecode<User>(data.access));
+      localStorage.setItem("authTokens", JSON.stringify(data));
+      document.cookie = `auth_token=${data.access}; path=/; max-age=${
+        60 * 60 * 24 * 7
+      }; SameSite=Strict; Secure`;
+    
+    } catch (error) {
+      console.error("Token refresh error:", error);
+    
+      // Network errors (e.g., no internet, server down)
+      if (error instanceof TypeError) {
+        console.warn("Network issue, not logging out the user.");
       } else {
         logoutUser();
       }
-    } catch (error) {
-      console.error("Token refresh error:", error);
-      logoutUser();
     } finally {
       setLoading(false);
     }
@@ -158,7 +170,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }; SameSite=Strict; Secure`;
 
         // Fetch the saved gyms from the API after successful login
-        const savedGyms = await getSavedGyms(data.access); // Fetch saved gyms using the newly obtained access token
+        const savedGyms = await getSavedGyms(data.access, logoutUser); // Fetch saved gyms using the newly obtained access token
         const gymIds = savedGyms.map((gym) => gym.gym_id.toString()); // Map the gym IDs to strings
         
         // Save the gym IDs in cookies

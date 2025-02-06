@@ -28,6 +28,7 @@ import { faIR } from "date-fns/locale";
 import jMoment from "jalali-moment";
 import { API_USER_URL } from "@/config";
 import { ArrowBack, Edit } from "@mui/icons-material";
+import { Loading } from "../Loading";
 
 const PROFILE_BASE_URL = `${API_USER_URL}/medias/profile/`;
 const BANNER_BASE_URL = `${API_USER_URL}/medias/banner/`;
@@ -88,19 +89,15 @@ const Profile = () => {
     try {
       setLoading(true);
       const htmlForm = await goToGateway(data, authTokens.access); // Get the HTML response
-
-      // Create a new window to submit the form
-      const newWindow = window.open();
-
-      if (newWindow) {
-        newWindow.document.write(htmlForm); // Write the form to the new window
-        newWindow.document.close(); // Close the document to allow form submission
-
-        // Cast to HTMLFormElement to access the submit method
-        const formElement = newWindow.document.getElementById("id_form") as HTMLFormElement;
-        formElement?.submit(); // Submit the form to the payment gateway
-      }
-
+  
+      // Create a temporary form to submit the HTML response
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = htmlForm;
+      document.body.appendChild(tempDiv);
+  
+      const formElement = tempDiv.querySelector("#id_form") as HTMLFormElement;
+      formElement?.submit(); // Submit the form to the payment gateway
+  
       setError(null); // Clear any previous errors
     } catch (error: any) {
       console.error("Failed to initiate payment:", error);
@@ -136,7 +133,7 @@ const Profile = () => {
     getProfile();
   }, [authTokens, logoutUser]); // Re-run when authTokens change
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (loading) return <Loading />;
   if (error) return <Typography color="error">{error}</Typography>;
 
   // Ensure dateJoined is available
@@ -667,7 +664,7 @@ const Profile = () => {
             type="text"
             inputProps={{
               inputMode: "numeric", // Ensures the numeric keypad is displayed
-              pattern: "[0-9]*",    // Limits input to digits only
+              pattern: "[0-9]*", // Limits input to digits only
             }}
           />
           <Button
