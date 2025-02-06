@@ -68,7 +68,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
 
   return (
     <Box
-       // Attach the onClick handler here
+      // Attach the onClick handler here
       sx={{
         boxShadow: "0px 0px 5px #00000040",
         direction: "rtl",
@@ -78,19 +78,21 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
         mx: { xs: "auto", md: 0 },
         aspectRatio: "4/1",
         p: 1,
+        my: 1,
         display: "flex",
         cursor: "pointer",
       }}>
       {/* Save button */}
       <Box>
-        <IconButton sx={{ p: 0.4, ml: 1 }} onClick={handleSaveClick}>
+        <IconButton
+          sx={{ p: 0.4, ml: 1 }}
+          onClick={handleSaveClick}>
           <svg
             width="24"
             height="24"
             viewBox="0 0 36 36"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+            xmlns="http://www.w3.org/2000/svg">
             <path
               d="M6 13.5C6 9.25736 6 7.13604 7.31802 5.81802C8.63604 4.5 10.7574 4.5 15 4.5H21C25.2426 4.5 27.364 4.5 28.682 5.17157C30 7.13604 30 9.25736 30 13.5V23.7414C30 27.7663 30 29.7788 28.7336 30.3943C27.4671 31.0099 25.8847 29.7665 22.7198 27.2798L21.7069 26.484C19.9274 25.0858 19.0376 24.3867 18 24.3867C16.9624 24.3867 16.0726 25.0858 14.2931 26.484L13.2802 27.2798C10.1153 29.7665 8.53288 31.0099 7.26644 30.3943C6 29.7788 6 27.7663 6 23.7414V13.5Z"
               fill={isSaved ? "orange" : ""}
@@ -101,7 +103,9 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
       </Box>
 
       {/* Card data */}
-      <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }} onClick={onClick}>
+      <Box
+        sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+        onClick={onClick}>
         <Box>
           <Typography
             noWrap
@@ -151,7 +155,11 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
             width: "auto",
           }}>
           {rate ? (
-            <Rating size="small" value={parseFloat(rate)} readOnly />
+            <Rating
+              size="small"
+              value={parseFloat(rate)}
+              readOnly
+            />
           ) : (
             <Box
               sx={{
@@ -162,8 +170,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
                 fontSize: "0.75rem",
                 padding: "2px 8px",
                 borderRadius: "12px",
-              }}
-            >
+              }}>
               جدید
             </Box>
           )}
@@ -193,7 +200,8 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
       </Box>
 
       {/* Card image */}
-      <CardMedia onClick={onClick}
+      <CardMedia
+        onClick={onClick}
         image={`${API_BASE_URL}/medias/profile/${profile}`}
         sx={{
           mr: 1,

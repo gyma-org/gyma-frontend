@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { fetchNearbyGyms, Gym } from "../../api/gymMap";
 import FloatCard from "../FloatCard";
 import NearbyGyms from "./NearbyGym";
+import GymPreview from "../GymPreview";
 
 const Mapp = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -16,6 +17,9 @@ const Mapp = () => {
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null); // Store clicked location
   const [gymMarkers, setGymMarkers] = useState<Marker[]>([]); // Track gym markers to remove them
   const [locationDenied, setLocationDenied] = useState(false);
+
+  // Preview
+  const [gymPreview, setGymPreview] = useState<Gym | null>(null);
 
   const initializeMap = (userLat: number, userLon: number) => {
     mapRef.current = new mapboxgl.Map({
@@ -54,10 +58,9 @@ const Mapp = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined" && mapContainerRef.current) {
-
       const defaultLat = 35.6892; // Tehran
       const defaultLon = 51.389;
-      
+
       // Initialize the map immediately with default coordinates
       initializeMap(defaultLat, defaultLon);
       if (navigator.geolocation) {
@@ -78,7 +81,7 @@ const Mapp = () => {
       } else {
         console.error("Geolocation is not supported by this browser.");
         setLocationDenied(true); // Show the location denied box
-        
+
         initializeMap(defaultLat, defaultLon);
       }
     }
@@ -99,12 +102,12 @@ const Mapp = () => {
           newMarker.remove();
         }
 
-        const markerElement = document.createElement('div');
-        markerElement.className = 'marker';
+        const markerElement = document.createElement("div");
+        markerElement.className = "marker";
         markerElement.style.backgroundImage = `url(/icons/mylocation.svg)`; // Use the SVG as the background image
-        markerElement.style.backgroundSize = 'contain'; // Ensure the image is fully contained
-        markerElement.style.width = '50px'; // Set width of the marker
-        markerElement.style.height = '50px'; // Set height of the marker
+        markerElement.style.backgroundSize = "contain"; // Ensure the image is fully contained
+        markerElement.style.width = "50px"; // Set width of the marker
+        markerElement.style.height = "50px"; // Set height of the marker
 
         // Add new user marker
         newMarker = new mapboxgl.Marker(markerElement).setLngLat([lng, lat]).addTo(map);
@@ -176,9 +179,8 @@ const Mapp = () => {
     });
   };
 
-  const handleGymClick = (id: string) => {
-    // Navigate to the gym details page
-    window.location.href = `/gyms/${id}`;
+  const handleGymClick = (gym: Gym) => {
+    setGymPreview(gym);
   };
 
   return (
@@ -194,15 +196,23 @@ const Mapp = () => {
             p: 2,
             zIndex: 200,
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Typography variant="body1" sx={{ mb: 2 }}>
+          }}>
+          <Typography
+            variant="body1"
+            sx={{ mb: 2 }}>
             سرویس موقعیت یابی توسط شما غیر فعال شده است.
           </Typography>
-          <Button variant="outlined" color="primary" onClick={handleRequestLocation} sx={{ mr: 1 }}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleRequestLocation}
+            sx={{ mr: 1 }}>
             فعال سازی سرویس موقعیت یابی
           </Button>
-          <Button variant="text" color="secondary" onClick={() => setLocationDenied(false)}>
+          <Button
+            variant="text"
+            color="secondary"
+            onClick={() => setLocationDenied(false)}>
             بستن
           </Button>
         </Box>
@@ -223,24 +233,36 @@ const Mapp = () => {
           width: "100%",
           maxWidth: 440,
         }}>
-        <Typography align="center">{"باشگاه های نزدیک"}</Typography>
-        {gyms.map((gym) => (
-          <FloatCard
-            key={gym.gym_code}
-            name={gym.name}
-            address={gym.address}
-            city={gym.city}
-            profile={gym.profile}
-            price={gym.price}
-            gymId={gym.id}
-            onClick={() => handleGymClick(gym.id)} // Pass the click handler
+        {gymPreview ? (
+          <GymPreview
+            handleBack={() => setGymPreview(null)}
+            gym={gymPreview}
             maxWidth={400}
-            rate={gym.rate}
           />
-        ))}
+        ) : (
+          <>
+            <Typography align="center">{"باشگاه های نزدیک"}</Typography>
+            {gyms.map((gym) => (
+              <FloatCard
+                key={gym.gym_code}
+                name={gym.name}
+                address={gym.address}
+                city={gym.city}
+                profile={gym.profile}
+                price={gym.price}
+                gymId={gym.id}
+                onClick={() => handleGymClick(gym)}
+                maxWidth={400}
+                rate={gym.rate}
+              />
+            ))}
+          </>
+        )}
       </Box>
       <NearbyGyms
         gyms={gyms}
+        gymPreview={gymPreview}
+        handleBack={() => setGymPreview(null)}
         handleGymClick={handleGymClick}
       />
       <Box
