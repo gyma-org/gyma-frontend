@@ -15,7 +15,7 @@ const Mapp = () => {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [userMarker, setUserMarker] = useState<Marker | null>(null); // State to store user marker
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null); // Store clicked location
-  const [gymMarkers, setGymMarkers] = useState<Marker[]>([]); // Track gym markers to remove them
+  const [gymMarkers, setGymMarkers] = useState<{ marker: Marker; popupElement: HTMLDivElement }[]>([]);
   const [locationDenied, setLocationDenied] = useState(false);
 
   // Preview
@@ -97,6 +97,11 @@ const Mapp = () => {
         const { lat, lng } = e.lngLat;
         console.log(e.lngLat);
 
+        const clickedElement = e.originalEvent.target as HTMLElement;
+
+        // ❌ Ignore clicks on gym pins
+        if (clickedElement.classList.contains("custom-marker")) return;
+
         // Remove previous user marker if it exists
         if (newMarker) {
           newMarker.remove();
@@ -113,7 +118,7 @@ const Mapp = () => {
         newMarker = new mapboxgl.Marker(markerElement).setLngLat([lng, lat]).addTo(map);
 
         // Update marker and selected location state
-        setUserMarker(newMarker);
+        // setUserMarker(newMarker);
         setSelectedLocation({ lat, lng });
 
         // Remove previous gym markers
@@ -146,37 +151,114 @@ const Mapp = () => {
     );
   };
 
+  let newGymMarkers: { marker: Marker; popupElement: HTMLDivElement }[] = [];
+  let selectedMarkerIndex: number | null = null;
+  
+  // ✅ Clears all gym markers
   const clearGymMarkers = () => {
-    // Remove previous gym markers
-    gymMarkers.forEach((marker) => marker.remove());
-    setGymMarkers([]); // Clear the state
+    newGymMarkers.forEach(({ marker, popupElement }) => {
+      marker.remove();
+      popupElement.remove();
+    });
+    newGymMarkers = [];
+    setGymMarkers([]);
+    selectedMarkerIndex = null;
   };
+  
+  // ✅ Handles marker selection & updates styles
+  const selectGymMarker = (index: number) => {
+    selectedMarkerIndex = index;
+  
+    newGymMarkers.forEach(({ marker }, i) => {
+      const el = marker.getElement();
+      el.style.backgroundImage =
+        i === index ? `url(/icons/selectedgyms.svg)` : `url(/icons/gyms.svg)`;
+      el.style.width = i === index ? "60px" : "50px";
+      el.style.height = i === index ? "60px" : "50px";
+    });
+  };
+  
+  // ✅ Flies to the selected gym
+  const flyToGym = (map: mapboxgl.Map, lat: number, lon: number) => {
+    map.flyTo({
+      center: [lon, lat],
+      zoom: 15,
+      essential: true,
+    });
+  };
+  
+  // ✅ Creates a gym marker and handles clicks
+  const createGymMarker = (map: mapboxgl.Map, gym: Gym, index: number) => {
+    const markerElement = document.createElement("div");
+    markerElement.className = "custom-marker";
+    markerElement.style.backgroundImage = `url(/icons/gyms.svg)`;
+    markerElement.style.width = "50px";
+    markerElement.style.height = "50px";
+    markerElement.style.cursor = "pointer";
+  
+    // ✅ Create text container (popup)
+    const popupElement = document.createElement("div");
+    popupElement.innerHTML = `<h3>${gym.name}</h3>`;
+    popupElement.className = "gym-popup";
+    
+    // ✅ Style for popup
+    
+    popupElement.style.position = "absolute";
+    popupElement.style.padding = "5px 8px";
+    popupElement.style.whiteSpace = "nowrap";
+    // popupElement.style.fontSize = "14px";
+    popupElement.style.backgroundColor = "transparent";
+    popupElement.style.borderRadius = "5px";
+    // popupElement.style.boxShadow = "0px 2px 5px rgba(0,0,0,0.2)";
+  
+    const marker = new mapboxgl.Marker(markerElement)
+      .setLngLat([gym.lon, gym.lat])
+      .addTo(map);
+  
+    map.getCanvas().parentNode?.appendChild(popupElement);
+  
+    const updatePopupPosition = () => {
+      const pos = map.project([gym.lon, gym.lat]);
+      const zoom = map.getZoom();
 
-  let newGymMarkers: Marker[] = [];
-  let marker: Marker | null = null;
-
+      const fontSize = Math.max(10, zoom * 1.2); // Prevents text from getting too small
+      popupElement.style.fontSize = `${fontSize}px`;
+      
+      const leftOffset = zoom * 2;  // Distance from pin
+      const topOffset = -10;
+      
+      const screenWidth = map.getCanvas().width;
+      const isLeftSide = pos.x < screenWidth / 2; // Check if marker is on left or right side
+      
+      popupElement.style.left = isLeftSide ? `${pos.x + leftOffset}px` : `${pos.x - leftOffset}px`;
+      popupElement.style.top = `${pos.y + topOffset}px`;
+    };
+  
+    map.on("move", updatePopupPosition);
+    map.on("moveend", updatePopupPosition);
+    map.on("zoom", updatePopupPosition);
+    updatePopupPosition();
+  
+    // ✅ Handle click event for selecting gym
+    markerElement.addEventListener("click", (event) => {
+      event.stopPropagation();
+      selectGymMarker(index);
+      flyToGym(map, gym.lat, gym.lon);
+    });
+  
+    return { marker, popupElement };
+  };
+  
+  // ✅ Main function to add markers
   const addMarkersToMap = (gyms: Gym[]) => {
     const map = mapRef.current;
     if (!map) return;
-
-    // Check if there are existing markers, and remove them
-    if (newGymMarkers.length > 0) {
-      newGymMarkers.forEach((marker) => {
-        marker.remove(); // Remove each marker from the map
-      });
-      newGymMarkers = []; // Clear the array
-    }
-
-    // Create new markers for the gyms
-    newGymMarkers = gyms.map((gym) => {
-      marker = new mapboxgl.Marker({ color: "purple" })
-        .setLngLat([gym.lon, gym.lat])
-        .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<h3>${gym.name}</h3><p>${gym.address}</p>`))
-        .addTo(map);
-
-      marker.togglePopup(); // Show the popup when the marker is added
-      return marker;
-    });
+  
+    clearGymMarkers(); // ✅ Remove existing markers
+  
+    newGymMarkers = gyms.map((gym, index) => createGymMarker(map, gym, index));
+  
+    setGymMarkers(newGymMarkers);
   };
 
   const handleGymClick = (gym: Gym) => {
