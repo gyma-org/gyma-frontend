@@ -1,15 +1,19 @@
 import React, { useState, useRef } from "react";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
 import { Box, Typography } from "@mui/material";
 import FloatCard from "../FloatCard";
+import { Gym } from "@/api/gymMap";
+import GymPreview from "../GymPreview";
 
 export default function NearbyGyms({
   gyms,
+  gymPreview,
   handleGymClick,
+  handleBack,
 }: {
   gyms: any[];
-  handleGymClick: (gym_id: string) => void;
+  gymPreview: Gym | null;
+  handleGymClick: (gym: Gym) => void;
+  handleBack: () => void;
 }) {
   const [dialogHeight, setDialogHeight] = useState(14);
   const startY = useRef(0);
@@ -35,13 +39,13 @@ export default function NearbyGyms({
         setDialogHeight(100);
         setIsFullScreen(true);
       } else if (diffY > 50 && !isFullScreen) {
-        setDialogHeight(dialogHeight === 50 ? 100 : 50);
+        setDialogHeight(dialogHeight === 65 ? 100 : 65);
       } else if (diffY < -50) {
         if (dialogHeight === 100) {
-          setDialogHeight(50);
+          setDialogHeight(65);
           setIsFullScreen(false);
         } else {
-          setDialogHeight(14);
+          setDialogHeight(15);
         }
       }
       touchMoveTimeout.current = null;
@@ -60,8 +64,8 @@ export default function NearbyGyms({
           margin: 0,
           backgroundColor: "white",
           height: { xs: `${dialogHeight}vh`, md: 0 },
-          borderTopLeftRadius: dialogHeight <= 50 ? 24 : 0,
-          borderTopRightRadius: dialogHeight <= 50 ? 24 : 0,
+          borderTopLeftRadius: dialogHeight <= 65 ? 24 : 0,
+          borderTopRightRadius: dialogHeight <= 65 ? 24 : 0,
           transition: "height 0.3s ease",
           boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
         }}>
@@ -84,27 +88,36 @@ export default function NearbyGyms({
               display: "flex",
               justifyContent: "end",
               alignItems: "end",
+              gap: 1,
             }}
           />
-          <Typography
-            align="center"
-            my={1}>
-            {"باشگاه های نزدیک"}
-          </Typography>
-          {gyms.map((gym) => (
-            <FloatCard
-              key={gym.gym_code}
-              name={gym.name}
-              address={gym.address}
-              city={gym.city}
-              price={gym.price}
-              profile={gym.profile}
-              gymId={gym.id}
-              onClick={() => handleGymClick(gym.id)}
-              maxWidth={400}
-              rate={gym.rate}
-            />
-          ))}
+          <Box px={2}>
+            {gymPreview ? (
+              <GymPreview
+                handleBack={handleBack}
+                gym={gymPreview}
+                maxWidth={360}
+              />
+            ) : (
+              <>
+                <Typography align="center">{"باشگاه های نزدیک"}</Typography>
+                {gyms.map((gym) => (
+                  <FloatCard
+                    key={gym.gym_code}
+                    name={gym.name}
+                    address={gym.address}
+                    city={gym.city}
+                    profile={gym.profile}
+                    price={gym.price}
+                    gymId={gym.id}
+                    onClick={() => handleGymClick(gym)}
+                    maxWidth={400}
+                    rate={gym.rate}
+                  />
+                ))}
+              </>
+            )}
+          </Box>
         </div>
       </Box>
     </>
