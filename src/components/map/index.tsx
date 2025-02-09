@@ -383,7 +383,6 @@ const Mapp = () => {
           }}
           onClick={() => setShowNearbyGyms(true)}
           variant="extended">
-          {/* material icon for nearby */}
           <FitnessCenter />
           نمایش باشگاه های نزدیک
         </Fab>
