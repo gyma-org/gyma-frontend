@@ -373,7 +373,7 @@ const Mapp = () => {
         <Fab
           sx={{
             position: "absolute",
-            bottom: 10,
+            bottom: "7%",
             right: -5,
             gap: 1,
             display: { xs: "flex", md: "none" },
