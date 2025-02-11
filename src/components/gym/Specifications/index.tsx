@@ -10,6 +10,7 @@ import { API_BASE_URL } from "@/config";
 import { bookGymSession } from "@/api/Booking";
 import moment from "jalali-moment";
 import { EditCalendarRounded } from "@mui/icons-material";
+import { useSnackbar } from "notistack";
 
 interface WorkingHours {
   off_days: { open: string; close: string };
@@ -46,6 +47,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
   // sex
   rate,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [showReservationModal, setShowReservationModal] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(moment().format("jYYYY/jMM/jDD"));
   const [sessions, setSessions] = useState<any[]>([]);
@@ -123,12 +125,14 @@ const Specifications: React.FC<SpecificationsProps> = ({
         window.open(result.redirect_url, "_blank");
     
         // Display success message
-        setSnackbarSeverity("success");
-        setSnackbarMessage("Session booked successfully!");
+        enqueueSnackbar("رزرو با موفقیت انجام شد!", { variant: "success" });
+        // setSnackbarSeverity("success");
+        // setSnackbarMessage("Session booked successfully!");
       } else {
         // Handle unexpected response
-        setSnackbarSeverity("error");
-        setSnackbarMessage("Unexpected response. Please try again.");
+        enqueueSnackbar("رزرو انجام نشد، دوباره تلاش کنید!", { variant: "error" });
+        // setSnackbarSeverity("error");
+        // setSnackbarMessage("Unexpected response. Please try again.");
         console.error("Unexpected response from bookGymSession:", result);
       }
     } catch (error: unknown) {
@@ -140,11 +144,13 @@ const Specifications: React.FC<SpecificationsProps> = ({
       if (error instanceof Error) {
         errorMessage = error.message; // The message from the error (e.g., API message)
       }
-    
-      setSnackbarSeverity("error");
-      setSnackbarMessage(errorMessage); // Set the message to be displayed in the Snackbar
+      
+      enqueueSnackbar("رزرو انجام نشد، دوباره تلاش کنید!", { variant: "error" });
+      // setSnackbarSeverity("error");
+      // setSnackbarMessage(errorMessage); // Set the message to be displayed in the Snackbar
     } finally {
-      setOpenSnackbar(true); // Show the Snackbar
+      console.log("");
+      // setOpenSnackbar(true); // Show the Snackbar
     }
   };
 

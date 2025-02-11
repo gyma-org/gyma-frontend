@@ -29,11 +29,13 @@ import jMoment from "jalali-moment";
 import { API_USER_URL } from "@/config";
 import { ArrowBack, Edit } from "@mui/icons-material";
 import { Loading } from "../Loading";
+import { useSnackbar } from "notistack";
 
 const PROFILE_BASE_URL = `${API_USER_URL}/medias/profile/`;
 const BANNER_BASE_URL = `${API_USER_URL}/medias/banner/`;
 
 const Profile = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { authTokens, logoutUser } = useAuth();
   const [UserProfile, setProfile] = useState<UserProfile | null>(null);
   const [wallet, setWallet] = useState<UserWallet | null>(null);
@@ -97,11 +99,13 @@ const Profile = () => {
   
       const formElement = tempDiv.querySelector("#id_form") as HTMLFormElement;
       formElement?.submit(); // Submit the form to the payment gateway
-  
+      
+      enqueueSnackbar("در حال ورود به درگاه پرداخت!", { variant: "success" });
       setError(null); // Clear any previous errors
     } catch (error: any) {
-      console.error("Failed to initiate payment:", error);
-      setError("Failed to initiate payment. Please try again.");
+      enqueueSnackbar("ورود به درگاه انجام نشد، دوباره تلاش کنید.", { variant: "error" });
+      // console.error("Failed to initiate payment:", error);
+      // setError("Failed to initiate payment. Please try again.");
     } finally {
       setLoading(false);
     }
