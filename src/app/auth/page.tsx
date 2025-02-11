@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import { SnackbarProvider } from "notistack";
+import { useSnackbar } from "notistack";
 
 import {
   Box,
@@ -268,6 +270,7 @@ const Paragraph = styled("p")({
 });
 
 const LoginSignup: React.FC = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [signIn, toggle] = useState(true);
@@ -290,18 +293,17 @@ const LoginSignup: React.FC = () => {
     try {
       const response = await loginUser(values);
       setLoading(false); // Stop loading
-      if (response.status_code === 400) {
-        setOpenVerification(true);
+  
+      if (response.status_code === 200) {
+        enqueueSnackbar("ورود موفقیت آمیز!", { variant: "success" });
+      } else if (response.status_code === 401) {
+        enqueueSnackbar("نام کاربری و یا رمز عبور اشتباه است", { variant: "error" });
       } else {
-        setSnackbarMessage("Login not successful!");
-        setSnackbarSeverity("error");
-        setOpenSnackbar(true);
+        enqueueSnackbar("نام کاربری و یا رمز عبور اشتباه است", { variant: "error" });
       }
     } catch (error) {
       setLoading(false); // Stop loading
-      setSnackbarMessage("Login failed. Please try again.");
-      setSnackbarSeverity("error");
-      setOpenSnackbar(true);
+      enqueueSnackbar("نام کاربری و یا رمز عبور اشتباه است", { variant: "error" });
     }
   };
 
@@ -316,16 +318,12 @@ const LoginSignup: React.FC = () => {
 
     const response = await registerUser(values); // call registerUser from context
     if (response.success) {
-      setSnackbarMessage("ثبت نام اولیه با موفقیت انجام شد.");
-      setSnackbarSeverity("success");
-      setOpenSnackbar(true);
+      enqueueSnackbar("ثبت نام اولیه با موفقیت انجام شد.", { variant: "success" });
       setOpenVerification(true);
       setUserPhoneNumber(phoneNumber);
     } else {
       console.error("Registration error:", response.errors);
-      setSnackbarMessage("Registration failed. Please try again.");
-      setSnackbarSeverity("error");
-      setOpenSnackbar(true);
+      enqueueSnackbar("مشکلی در ثبت نام پیش آمد، دوباره تلاش کنید.", { variant: "error" });
     }
   };
 
@@ -340,13 +338,10 @@ const LoginSignup: React.FC = () => {
     if (verificationResponse.success) {
       setOpenVerification(false);
       setSnackbarMessage(verificationResponse.message);
-      setSnackbarSeverity("success");
+      enqueueSnackbar(verificationResponse.message, { variant: "success" });
     } else {
-      setSnackbarMessage(verificationResponse.message);
-      setSnackbarSeverity("error");
+      enqueueSnackbar(verificationResponse.message, { variant: "error" });
     }
-
-    setOpenSnackbar(true);
   };
 
   return (
@@ -636,6 +631,7 @@ const LoginSignup: React.FC = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      <SnackbarProvider />
     </MuiContainer>
   );
 };

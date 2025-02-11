@@ -1,27 +1,33 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import FloatCard from "../FloatCard";
 import { Gym } from "@/api/gymMap";
 import GymPreview from "../GymPreview";
+import { KeyboardDoubleArrowDown } from "@mui/icons-material";
+import { hi } from "date-fns/locale";
 
 export default function NearbyGyms({
   gyms,
   gymPreview,
   handleGymClick,
   handleBack,
+  showNearbyGyms,
+  setShowNearbyGyms,
 }: {
   gyms: any[];
   gymPreview: Gym | null;
   handleGymClick: (gym: Gym) => void;
   handleBack: () => void;
+  showNearbyGyms: boolean;
+  setShowNearbyGyms: (value: boolean) => void;
 }) {
-  const [dialogHeight, setDialogHeight] = useState(14);
+  const [dialogHeight, setDialogHeight] = useState(0);
   const startY = useRef(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const touchMoveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleClose = () => {
-    setDialogHeight(14);
+    setDialogHeight(0);
   };
 
   const handleTouchStart = (event: React.TouchEvent) => {
@@ -39,18 +45,26 @@ export default function NearbyGyms({
         setDialogHeight(100);
         setIsFullScreen(true);
       } else if (diffY > 50 && !isFullScreen) {
-        setDialogHeight(dialogHeight === 65 ? 100 : 65);
+        setDialogHeight(dialogHeight === 60 ? 100 : 60);
       } else if (diffY < -50) {
         if (dialogHeight === 100) {
-          setDialogHeight(65);
+          setDialogHeight(50);
           setIsFullScreen(false);
         } else {
-          setDialogHeight(15);
+          setShowNearbyGyms(false);
         }
       }
       touchMoveTimeout.current = null;
     }, 100);
   };
+
+  useEffect(() => {
+    if (showNearbyGyms) {
+      setDialogHeight(60);
+    } else {
+      setDialogHeight(0);
+    }
+  }, [showNearbyGyms]);
 
   return (
     <>
@@ -64,8 +78,8 @@ export default function NearbyGyms({
           margin: 0,
           backgroundColor: "white",
           height: { xs: `${dialogHeight}vh`, md: 0 },
-          borderTopLeftRadius: dialogHeight <= 65 ? 24 : 0,
-          borderTopRightRadius: dialogHeight <= 65 ? 24 : 0,
+          borderTopLeftRadius: dialogHeight <= 60 ? 24 : 0,
+          borderTopRightRadius: dialogHeight <= 60 ? 24 : 0,
           transition: "height 0.3s ease",
           boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
         }}>
@@ -100,7 +114,28 @@ export default function NearbyGyms({
               />
             ) : (
               <>
-                <Typography align="center">{"باشگاه های نزدیک"}</Typography>
+                <Box display="flex">
+                  <Box
+                    flexGrow={1}
+                    sx={{
+                      opacity: 0,
+                    }}>
+                    بستن
+                    <KeyboardDoubleArrowDown />
+                  </Box>
+                  <Typography
+                    flexGrow={1}
+                    align="center">
+                    {"باشگاه های نزدیک"}
+                  </Typography>
+                  <Box
+                    flexGrow={1}
+                    onClick={() => setShowNearbyGyms(false)}
+                    style={{ cursor: "pointer", textAlign: "end" }}>
+                    بستن
+                    <KeyboardDoubleArrowDown />
+                  </Box>
+                </Box>
                 {gyms.map((gym) => (
                   <FloatCard
                     key={gym.gym_code}

@@ -9,6 +9,7 @@ import styles from "./Card.module.css";
 import moment from "jalali-moment";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { useSnackbar } from "notistack";
 
 interface ReservationCardIFace {
   outdate?: boolean;
@@ -17,6 +18,7 @@ interface ReservationCardIFace {
 }
 
 const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { authTokens, logoutUser } = useAuth();
 
   const [comment, setComment] = useState("");
@@ -53,10 +55,10 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
       }
       await addComment(newComment, authTokens.access, logoutUser);
       setComment("");
-      alert("نظر شما ثبت شد!");
+      enqueueSnackbar("نظر شما ثبت شد!", { variant: "success" });
     } catch (error) {
       console.error("Error submitting comment:", error);
-      alert("خطا در ثبت نظر!");
+      enqueueSnackbar("خطا در ثبت نظر، دوباره تلاش کنید!", { variant: "error" });
     }
   };
 

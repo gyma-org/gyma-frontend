@@ -1,6 +1,6 @@
 import mapboxgl from "@neshan-maps-platform/mapbox-gl";
 import { Marker } from "mapbox-gl";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Fab, Typography } from "@mui/material";
 import "./index.css";
 import myLocationIcon from "@/assets/mylocation.svg";
 import React, { useEffect, useRef, useState } from "react";
@@ -8,6 +8,8 @@ import { fetchNearbyGyms, Gym } from "../../api/gymMap";
 import FloatCard from "../FloatCard";
 import NearbyGyms from "./NearbyGym";
 import GymPreview from "../GymPreview";
+import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp } from "@mui/icons-material";
+import { set } from "date-fns";
 
 const Mapp = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -20,6 +22,8 @@ const Mapp = () => {
 
   // Preview
   const [gymPreview, setGymPreview] = useState<Gym | null>(null);
+
+  const [showNearbyGyms, setShowNearbyGyms] = useState(false);
 
   const initializeMap = (userLat: number, userLon: number) => {
     mapRef.current = new mapboxgl.Map({
@@ -153,7 +157,7 @@ const Mapp = () => {
 
   let newGymMarkers: { marker: Marker; popupElement: HTMLDivElement }[] = [];
   let selectedMarkerIndex: number | null = null;
-  
+
   // ✅ Clears all gym markers
   const clearGymMarkers = () => {
     newGymMarkers.forEach(({ marker, popupElement }) => {
@@ -164,29 +168,28 @@ const Mapp = () => {
     setGymMarkers([]);
     selectedMarkerIndex = null;
   };
-  
+
   // ✅ Handles marker selection & updates styles
   const selectGymMarker = (index: number) => {
     selectedMarkerIndex = index;
-  
+
     newGymMarkers.forEach(({ marker }, i) => {
       const el = marker.getElement();
-      el.style.backgroundImage =
-        i === index ? `url(/icons/selectedgyms.svg)` : `url(/icons/gyms.svg)`;
+      el.style.backgroundImage = i === index ? `url(/icons/selectedgyms.svg)` : `url(/icons/gyms.svg)`;
       el.style.width = i === index ? "60px" : "50px";
       el.style.height = i === index ? "60px" : "50px";
     });
   };
-  
+
   // ✅ Flies to the selected gym
   const flyToGym = (map: mapboxgl.Map, lat: number, lon: number) => {
     map.flyTo({
-      center: [lon, lat],
+      center: [lon, lat - 0.004],
       zoom: 15,
       essential: true,
     });
   };
-  
+
   // ✅ Creates a gym marker and handles clicks
   const createGymMarker = (map: mapboxgl.Map, gym: Gym, index: number) => {
     const markerElement = document.createElement("div");
@@ -195,14 +198,14 @@ const Mapp = () => {
     markerElement.style.width = "50px";
     markerElement.style.height = "50px";
     markerElement.style.cursor = "pointer";
-  
+
     // ✅ Create text container (popup)
     const popupElement = document.createElement("div");
     popupElement.innerHTML = `<h3>${gym.name}</h3>`;
     popupElement.className = "gym-popup";
-    
+
     // ✅ Style for popup
-    
+
     popupElement.style.position = "absolute";
     popupElement.style.padding = "5px 8px";
     popupElement.style.whiteSpace = "nowrap";
@@ -210,54 +213,54 @@ const Mapp = () => {
     popupElement.style.backgroundColor = "transparent";
     popupElement.style.borderRadius = "5px";
     // popupElement.style.boxShadow = "0px 2px 5px rgba(0,0,0,0.2)";
-  
-    const marker = new mapboxgl.Marker(markerElement)
-      .setLngLat([gym.lon, gym.lat])
-      .addTo(map);
-  
+
+    const marker = new mapboxgl.Marker(markerElement).setLngLat([gym.lon, gym.lat]).addTo(map);
+
     map.getCanvas().parentNode?.appendChild(popupElement);
-  
+
     const updatePopupPosition = () => {
       const pos = map.project([gym.lon, gym.lat]);
       const zoom = map.getZoom();
 
       const fontSize = Math.max(10, zoom * 1.2); // Prevents text from getting too small
       popupElement.style.fontSize = `${fontSize}px`;
-      
-      const leftOffset = zoom * 2;  // Distance from pin
+
+      const leftOffset = zoom * 2; // Distance from pin
       const topOffset = -10;
-      
+
       const screenWidth = map.getCanvas().width;
       const isLeftSide = pos.x < screenWidth / 2; // Check if marker is on left or right side
-      
+
       popupElement.style.left = isLeftSide ? `${pos.x + leftOffset}px` : `${pos.x - leftOffset}px`;
       popupElement.style.top = `${pos.y + topOffset}px`;
     };
-  
+
     map.on("move", updatePopupPosition);
     map.on("moveend", updatePopupPosition);
     map.on("zoom", updatePopupPosition);
     updatePopupPosition();
-  
+
     // ✅ Handle click event for selecting gym
     markerElement.addEventListener("click", (event) => {
       event.stopPropagation();
       selectGymMarker(index);
       flyToGym(map, gym.lat, gym.lon);
+      setShowNearbyGyms(true);
+      setGymPreview(gym);
     });
-  
+
     return { marker, popupElement };
   };
-  
+
   // ✅ Main function to add markers
   const addMarkersToMap = (gyms: Gym[]) => {
     const map = mapRef.current;
     if (!map) return;
-  
+
     clearGymMarkers(); // ✅ Remove existing markers
-  
+
     newGymMarkers = gyms.map((gym, index) => createGymMarker(map, gym, index));
-  
+
     setGymMarkers(newGymMarkers);
   };
 
@@ -323,21 +326,38 @@ const Mapp = () => {
           />
         ) : (
           <>
-            <Typography align="center">{"باشگاه های نزدیک"}</Typography>
-            {gyms.map((gym) => (
-              <FloatCard
-                key={gym.gym_code}
-                name={gym.name}
-                address={gym.address}
-                city={gym.city}
-                profile={gym.profile}
-                price={gym.price}
-                gymId={gym.id}
-                onClick={() => handleGymClick(gym)}
-                maxWidth={400}
-                rate={gym.rate}
-              />
-            ))}
+            {showNearbyGyms && <Typography align="center">{"باشگاه های نزدیک"}</Typography>}
+            {showNearbyGyms &&
+              gyms.map((gym) => (
+                <FloatCard
+                  key={gym.gym_code}
+                  name={gym.name}
+                  address={gym.address}
+                  city={gym.city}
+                  profile={gym.profile}
+                  price={gym.price}
+                  gymId={gym.id}
+                  onClick={() => handleGymClick(gym)}
+                  maxWidth={400}
+                  rate={gym.rate}
+                />
+              ))}
+            <Button
+              variant="outlined"
+              onClick={() => setShowNearbyGyms(!showNearbyGyms)}
+              color="primary">
+              {showNearbyGyms ? (
+                <>
+                  عدم نمایش
+                  <KeyboardDoubleArrowUp />
+                </>
+              ) : (
+                <>
+                  نمایش باشگاه های نزدیک
+                  <KeyboardDoubleArrowDown />
+                </>
+              )}
+            </Button>
           </>
         )}
       </Box>
@@ -346,7 +366,27 @@ const Mapp = () => {
         gymPreview={gymPreview}
         handleBack={() => setGymPreview(null)}
         handleGymClick={handleGymClick}
+        showNearbyGyms={showNearbyGyms}
+        setShowNearbyGyms={setShowNearbyGyms}
       />
+      {!showNearbyGyms && (
+        <Fab
+          sx={{
+            position: "absolute",
+            bottom: "7%",
+            right: -5,
+            gap: 1,
+            display: { xs: "flex", md: "none" },
+            borderRadius: "16px 0 0 16px",
+            color: "#fff",
+            bgcolor: "#FF9100 !important",
+          }}
+          onClick={() => setShowNearbyGyms(true)}
+          variant="extended">
+          <FitnessCenter />
+          نمایش باشگاه های نزدیک
+        </Fab>
+      )}
       <Box
         sx={{ width: "100%", height: "78vh" }}
         ref={mapContainerRef}

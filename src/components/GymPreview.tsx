@@ -14,7 +14,6 @@ const GymPreview = ({
   maxWidth?: number;
 }) => {
   const { name, city, address, rate, profile } = gym;
-  const isSaved = false;
   const onClick = () => {
     window.location.href = `/gyms/${gym.id}`;
   };
@@ -79,7 +78,7 @@ const GymPreview = ({
         <Box
           sx={{
             width: "100%",
-            height: 150,
+            height: "auto",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
@@ -133,6 +132,8 @@ const GymPreview = ({
               justifyContent: "space-between",
               alignItems: "center",
               width: "auto",
+              mt: 2,
+              px: 1,
             }}>
             {rate ? (
               <Rating
