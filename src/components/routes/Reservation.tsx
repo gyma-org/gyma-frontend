@@ -186,7 +186,7 @@ const Reservation = () => {
             sx={{
               mb: 12,
               mx: "auto",
-              justifyContent: { xs: "center", md: "space-between" },
+              justifyContent: { xs: "center", md: "start" },
             }}>
             {/* Map through pastBookings and pass each booking to ReservationCard */}
             {pastBookings.map((booking) => (

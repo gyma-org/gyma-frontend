@@ -9,7 +9,6 @@ import FloatCard from "../FloatCard";
 import NearbyGyms from "./NearbyGym";
 import GymPreview from "../GymPreview";
 import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { set } from "date-fns";
 
 const Mapp = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -184,7 +183,7 @@ const Mapp = () => {
   // ✅ Flies to the selected gym
   const flyToGym = (map: mapboxgl.Map, lat: number, lon: number) => {
     map.flyTo({
-      center: [lon, lat - 0.004],
+      center: [lon, lat - 0.002],
       zoom: 15,
       essential: true,
     });
