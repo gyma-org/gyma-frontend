@@ -167,7 +167,7 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               />
             </Box>
           </Link>
-          {outdate || booking.used ? (
+          {(outdate || booking.used) && !booking.comment ? (
             <div style={{ position: "relative", display: "flex" }}>
               <Typography
                 sx={{
@@ -196,6 +196,10 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
                 افزودن نظر
               </Button>
             </div>
+          ) : (outdate || booking.used) && booking.comment ? (
+            <Typography sx={{ fontSize: 14, color: "#888", textAlign: "center", mt: 2 }}>
+              شما قبلا نظر خود را ثبت کرده اید
+            </Typography>
           ) : null}
 
           {/* Comment Modal */}
