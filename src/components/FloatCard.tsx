@@ -74,7 +74,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
         direction: "rtl",
         borderRadius: "16px",
         maxWidth: maxWidth,
-        width: "92vw",
+        width: "96vw",
         mx: { xs: "auto", md: 0 },
         aspectRatio: "4/1",
         p: 1,

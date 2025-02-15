@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "@/config";
-import { Box, Typography, CardMedia, TextField, Button, Modal, Rating } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CardMedia,
+  TextField,
+  Button,
+  Modal,
+  Rating,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { booked } from "../../types/booked";
 import { CommentAdd } from "../../types/CommentAdd";
@@ -28,20 +40,20 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
   const convertToJalali = (gregorianDate: string | Date): string => {
     return moment(gregorianDate, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
   };
-  
+
   const persianDate = convertToJalali(booking.gym_session_date);
 
   const handleOpenCommentModal = () => {
     setOpenCommentModal(true);
   };
-  
+
   const handleCloseCommentModal = () => {
     setOpenCommentModal(false);
   };
-  
+
   const handleCommentSubmit = async () => {
     if (!comment.trim()) return;
-    
+
     const newComment: CommentAdd = {
       gym_id: booking.gym_id,
       content: comment,
@@ -155,131 +167,118 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               />
             </Box>
           </Link>
-  {outdate || booking.used ? (
-    <div style={{ position: "relative" }}>
-      <Typography
-        sx={{
-          color: "#f00",
-          position: "absolute",
-          zIndex: 10,
-          bottom: 40,
-          right: 30,
-          px: 1,
-          border: "2px solid #f00",
-        }}>
-        {"منقضی شد"}
-        <Typography variant="body2">
-          {booking.used ? "استفاده شده!" : "استفاده نشد!"}
-        </Typography>
-      </Typography>
-      {/* Open Comment Modal Button */}
-    <div style={{ marginTop: "50px" }}>
-      <Button
-        variant="outlined"
-        color="primary"
-        fullWidth
-        onClick={handleOpenCommentModal}
-        sx={{
-          mt: 1,
-          borderRadius: "8px",
-          fontWeight: "bold",
-        }}
-      >
-        افزودن نظر
-      </Button>
-    </div>
-    </div>
-  
-  ) : null}
- 
-  {/* Comment Modal */}
-  <Modal open={openCommentModal} onClose={handleCloseCommentModal}>
-    <Box
-      sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        bgcolor: "white",
-        boxShadow: 24,
-        p: 3,
-        borderRadius: "10px",
-        width: "90%",
-        maxWidth: "400px",
-      }}
-    >
-      <Typography sx={{ fontSize: 16, fontWeight: 700, mb: 2, textAlign: "right" }}>:ثبت نظر شما</Typography>
-      
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="...نظر خود را بنویسید"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        sx={{
-          mb: 2,
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "8px",
-          },
-          textAlign: "right",
-        }}
-        inputProps={{ style: { textAlign: "right" } }}
-      />
+          {outdate || booking.used ? (
+            <div style={{ position: "relative", display: "flex" }}>
+              <Typography
+                sx={{
+                  color: "#f00",
+                  position: "absolute",
+                  zIndex: 10,
+                  bottom: 40,
+                  right: 30,
+                  px: 1,
+                  border: "2px solid #f00",
+                }}>
+                {"منقضی شد"}
+                <Typography variant="body2">{booking.used ? "استفاده شده!" : "استفاده نشد!"}</Typography>
+              </Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleOpenCommentModal}
+                sx={{
+                  mt: 2,
+                  mx: "auto",
+                  width: "92%",
+                  borderRadius: "8px",
+                  fontWeight: "bold",
+                }}>
+                افزودن نظر
+              </Button>
+            </div>
+          ) : null}
 
-<Rating
-  name="simple-controlled"
-  value={rate}
-  onChange={(event, newValue) => {
-    setRate(newValue);
-  }}
-  precision={0.5}
-  max={5}
-  sx={{
-    mb: 2,
-  }}
-/>
-      
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleCommentSubmit}
-        sx={{
-          borderRadius: "8px",
-          fontWeight: "bold",
-        }}
-      >
-        ارسال نظر
-      </Button>
-    </Box>
-  </Modal>
-  </Box>
-  <Box sx={{ height: outdate ? 11 : 20, overflow: "hidden" }}>
-    <div className={styles.rip} />
-  </Box>
-  {!outdate && !booking.used ? (
-    <>
-      <Box
-        sx={{
-          bgcolor: "#fff",
-          pt: 1,
-          borderRadius: "0px 0px 10px 10px",
-        }}>
-        {/* <Box sx={{ bgcolor: "#000", height: 50, mx: 2 }} /> */}
-        <Box
-          display="flex"
-          justifyContent="space-around"
-          alignItems="center"
-          py={1}>
-          {/* <Box
+          {/* Comment Modal */}
+          <Dialog
+            open={openCommentModal}
+            onClose={handleCloseCommentModal}>
+            <DialogTitle>
+              <Typography sx={{ fontSize: 16, fontWeight: 700, mb: 2, textAlign: "right" }}>
+                :ثبت نظر شما
+              </Typography>
+            </DialogTitle>
+
+            <DialogContent>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="...نظر خود را بنویسید"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                sx={{
+                  mb: 2,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                  },
+                  textAlign: "right",
+                }}
+                inputProps={{ style: { textAlign: "right" } }}
+              />
+              <Rating
+                name="simple-controlled"
+                value={rate}
+                onChange={(event, newValue) => {
+                  setRate(newValue);
+                }}
+                precision={1}
+                max={5}
+                sx={{
+                  mb: 2,
+                  direction: "rtl",
+                }}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleCommentSubmit}
+                sx={{
+                  borderRadius: "8px",
+                  fontWeight: "bold",
+                }}>
+                ارسال نظر
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+        <Box sx={{ height: outdate ? 11 : 20, overflow: "hidden" }}>
+          <div className={styles.rip} />
+        </Box>
+        {!outdate && !booking.used ? (
+          <>
+            <Box
+              sx={{
+                bgcolor: "#fff",
+                pt: 1,
+                borderRadius: "0px 0px 10px 10px",
+              }}>
+              {/* <Box sx={{ bgcolor: "#000", height: 50, mx: 2 }} /> */}
+              <Box
+                display="flex"
+                justifyContent="space-around"
+                alignItems="center"
+                py={1}>
+                {/* <Box
             sx={{
               width: 40,
             }}
           /> */}
-          <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>
-            {booking.confirmation_code}
-          </Typography>
-          {/* <IconButton
+                <Typography sx={{ color: "#F95A00", fontWeight: 900, fontSize: 30 }}>
+                  {booking.confirmation_code}
+                </Typography>
+                {/* <IconButton
             sx={{
               bgcolor: "#F4F4F4",
             }}>
@@ -312,12 +311,12 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               />
             </svg>
           </IconButton> */}
-        </Box>
-      </Box>
-    </>
-  ): null }
-</div>
-</Grid>
+              </Box>
+            </Box>
+          </>
+        ) : null}
+      </div>
+    </Grid>
   );
 };
 

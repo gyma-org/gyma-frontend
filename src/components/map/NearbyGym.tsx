@@ -4,7 +4,6 @@ import FloatCard from "../FloatCard";
 import { Gym } from "@/api/gymMap";
 import GymPreview from "../GymPreview";
 import { KeyboardDoubleArrowDown } from "@mui/icons-material";
-import { hi } from "date-fns/locale";
 
 export default function NearbyGyms({
   gyms,
@@ -13,6 +12,7 @@ export default function NearbyGyms({
   handleBack,
   showNearbyGyms,
   setShowNearbyGyms,
+  onBack
 }: {
   gyms: any[];
   gymPreview: Gym | null;
@@ -20,6 +20,7 @@ export default function NearbyGyms({
   handleBack: () => void;
   showNearbyGyms: boolean;
   setShowNearbyGyms: (value: boolean) => void;
+  onBack: () => void;
 }) {
   const [dialogHeight, setDialogHeight] = useState(0);
   const startY = useRef(0);
@@ -45,7 +46,7 @@ export default function NearbyGyms({
         setDialogHeight(100);
         setIsFullScreen(true);
       } else if (diffY > 50 && !isFullScreen) {
-        setDialogHeight(dialogHeight === 60 ? 100 : 60);
+        setDialogHeight(dialogHeight === 50 ? 100 : 50);
       } else if (diffY < -50) {
         if (dialogHeight === 100) {
           setDialogHeight(50);
@@ -60,7 +61,7 @@ export default function NearbyGyms({
 
   useEffect(() => {
     if (showNearbyGyms) {
-      setDialogHeight(60);
+      setDialogHeight(50);
     } else {
       setDialogHeight(0);
     }
@@ -77,9 +78,9 @@ export default function NearbyGyms({
           left: 0,
           margin: 0,
           backgroundColor: "white",
-          height: { xs: `${dialogHeight}vh`, md: 0 },
-          borderTopLeftRadius: dialogHeight <= 60 ? 24 : 0,
-          borderTopRightRadius: dialogHeight <= 60 ? 24 : 0,
+          height: { xs: `${dialogHeight}%`, md: 0 },
+          borderTopLeftRadius: dialogHeight <= 50 ? 24 : 0,
+          borderTopRightRadius: dialogHeight <= 50 ? 24 : 0,
           transition: "height 0.3s ease",
           boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
         }}>
@@ -105,55 +106,66 @@ export default function NearbyGyms({
               gap: 1,
             }}
           />
-          <Box px={2}>
-            {gymPreview ? (
-              <GymPreview
-                handleBack={handleBack}
-                gym={gymPreview}
-                maxWidth={360}
-              />
-            ) : (
-              <>
-                <Box display="flex">
-                  <Box
-                    flexGrow={1}
-                    sx={{
-                      opacity: 0,
-                    }}>
-                    بستن
-                    <KeyboardDoubleArrowDown />
-                  </Box>
-                  <Typography
-                    flexGrow={1}
-                    align="center">
-                    {"باشگاه های نزدیک"}
-                  </Typography>
-                  <Box
-                    flexGrow={1}
-                    onClick={() => setShowNearbyGyms(false)}
-                    style={{ cursor: "pointer", textAlign: "end" }}>
-                    بستن
-                    <KeyboardDoubleArrowDown />
-                  </Box>
-                </Box>
-                {gyms.map((gym) => (
-                  <FloatCard
-                    key={gym.gym_code}
-                    name={gym.name}
-                    address={gym.address}
-                    city={gym.city}
-                    profile={gym.profile}
-                    price={gym.price}
-                    gymId={gym.id}
-                    onClick={() => handleGymClick(gym)}
-                    maxWidth={400}
-                    rate={gym.rate}
-                  />
-                ))}
-              </>
-            )}
-          </Box>
+          {!gymPreview ? (
+            <Box
+              display="flex"
+              px={2}>
+              <Box
+                flexGrow={1}
+                sx={{
+                  opacity: 0,
+                }}>
+                بستن
+                <KeyboardDoubleArrowDown />
+              </Box>
+              <Typography
+                flexGrow={1}
+                align="center">
+                {"باشگاه های نزدیک"}
+              </Typography>
+              <Box
+                flexGrow={1}
+                onClick={() => setShowNearbyGyms(false)}
+                style={{ cursor: "pointer", textAlign: "end" }}>
+                بستن
+                <KeyboardDoubleArrowDown />
+              </Box>
+            </Box>
+          ) : null}
         </div>
+        <Box
+          sx={{
+            overflowY: "auto",
+            height: "calc(100% - 50px)",
+            transition: "height 0.3s ease",
+            pb: 8,
+          }}>
+          {gymPreview ? (
+            <GymPreview
+              handleBack={handleBack}
+              gym={gymPreview}
+              maxWidth={360}
+              onBack={onBack}
+            />
+          ) : (
+            <>
+              {gyms.map((gym) => (
+                <FloatCard
+                  key={gym.gym_code}
+                  name={gym.name}
+                  address={gym.address}
+                  city={gym.city}
+                  profile={gym.profile}
+                  price={gym.price}
+                  gymId={gym.id}
+                  onClick={() => handleGymClick(gym)}
+                  maxWidth={450}
+                  rate={gym.rate}
+                />
+              ))}
+            </>
+          )}
+        </Box>
       </Box>
     </>
   );
