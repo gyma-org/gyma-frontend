@@ -8,10 +8,12 @@ const GymPreview = ({
   gym,
   handleBack,
   maxWidth = 500,
+  onBack
 }: {
   gym: Gym;
   handleBack: () => void;
   maxWidth?: number;
+  onBack: () => void;
 }) => {
   const { name, city, address, rate, profile } = gym;
   const onClick = () => {
@@ -30,7 +32,11 @@ const GymPreview = ({
             px: 1,
             py: { xs: 0.1, md: 0.5 },
           }}
-          onClick={handleBack}>
+          onClick={() => {
+            handleBack(); // Close the Gym Preview
+            onBack(); // Zoom out the map
+          }}
+          >
           بازگشت
           <ArrowBack />
         </Button>

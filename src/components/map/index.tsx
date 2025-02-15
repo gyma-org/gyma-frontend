@@ -139,6 +139,19 @@ const Mapp = () => {
     }
   };
 
+  const handleZoomOut = () => { // این فانکشن در دو بخش NearbyGym و GymPreview اضافه شده به
+    if (mapRef.current) {
+      const map = mapRef.current;
+      const currentCenter = map.getCenter(); // Get current center
+  
+      map.flyTo({
+        center: [currentCenter.lng, currentCenter.lat - 0.02], // Move slightly up
+        zoom: 12, // Adjust zoom level
+        essential: true,
+      });
+    }
+  }; 
+
   const handleRequestLocation = () => {
     setLocationDenied(false); // Hide the box before re-requesting
     navigator.geolocation.getCurrentPosition(
@@ -194,8 +207,8 @@ const Mapp = () => {
     const markerElement = document.createElement("div");
     markerElement.className = "custom-marker";
     markerElement.style.backgroundImage = `url(/icons/gyms.svg)`;
-    markerElement.style.width = "50px";
-    markerElement.style.height = "50px";
+    markerElement.style.width = "40px";
+    markerElement.style.height = "40px";
     markerElement.style.cursor = "pointer";
 
     // ✅ Create text container (popup)
@@ -220,6 +233,16 @@ const Mapp = () => {
     const updatePopupPosition = () => {
       const pos = map.project([gym.lon, gym.lat]);
       const zoom = map.getZoom();
+
+      if (zoom <= 11.5) {
+        popupElement.style.transition = "opacity 0.3s ease-in-out"; // Add transition
+        popupElement.style.opacity = "0"; // Fade out
+        popupElement.style.pointerEvents = "none"; // Prevent interaction when hidden
+      } else {
+        popupElement.style.transition = "opacity 0.3s ease-in-out"; // Add transition
+        popupElement.style.opacity = "1"; // Fade in
+        popupElement.style.pointerEvents = "auto"; // Re-enable interaction
+      }
 
       const fontSize = Math.max(10, zoom * 1.2); // Prevents text from getting too small
       popupElement.style.fontSize = `${fontSize}px`;
@@ -322,6 +345,7 @@ const Mapp = () => {
             handleBack={() => setGymPreview(null)}
             gym={gymPreview}
             maxWidth={400}
+            onBack={handleZoomOut}
           />
         ) : (
           <>
@@ -367,6 +391,7 @@ const Mapp = () => {
         handleGymClick={handleGymClick}
         showNearbyGyms={showNearbyGyms}
         setShowNearbyGyms={setShowNearbyGyms}
+        onBack={handleZoomOut}
       />
       {!showNearbyGyms && (
         <Fab

@@ -12,6 +12,7 @@ export default function NearbyGyms({
   handleBack,
   showNearbyGyms,
   setShowNearbyGyms,
+  onBack
 }: {
   gyms: any[];
   gymPreview: Gym | null;
@@ -19,6 +20,7 @@ export default function NearbyGyms({
   handleBack: () => void;
   showNearbyGyms: boolean;
   setShowNearbyGyms: (value: boolean) => void;
+  onBack: () => void;
 }) {
   const [dialogHeight, setDialogHeight] = useState(0);
   const startY = useRef(0);
@@ -143,6 +145,7 @@ export default function NearbyGyms({
               handleBack={handleBack}
               gym={gymPreview}
               maxWidth={360}
+              onBack={onBack}
             />
           ) : (
             <>
