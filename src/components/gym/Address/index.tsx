@@ -59,22 +59,22 @@ const Address: React.FC<AddressProps> = ({ location, lat, lon }) => {
         onClick={openMaps}
         sx={{
           cursor: "pointer",
-          height: "60vh",
+          height: { xs: "30vh", md: "50vh" },
           width: "100%",
           borderRadius: "12px",
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
           overflow: "hidden",
           position: "relative",
-        }}
-      >
+        }}>
         <MapContainer
           center={[lat, lon]}
           zoom={15}
           scrollWheelZoom={false}
-          style={{ height: "100%", width: "100%" }}
-        >
+          style={{ height: "100%", width: "100%" }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Marker position={[lat, lon]} icon={customIcon}>
+          <Marker
+            position={[lat, lon]}
+            icon={customIcon}>
             <Popup>{location}</Popup>
           </Marker>
         </MapContainer>
@@ -89,25 +89,27 @@ const Address: React.FC<AddressProps> = ({ location, lat, lon }) => {
         width: "100%",
         maxWidth: "800px",
         mx: "auto",
-        mt: 3,
-        p: 2,
+        mt: { xs: 2, md: 3 },
+        p: { xs: 1, md: 2 },
         borderRadius: "12px",
         bgcolor: "white",
         boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
-      }}
-    >
-      <Typography variant="h6" fontWeight="bold" textAlign="center" sx={{ mb: 2 }}>
-        📍 {location}
+      }}>
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        textAlign="center"
+        sx={{ mb: { xs: 1, md: 2 } }}>
+        {location}
       </Typography>
       {mapElement}
       <Button
         fullWidth
         variant="contained"
         color="primary"
-        sx={{ mt: 2, p: 1.5, fontSize: "16px", borderRadius: "8px" }}
-        onClick={openMaps}
-      >
-        بزن بریم! 📍
+        sx={{ mt: { xs: 1, md: 2 }, p: { xs: 0.5, md: 1.5 }, fontSize: "16px", borderRadius: "8px" }}
+        onClick={openMaps}>
+        بزن بریم!
       </Button>
     </Box>
   );
