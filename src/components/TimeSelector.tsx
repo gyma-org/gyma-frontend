@@ -31,7 +31,6 @@ const TimeSelector = ({
       <Box
         sx={{
           display: "flex",
-          // flexWrap: "wrap",
           flexDirection: "column",
           gap: 1,
           pb: 2,
@@ -56,49 +55,56 @@ const TimeSelector = ({
 
         <Typography align="center">{"انتخاب سانس"}</Typography>
         {timeSlots.map((time) => (
-        <Button
-          key={time.id}
-          variant="contained"
-          sx={{
-            bgcolor: selectedTimeID === time.id ? "#00215E" : "#f0f0f0",
-            color: selectedTimeID === time.id ? "#fff" : "#000",
-            boxShadow: "none",
-            borderRadius: 3,
-            display: "flex",
-            justifyContent: "space-between",
-            mt: 1, // Add spacing between buttons
-          }}
-          onClick={() => setSelectedTimeID(time.id)}
-          > {/* Assuming 'is_full' indicates full sessions */}
-          <Typography>
-            {time.start_time} - {time.end_time}
-          </Typography>
-          <Box display="flex" alignItems="center" gap={1}>
+          <Button
+            key={time.id}
+            variant="contained"
+            sx={{
+              bgcolor: selectedTimeID === time.id ? "#00215E" : "#f0f0f0",
+              color: selectedTimeID === time.id ? "#fff" : "#000",
+              boxShadow: "none",
+              borderRadius: 3,
+              display: "flex",
+              justifyContent: "space-between",
+              mt: 1,
+            }}
+            onClick={() => setSelectedTimeID(time.id)}>
+            {" "}
+            {/* Assuming 'is_full' indicates full sessions */}
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={1}>
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                sx={{
+                  fontSize: { xs: 12, md: 14 },
+                  color: selectedTimeID === time.id ? "white" : "black",
+                }}>
+                {time.price} تومان {/* Assuming the price is in Toman */}
+              </Typography>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 22 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d=" 20Z"
+                  fill={selectedTimeID === time.id ? "white" : "black"}
+                />
+              </svg>
+            </Box>
             <Typography
-              variant="h4"
-              fontWeight="bold"
               sx={{
-                fontSize: { xs: 12, md: 14 },
-                color: selectedTimeID === time.id ? "white" : "black",
+                direction: "ltr",
               }}>
-              {time.price} تومان {/* Assuming the price is in Toman */}
+              {time.start_time} - {time.end_time}
             </Typography>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 22 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d=" 20Z"
-                fill={selectedTimeID === time.id ? "white" : "black"}
-              />
-            </svg>
-          </Box>
-        </Button>
-          ))}
+          </Button>
+        ))}
       </Box>
-    
+
       <Button
         fullWidth
         variant="contained"

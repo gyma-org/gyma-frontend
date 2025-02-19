@@ -243,17 +243,18 @@ const Mapp = () => {
         popupElement.style.opacity = "1"; // Fade in
         popupElement.style.pointerEvents = "auto"; // Re-enable interaction
       }
-
+      
       const fontSize = Math.max(10, zoom * 1.2); // Prevents text from getting too small
       popupElement.style.fontSize = `${fontSize}px`;
+    
+      const baseOffset = 15;
 
-      const leftOffset = zoom * 2; // Distance from pin
       const topOffset = -10;
+      const leftOffset = baseOffset + (zoom * 0.5);
 
-      const screenWidth = map.getCanvas().width;
-      const isLeftSide = pos.x < screenWidth / 2; // Check if marker is on left or right side
+      popupElement.style.left = `${pos.x + leftOffset}px`;
 
-      popupElement.style.left = isLeftSide ? `${pos.x + leftOffset}px` : `${pos.x - leftOffset}px`;
+      // popupElement.style.left = isLeftSide ? `${pos.x + leftOffset}px` : `${pos.x - leftOffset}px`;
       popupElement.style.top = `${pos.y + topOffset}px`;
     };
 

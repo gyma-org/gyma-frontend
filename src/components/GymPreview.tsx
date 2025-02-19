@@ -2,7 +2,11 @@ import { Gym } from "@/api/gymMap";
 import { API_BASE_URL } from "@/config";
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, CardMedia, Divider, Rating, Typography } from "@mui/material";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
 import React from "react";
+
+import "./gym/ImageSlider/swiper.css";
 
 const GymPreview = ({
   gym,
@@ -15,7 +19,8 @@ const GymPreview = ({
   maxWidth?: number;
   onBack: () => void;
 }) => {
-  const { name, city, address, rate, profile } = gym;
+  const { name, city, address, rate, profile, gallery } = gym;
+  const images = [`${API_BASE_URL}/medias/profile/${profile}`, ...(Array.isArray(gallery) ? gallery.map(img => `${API_BASE_URL}/medias/gallery/${img}`) : [])];
   const onClick = () => {
     window.location.href = `/gyms/${gym.id}`;
   };
@@ -36,7 +41,7 @@ const GymPreview = ({
             handleBack(); // Close the Gym Preview
             onBack(); // Zoom out the map
           }}
-          >
+        >
           بازگشت
           <ArrowBack />
         </Button>
@@ -129,18 +134,35 @@ const GymPreview = ({
             </Box>
           </Box>
 
-          {/* Card image */}
-          <CardMedia
-            onClick={onClick}
-            image={`${API_BASE_URL}/medias/profile/${profile}`}
-            sx={{
-              mr: 1,
-              height: "100%",
-              width: "auto",
-              aspectRatio: "1 / 1",
-              borderRadius: "8px",
-            }}
-          />
+          <Box sx={{ display: "flex", gap: 1, overflowX: "auto", width: "100%", borderRadius: "8px", pb: 1, maxHeight: "400px" }}>
+            {/* Image Slider using Swiper */}
+            <Box sx={{ width: "100%", overflow: "hidden", borderRadius: "16px" }}>
+              <Swiper
+                pagination={{
+                  dynamicBullets: true,
+                }}
+                grabCursor={true}
+                modules={[Pagination]}
+                style={{ width: "100%", height: "100%" }} // Ensure swiper fills the container
+              >
+                {images.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        width: "100%",
+                        height: "100%", 
+                        objectFit: "contain", 
+                        borderRadius: "16px",
+                      }}
+                      image={image}
+                      title={`Gallery Image ${index + 1}`}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Box>
+          </Box>
         </Box>
         <Box
           sx={{
