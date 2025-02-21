@@ -1,7 +1,15 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
 import { getGymDetails } from "@/api/gymDetails";
-import { Address, Comments, Description, GYMHeader, ImageSlider, Specifications } from "@/components/gym";
+import {
+  Address,
+  Comments,
+  Description,
+  Features,
+  GYMHeader,
+  ImageSlider,
+  Specifications,
+} from "@/components/gym";
 
 // Defining the props with parameters for gym id
 interface GymPageProps {
@@ -42,11 +50,10 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         bgcolor: "#f3f3f3",
         minHeight: "100vh",
         pb: 8,
-      }}
-    >
+      }}>
       <GYMHeader gymId={gymDetails.id} />
       <ImageSlider images={gymDetails.gallery} />
-      <Specifications 
+      <Specifications
         features={gymDetails.features}
         gymName={gymDetails.name}
         location={gymDetails.address}
@@ -56,8 +63,16 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         working_hours_women={gymDetails.working_hours_women}
         rate={gymDetails.rate}
       />
+      <Features
+        features={gymDetails.features}
+        equipment={gymDetails.equipment}
+      />
       <Description text={gymDetails.description} />
-      <Address location={gymDetails.address} lat={gymDetails.lat} lon={gymDetails.lon} />
+      <Address
+        location={gymDetails.address}
+        lat={gymDetails.lat}
+        lon={gymDetails.lon}
+      />
       <Comments gymid={gymDetails.id} />
     </Grid>
   );

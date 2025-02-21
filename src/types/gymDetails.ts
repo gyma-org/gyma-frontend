@@ -20,6 +20,7 @@ export interface GymDetails {
   email_verified: boolean;
   phone_verified: boolean;
   features: string[];
+  equipment: string[];
   sex: string;
   rate: string;
   working_hours_men: {

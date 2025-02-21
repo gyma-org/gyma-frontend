@@ -4,3 +4,4 @@ export { default as Specifications } from "./Specifications";
 export { default as Description } from "./Description";
 export { default as Address } from "./Address";
 export { default as Comments } from "./Comments";
+export { default as Features } from "./Features";
