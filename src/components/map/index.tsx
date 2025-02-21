@@ -37,7 +37,7 @@ const Mapp = () => {
       minZoom: 2,
       maxZoom: 21,
       trackResize: true,
-      mapKey: "web.659fc6316bb54b98b27499e3972b294e",
+      mapKey: "web.371ed93a9e524959acafafcafdeb0783",
       poi: false,
       traffic: false,
     }) as unknown as mapboxgl.Map;
