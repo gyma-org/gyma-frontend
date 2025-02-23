@@ -35,4 +35,26 @@ export interface GymDetails {
     even: { open: string; close: string };
     odd_even: string;
   };
+  structure: { // ✅ Added structure field
+    area: number | null;
+    floor: number | null;
+    height: number | null;
+    parking: number;
+    elevator: number | null;
+  };
+}
+
+export interface Structure {
+  area: number | null;
+  floor: number | null;
+  height: number | null;
+  parking: number | null;
+  elevator: number | null;
+}
+
+export interface WorkingHours {
+  off_days: { open: string; close: string };
+  odd: { open: string; close: string };
+  even: { open: string; close: string };
+  odd_even: string;
 }

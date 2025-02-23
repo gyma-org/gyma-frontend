@@ -11,13 +11,7 @@ import { bookGymSession } from "@/api/Booking";
 import moment from "jalali-moment";
 import { EditCalendarRounded } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
-
-interface WorkingHours {
-  off_days: { open: string; close: string };
-  odd: { open: string; close: string };
-  even: { open: string; close: string };
-  odd_even: string;
-}
+import { Structure, WorkingHours } from "@/types/gymDetails";
 
 interface SpecificationsProps {
   gymName: string;
@@ -32,6 +26,7 @@ interface SpecificationsProps {
   // sex: string;
   gymSex: string;
   rate: string;
+  structure: Structure;
 }
 
 const Specifications: React.FC<SpecificationsProps> = ({
@@ -46,6 +41,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
   gymId,
   // sex
   rate,
+  structure,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [showReservationModal, setShowReservationModal] = useState<boolean>(false);
@@ -300,8 +296,9 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   <Typography
                     variant="body2"
                     color="text.secondary">
-                    {"300 "}
-                    مترمربع
+                    <Typography variant="body2" color="text.secondary">
+                      {structure?.area ? `${structure.area} مترمربع` : "نامشخص"}
+                    </Typography>
                   </Typography>
                 </Grid2>
                 <Grid2
@@ -317,8 +314,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   <Typography
                     variant="body2"
                     color="text.secondary">
-                    {"4 "}
-                    متر
+                    {structure?.height ? `${structure.height} متر` : "نامشخص"}
                   </Typography>
                 </Grid2>
                 <Grid2
@@ -334,7 +330,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   <Typography
                     variant="body2"
                     color="text.secondary">
-                    {"2"}
+                    {structure?.floor ? structure.floor : "نامشخص"}
                   </Typography>
                 </Grid2>
                 <Grid2
@@ -350,7 +346,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   <Typography
                     variant="body2"
                     color="text.secondary">
-                    {"دارد"}
+                    {structure?.parking ? "دارد" : "ندارد"}
                   </Typography>
                 </Grid2>
                 <Grid2
@@ -366,7 +362,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   <Typography
                     variant="body2"
                     color="text.secondary">
-                    {"دارد"}
+                    {structure?.elevator ? "دارد" : "ندارد"}
                   </Typography>
                 </Grid2>
               </Grid2>
@@ -532,8 +528,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
                     }}
                     fontWeight={500}>
                     {`روزهای فرد: ${working_hours_men?.odd?.open && working_hours_men?.odd?.close
-                        ? `${working_hours_men.odd.open} الی ${working_hours_men.odd.close}`
-                        : `تعطیل`
+                      ? `${working_hours_men.odd.open} الی ${working_hours_men.odd.close}`
+                      : `تعطیل`
                       }`}
                   </Typography>
 
@@ -544,8 +540,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
                     }}
                     fontWeight={500}>
                     {`روزهای زوج: ${working_hours_men?.even?.open && working_hours_men?.even?.close
-                        ? `${working_hours_men.even.open} الی ${working_hours_men.even.close}`
-                        : `تعطیل`
+                      ? `${working_hours_men.even.open} الی ${working_hours_men.even.close}`
+                      : `تعطیل`
                       }`}
                   </Typography>
 
@@ -556,8 +552,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
                     }}
                     fontWeight={500}>
                     {`روزهای تعطیل: ${working_hours_men?.off_days?.open && working_hours_men?.off_days?.close
-                        ? `${working_hours_men.off_days.open} الی ${working_hours_men.off_days.close}`
-                        : `موجود نیست`
+                      ? `${working_hours_men.off_days.open} الی ${working_hours_men.off_days.close}`
+                      : `موجود نیست`
                       }`}
                   </Typography>
                 </Box>
@@ -573,8 +569,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
                     }}
                     fontWeight={500}>
                     {`روزهای فرد: ${working_hours_women?.odd?.open && working_hours_women?.odd?.close
-                        ? `${working_hours_women.odd.open} الی ${working_hours_women.odd.close}`
-                        : `تعطیل`
+                      ? `${working_hours_women.odd.open} الی ${working_hours_women.odd.close}`
+                      : `تعطیل`
                       }`}
                   </Typography>
 
@@ -585,8 +581,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
                     }}
                     fontWeight={500}>
                     {`روزهای زوج: ${working_hours_women?.even?.open && working_hours_women?.even?.close
-                        ? `${working_hours_women.even.open} الی ${working_hours_women.even.close}`
-                        : `تعطیل`
+                      ? `${working_hours_women.even.open} الی ${working_hours_women.even.close}`
+                      : `تعطیل`
                       }`}
                   </Typography>
 
@@ -597,8 +593,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
                     }}
                     fontWeight={500}>
                     {`روزهای تعطیل: ${working_hours_women?.off_days?.open && working_hours_women?.off_days?.close
-                        ? `${working_hours_women.off_days.open} الی ${working_hours_women.off_days.close}`
-                        : `موجود نیست`
+                      ? `${working_hours_women.off_days.open} الی ${working_hours_women.off_days.close}`
+                      : `موجود نیست`
                       }`}
                   </Typography>
                 </Box>
