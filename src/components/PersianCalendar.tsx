@@ -24,8 +24,16 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessio
     console.log("Today's Jalali Date:", moment().locale("fa").format("jYYYY/jMM/jDD"));
   }, [sessions]);
 
-  const convertToJalaliWithIntl = (date: string): string => {
-    return moment(date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD");
+  const convertToJalaliWithIntl = (date: string): string | null => {
+    if (!date) return null; // Check for empty or undefined date
+  
+    try {
+      const jalaliDate = moment(date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD");
+      return jalaliDate;
+    } catch (error) {
+      console.error("Error converting date to Jalali:", error);
+      return null;
+    }
   };
 
   const getSessionForDate = (date: string) => {

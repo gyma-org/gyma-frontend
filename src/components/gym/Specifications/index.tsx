@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, Button, Rating, Typography, Snackbar, Alert, Tabs, Tab } from "@mui/material";
+import { Box, Button, Rating, Typography, Snackbar, Alert, Tabs, Tab, Grid2, Divider } from "@mui/material";
 import ReservationModal from "@/components/ReservationModal";
 import TimeSelector from "@/components/TimeSelector";
 import { useAuth } from "@/context/AuthContext";
@@ -244,9 +244,145 @@ const Specifications: React.FC<SpecificationsProps> = ({
             </Box>
           )}
         </Box>
+        {/* <Box>
+          <Typography variant="subtitle2">{"نیاز به رزرو دارد؟"}</Typography>
+        </Box> */}
+        <Divider
+          sx={{
+            mb: 1,
+            mt: 3,
+          }}
+        />
+        {/* Structure */}
+        <Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            mr={1}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M9.5 10.0003C9.5 9.20875 8.44722 8.99895 8.16791 9.73957C7.49228 11.5311 7 13.1337 7 14.0002C7 16.7616 9.23858 19.0002 12 19.0002C14.7614 19.0002 17 16.7616 17 14.0002C17 13.0693 16.4318 11.2887 15.6784 9.33698C14.7026 6.80879 14.2146 5.54469 13.6123 5.4766C13.4196 5.45482 13.2093 5.49399 13.0374 5.58371C12.5 5.86413 12.5 7.24285 12.5 10.0003C12.5 10.8287 11.8284 11.5003 11 11.5003C10.1716 11.5003 9.5 10.8287 9.5 10.0003Z"
+                stroke="#33363F"
+                strokeWidth="2"
+              />
+            </svg>
+            <Typography
+              variant="h6"
+              fontWeight={600}>
+              {"ساختار باشگاه :"}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              mr: { xs: 2, md: 8 },
+            }}>
+            {features.length > 0 ? (
+              <Grid2
+                container
+                mt={1}
+                spacing={1}>
+                <Grid2
+                  size={6}
+                  display="flex"
+                  gap={0.5}
+                  alignItems="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold">
+                    {"مساحت باشگاه"}:
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary">
+                    {"300 "}
+                    مترمربع
+                  </Typography>
+                </Grid2>
+                <Grid2
+                  size={6}
+                  display="flex"
+                  gap={0.5}
+                  alignItems="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold">
+                    {"ارتفاع سقف"}:
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary">
+                    {"4 "}
+                    متر
+                  </Typography>
+                </Grid2>
+                <Grid2
+                  size={6}
+                  display="flex"
+                  gap={0.5}
+                  alignItems="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold">
+                    {"طبقه"}:
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary">
+                    {"2"}
+                  </Typography>
+                </Grid2>
+                <Grid2
+                  size={6}
+                  display="flex"
+                  gap={0.5}
+                  alignItems="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold">
+                    {"پارکینگ"}:
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary">
+                    {"دارد"}
+                  </Typography>
+                </Grid2>
+                <Grid2
+                  size={6}
+                  display="flex"
+                  gap={0.5}
+                  alignItems="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold">
+                    {"آسانسور"}:
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary">
+                    {"دارد"}
+                  </Typography>
+                </Grid2>
+              </Grid2>
+            ) : (
+              <Typography
+                variant="subtitle1"
+                fontWeight={500}
+                color="textSecondary">
+                {"ویژگی موجود نیست"}
+              </Typography>
+            )}
+          </Box>
+        </Box>
 
         {/* Attributes */}
-        <Box>
+        {/* <Box>
           <Box
             display="flex"
             alignItems="center"
@@ -268,7 +404,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
             <Typography
               variant="h6"
               fontWeight={600}>
-              {"ویژگی ها :"}
+              {"تجهیزات :"}
             </Typography>
           </Box>
           <Box mr={8}>
@@ -290,8 +426,13 @@ const Specifications: React.FC<SpecificationsProps> = ({
               </Typography>
             )}
           </Box>
-        </Box>
+        </Box> */}
 
+        <Divider
+          sx={{
+            my: 1,
+          }}
+        />
         {/* Time */}
         <Box>
           <Box
@@ -346,7 +487,16 @@ const Specifications: React.FC<SpecificationsProps> = ({
               orientation="vertical"
               variant="fullWidth"
               value={showGender}
-              onChange={(_, value) => setShowGender(value)}>
+              onChange={(_, value) => {
+                setShowGender(value);
+
+                // Check if the user is not logged in
+                if (!authTokens) {
+                  const gender = value === 0 ? "men" : "women";
+                  localStorage.setItem("selectedGender", gender);
+                }
+              }}
+            >
               <Tab
                 label="آقایان"
                 value={0}
@@ -381,11 +531,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای فرد: ${
-                      working_hours_men?.odd?.open && working_hours_men?.odd?.close
+                    {`روزهای فرد: ${working_hours_men?.odd?.open && working_hours_men?.odd?.close
                         ? `${working_hours_men.odd.open} الی ${working_hours_men.odd.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -394,11 +543,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای زوج: ${
-                      working_hours_men?.even?.open && working_hours_men?.even?.close
+                    {`روزهای زوج: ${working_hours_men?.even?.open && working_hours_men?.even?.close
                         ? `${working_hours_men.even.open} الی ${working_hours_men.even.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -407,11 +555,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای تعطیل: ${
-                      working_hours_men?.off_days?.open && working_hours_men?.off_days?.close
+                    {`روزهای تعطیل: ${working_hours_men?.off_days?.open && working_hours_men?.off_days?.close
                         ? `${working_hours_men.off_days.open} الی ${working_hours_men.off_days.close}`
                         : `موجود نیست`
-                    }`}
+                      }`}
                   </Typography>
                 </Box>
               ) : (
@@ -425,11 +572,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای فرد: ${
-                      working_hours_women?.odd?.open && working_hours_women?.odd?.close
+                    {`روزهای فرد: ${working_hours_women?.odd?.open && working_hours_women?.odd?.close
                         ? `${working_hours_women.odd.open} الی ${working_hours_women.odd.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -438,11 +584,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای زوج: ${
-                      working_hours_women?.even?.open && working_hours_women?.even?.close
+                    {`روزهای زوج: ${working_hours_women?.even?.open && working_hours_women?.even?.close
                         ? `${working_hours_women.even.open} الی ${working_hours_women.even.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -451,11 +596,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای تعطیل: ${
-                      working_hours_women?.off_days?.open && working_hours_women?.off_days?.close
+                    {`روزهای تعطیل: ${working_hours_women?.off_days?.open && working_hours_women?.off_days?.close
                         ? `${working_hours_women.off_days.open} الی ${working_hours_women.off_days.close}`
                         : `موجود نیست`
-                    }`}
+                      }`}
                   </Typography>
                 </Box>
               )}
@@ -595,7 +739,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         gymId={gymId}
-        gymSex="men"
+        gymSex={localStorage.getItem("selectedGender") || "men"}
       />
 
       <Snackbar

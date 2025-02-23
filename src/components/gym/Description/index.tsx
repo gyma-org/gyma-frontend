@@ -1,7 +1,8 @@
 import React from "react";
 
-import { Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { ArrowBackIos } from "@mui/icons-material";
 
 interface DescriptionProps {
   text: string | null;
@@ -12,12 +13,26 @@ const Description: React.FC<DescriptionProps> = ({ text }) => {
     <Grid
       size={12}
       sx={{
-        p: 2,
+        px: 2,
       }}>
       <Typography
-        textAlign="justify"
+        variant="h6"
+        fontWeight={600}>
+        <ArrowBackIos sx={{ ml: 2 }} />
+        {"توضیحات :"}
+      </Typography>
+      <Divider
         sx={{
-          fontSize: { xs: 16, md: 24 },
+          my: 1,
+        }}
+      />
+      <Typography
+        textAlign="justify"
+        variant="subtitle2"
+        sx={{
+          fontSize: { xs: 12, md: 20 },
+          pr: 4,
+          color: "text.secondary",
         }}>
         {text}
       </Typography>
