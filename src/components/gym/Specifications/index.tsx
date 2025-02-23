@@ -346,7 +346,13 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   <Typography
                     variant="body2"
                     color="text.secondary">
-                    {structure?.parking ? "دارد" : "ندارد"}
+                    <Typography variant="body2" color="text.secondary">
+                      {structure?.parking === 1
+                        ? "پارکینگ دارد"
+                        : structure?.parking === 0
+                          ? "جای پارک مناسب بیرون از باشگاه (پارکینگ ندارد)"
+                          : "پارکینگ ندارد"}
+                    </Typography>
                   </Typography>
                 </Grid2>
                 <Grid2
