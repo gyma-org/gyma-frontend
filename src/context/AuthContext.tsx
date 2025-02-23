@@ -169,6 +169,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           60 * 60 * 24 * 7
         }; SameSite=Strict; Secure`;
 
+        // Store the user's gender in localStorage
+        if (data.sex) {
+          localStorage.setItem("selectedGender", data.sex === "men" ? "men" : "women");
+        }
+
         // Fetch the saved gyms from the API after successful login
         const savedGyms = await getSavedGyms(data.access, logoutUser); // Fetch saved gyms using the newly obtained access token
         const gymIds = savedGyms.map((gym) => gym.gym_id.toString()); // Map the gym IDs to strings

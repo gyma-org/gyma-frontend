@@ -487,7 +487,16 @@ const Specifications: React.FC<SpecificationsProps> = ({
               orientation="vertical"
               variant="fullWidth"
               value={showGender}
-              onChange={(_, value) => setShowGender(value)}>
+              onChange={(_, value) => {
+                setShowGender(value);
+
+                // Check if the user is not logged in
+                if (!authTokens) {
+                  const gender = value === 0 ? "men" : "women";
+                  localStorage.setItem("selectedGender", gender);
+                }
+              }}
+            >
               <Tab
                 label="آقایان"
                 value={0}
@@ -522,11 +531,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای فرد: ${
-                      working_hours_men?.odd?.open && working_hours_men?.odd?.close
+                    {`روزهای فرد: ${working_hours_men?.odd?.open && working_hours_men?.odd?.close
                         ? `${working_hours_men.odd.open} الی ${working_hours_men.odd.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -535,11 +543,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای زوج: ${
-                      working_hours_men?.even?.open && working_hours_men?.even?.close
+                    {`روزهای زوج: ${working_hours_men?.even?.open && working_hours_men?.even?.close
                         ? `${working_hours_men.even.open} الی ${working_hours_men.even.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -548,11 +555,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای تعطیل: ${
-                      working_hours_men?.off_days?.open && working_hours_men?.off_days?.close
+                    {`روزهای تعطیل: ${working_hours_men?.off_days?.open && working_hours_men?.off_days?.close
                         ? `${working_hours_men.off_days.open} الی ${working_hours_men.off_days.close}`
                         : `موجود نیست`
-                    }`}
+                      }`}
                   </Typography>
                 </Box>
               ) : (
@@ -566,11 +572,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای فرد: ${
-                      working_hours_women?.odd?.open && working_hours_women?.odd?.close
+                    {`روزهای فرد: ${working_hours_women?.odd?.open && working_hours_women?.odd?.close
                         ? `${working_hours_women.odd.open} الی ${working_hours_women.odd.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -579,11 +584,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای زوج: ${
-                      working_hours_women?.even?.open && working_hours_women?.even?.close
+                    {`روزهای زوج: ${working_hours_women?.even?.open && working_hours_women?.even?.close
                         ? `${working_hours_women.even.open} الی ${working_hours_women.even.close}`
                         : `تعطیل`
-                    }`}
+                      }`}
                   </Typography>
 
                   <Typography
@@ -592,11 +596,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                       fontSize: { xs: "12px", md: "16px" },
                     }}
                     fontWeight={500}>
-                    {`روزهای تعطیل: ${
-                      working_hours_women?.off_days?.open && working_hours_women?.off_days?.close
+                    {`روزهای تعطیل: ${working_hours_women?.off_days?.open && working_hours_women?.off_days?.close
                         ? `${working_hours_women.off_days.open} الی ${working_hours_women.off_days.close}`
                         : `موجود نیست`
-                    }`}
+                      }`}
                   </Typography>
                 </Box>
               )}
@@ -736,7 +739,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         gymId={gymId}
-        gymSex="men"
+        gymSex={localStorage.getItem("selectedGender") || "men"}
       />
 
       <Snackbar
