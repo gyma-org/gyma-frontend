@@ -62,6 +62,7 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
         working_hours_men={gymDetails.working_hours_men}
         working_hours_women={gymDetails.working_hours_women}
         rate={gymDetails.rate}
+        structure={gymDetails.structure}
       />
       <Features
         features={gymDetails.features}
