@@ -10,12 +10,14 @@ interface CommentProps {
     content: string;
     avatar_url: string;
     rate: string;
+    gym_name: string;
+    writer_username: string;
   };
   replies?: CommentProps["data"][];
 }
 
 const Comment: React.FC<CommentProps> = ({ data, replies }) => {
-  const { writer, created_at, content, avatar_url, rate } = data;
+  const { writer, created_at, content, avatar_url, rate, gym_name, writer_username } = data;
 
   return (
     <Box
@@ -38,7 +40,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
             sx={{
               fontWeight: 600,
               fontSize: { xs: 14, md: 20 },
-            }}>{`${writer} در ${moment(created_at).format("jYYYY/jMM/jDD")} گفته : `}</Typography>
+            }}>{`${writer_username} در ${moment(created_at).format("jYYYY/jMM/jDD")} گفته : `}</Typography>
           <Rating
             sx={{
               direction: "ltr",
@@ -76,7 +78,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
           {replies.map((reply) => {
             return (
               <Box
-                key={reply.writer}
+                key={reply.gym_name}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
@@ -95,7 +97,7 @@ const Comment: React.FC<CommentProps> = ({ data, replies }) => {
                       fontWeight: 600,
                       fontSize: { xs: 14, md: 20 },
                       mb: { xs: 1, md: 2 },
-                    }}>{`${reply.writer} در ${moment(reply.created_at).format(
+                    }}>{`${reply.gym_name} در ${moment(reply.created_at).format(
                     "jYYYY/jMM/jDD"
                   )} در جواب گفته : `}</Typography>
                   <Typography

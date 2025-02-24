@@ -54,7 +54,13 @@ const Specifications: React.FC<SpecificationsProps> = ({
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
-  const [showGender, setShowGender] = useState(0);
+  const [showGender, setShowGender] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const savedGender = localStorage.getItem("selectedGender");
+      return savedGender === "women" ? 1 : 0; // Default to men if not found
+    }
+    return 0;
+  });
 
   const today = new Date();
   const isOddDay = today.getDate() % 2 !== 0;
@@ -87,17 +93,17 @@ const Specifications: React.FC<SpecificationsProps> = ({
   const [currentMonth, setCurrentMonth] = useState(moment().locale("fa"));
 
   useEffect(() => {
-    // Convert Jalali month to Gregorian before sending the request
+    const selectedGender = showGender === 0 ? "men" : "women";
     const gregorianMonth = currentMonth.clone().locale("en").format("YYYY-MM-DD");
-    fetchGymSessions(gymId, "men", gregorianMonth).then((responseSessions) => {
-      // Convert response dates back to Jalali for display
+  
+    fetchGymSessions(gymId, selectedGender, gregorianMonth).then((responseSessions) => {
       const jalaliSessions = responseSessions.map((session) => ({
         ...session,
         date: moment(session.date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD"),
       }));
       setSessions(jalaliSessions);
     });
-  }, [gymId, currentMonth]);
+  }, [gymId, currentMonth, showGender]);
 
   const availableTimeSlots = sessions
     .filter((session) => session.date === selectedDate)
@@ -271,7 +277,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
             <Typography
               variant="h6"
               fontWeight={600}>
-              {"ساختار باشگاه :"}
+              {"مشخصات باشگاه :"}
             </Typography>
           </Box>
           <Box
@@ -491,12 +497,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
               value={showGender}
               onChange={(_, value) => {
                 setShowGender(value);
-
-                // Check if the user is not logged in
-                if (!authTokens) {
-                  const gender = value === 0 ? "men" : "women";
-                  localStorage.setItem("selectedGender", gender);
-                }
+                const gender = value === 0 ? "men" : "women";
+                localStorage.setItem("selectedGender", gender);
               }}
             >
               <Tab

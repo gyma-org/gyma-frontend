@@ -68,10 +68,10 @@ const Comments: React.FC<CommentProps> = ({ gymid }) => {
       </Typography>
       {comments.length > 0 ? (
         comments.map((comment) => (
-          <div key={comment.comment.user_name}>
+          <div key={comment.comment.writer_username}>
             {/* Render the comment */}
             <Comment
-              key={comment.comment.user_name}
+              key={comment.comment.writer_username}
               data={comment.comment}
               replies={comment.replies}
             />

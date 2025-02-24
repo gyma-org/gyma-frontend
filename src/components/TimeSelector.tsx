@@ -99,7 +99,7 @@ const TimeSelector = ({
               sx={{
                 direction: "ltr",
               }}>
-              {time.end_time} - {time.start_time}
+              {time.start_time} - {time.end_time}
             </Typography>
           </Button>
         ))}
