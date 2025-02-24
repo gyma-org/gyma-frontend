@@ -469,7 +469,7 @@ const Profile = () => {
             <Typography
               align="left"
               variant="body1">
-              {UserProfile?.email || "user@example.com"}
+              {/* {UserProfile?.email || "user@example.com"} */}
             </Typography>
           </Box>
           {/* <Box sx={{ direction: "rtl", pt: 2 }}>
