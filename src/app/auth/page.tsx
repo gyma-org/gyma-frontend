@@ -321,6 +321,9 @@ const LoginSignup: React.FC = () => {
       enqueueSnackbar("ثبت نام اولیه با موفقیت انجام شد.", { variant: "success" });
       setOpenVerification(true);
       setUserPhoneNumber(phoneNumber);
+      
+      enqueueSnackbar("هویت تایید شد، ورود کنید!", { variant: "success" });
+      toggle(true);
     } else {
       console.error("Registration error:", response.errors);
       enqueueSnackbar("مشکلی در ثبت نام پیش آمد، دوباره تلاش کنید.", { variant: "error" });
