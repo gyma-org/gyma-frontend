@@ -316,18 +316,20 @@ const LoginSignup: React.FC = () => {
 
     const phoneNumber = values.phone_number;
 
+    setLoading(true);
+
     const response = await registerUser(values); // call registerUser from context
     if (response.success) {
-      enqueueSnackbar("ثبت نام اولیه با موفقیت انجام شد.", { variant: "success" });
+      enqueueSnackbar(".ثبت نام اولیه انجام شد برای ادامه شماره خود را تایید کنید", { variant: "success" });
       setOpenVerification(true);
       setUserPhoneNumber(phoneNumber);
       
-      enqueueSnackbar("هویت تایید شد، ورود کنید!", { variant: "success" });
       toggle(true);
     } else {
       console.error("Registration error:", response.errors);
-      enqueueSnackbar("مشکلی در ثبت نام پیش آمد، دوباره تلاش کنید.", { variant: "error" });
+      enqueueSnackbar(".مشکلی در ثبت نام پیش آمد، دوباره تلاش کنید", { variant: "error" });
     }
+    setLoading(false);
   };
 
   const handleVerify = async ({ code }: { code: string }) => {
@@ -342,6 +344,7 @@ const LoginSignup: React.FC = () => {
       setOpenVerification(false);
       setSnackbarMessage(verificationResponse.message);
       enqueueSnackbar(verificationResponse.message, { variant: "success" });
+      setOpenVerification(false);
     } else {
       enqueueSnackbar(verificationResponse.message, { variant: "error" });
     }
