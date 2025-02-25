@@ -19,12 +19,12 @@ export const verifyOtp = async (data: VerificationData): Promise<{ success: bool
     const result = await response.json();
 
     if (response.ok) {
-      return { success: true, message: result.message || "Verification successful" };
+      return { success: true, message: result.message || "هویت با شماره تایید شد." };
     } else {
-      return { success: false, message: result.message || "Verification failed" };
+      return { success: false, message: result.message || "کد اشتباه وارد شده است." };
     }
   } catch (error) {
-    console.error("Error during OTP verification:", error);
+    console.error("مشکلی پیش آمد دوباره تلاش کنید.", error);
     return { success: false, message: "An error occurred during verification. Please try again." };
   }
 };

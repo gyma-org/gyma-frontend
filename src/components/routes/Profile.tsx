@@ -691,6 +691,7 @@ const Profile = () => {
           position: "relative",
           mx: "auto",
         }}>
+        <a href="tel:+989330454165" style={{ textDecoration: "none" }}>
         <Button
           variant="contained"
           sx={{
@@ -706,6 +707,7 @@ const Profile = () => {
           }}>
           {"پشتیبانی"}
         </Button>
+        </a>
         <Button
           variant="contained"
           sx={{
