@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 242.22 257.78">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000449;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g>
+    <g id="Layer_1">
+      <g>
+        <rect class="cls-1" x="98.36" y="119.47" width="53.69" height="24.71" rx="2.08" ry="2.08"/>
+        <path class="cls-1" d="M35.62,121.32h6.43v24.71h-6.43c-1.9,0-3.43-1.54-3.43-3.43v-17.85c0-1.9,1.54-3.43,3.43-3.43Z"/>
+        <path class="cls-1" d="M208.74,121.32h7.08c1.54,0,2.79,1.25,2.79,2.79v19.14c0,1.54-1.25,2.79-2.79,2.79h-7.08v-24.71h0Z"/>
+        <rect class="cls-1" x="66.4" y="83.09" width="28.72" height="91.6" rx="9.49" ry="9.49"/>
+        <rect class="cls-1" x="43.19" y="99.08" width="20.53" height="65.48" rx="6.79" ry="6.79"/>
+        <rect class="cls-1" x="155.3" y="83.09" width="28.72" height="91.6" rx="9.49" ry="9.49" transform="translate(339.32 257.78) rotate(180)"/>
+        <rect class="cls-1" x="186.7" y="99.08" width="20.53" height="65.48" rx="6.79" ry="6.79" transform="translate(393.92 263.65) rotate(180)"/>
+      </g>
+    </g>
+  </g>
+</svg>
