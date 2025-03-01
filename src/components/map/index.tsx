@@ -9,7 +9,8 @@ import FloatCard from "../FloatCard";
 import NearbyGyms from "./NearbyGym";
 import GymPreview from "../GymPreview";
 import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { CircularProgress, LinearProgress } from "@mui/material";
+import { CircularProgress, LinearProgress, useMediaQuery  } from "@mui/material";
+
 
 const Mapp = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -22,6 +23,7 @@ const Mapp = () => {
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(10);
   const [progress, setProgress] = useState(100);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   // Preview
   const [gymPreview, setGymPreview] = useState<Gym | null>(null);
@@ -342,23 +344,25 @@ const Mapp = () => {
         <Box
           sx={{
             position: "absolute",
-            top: 10,
-            right: 10,
-            bgcolor: "#fff",
-            borderRadius: "6px",
-            p: 0.5,
-            zIndex: 200,
-            boxShadow: "0 3px 6px rgba(0, 0, 0, 0.15)", 
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            fontSize: "10px",
-            maxWidth: "250px",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
+      top: 10,
+      left: isMobile ? "auto" : "50%",
+      right: isMobile ? 10 : "auto",
+      transform: isMobile ? "none" : "translateX(-50%)",
+      bgcolor: "#fff",
+      borderRadius: "8px",
+      p: 1,
+      zIndex: 200,
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)", // ✅ Soft shadow
+      display: "flex",
+      alignItems: "center",
+      gap: 1,
+      fontSize: "12px",
+      maxWidth: isMobile ? "200px" : "320px", // ✅ Smaller on mobile, normal on desktop
+      whiteSpace: "nowrap",
+      overflow: "hidden",
           }}>
           <Typography variant="caption" sx={{ flexShrink: 0 }}>
-            موقعیت‌یابی غیرفعال ({countdown}s)
+            موقعیت‌یابی غیرفعال
           </Typography>
           <Button variant="outlined" color="primary" onClick={handleRequestLocation} size="small" sx={{ fontSize: "9px", p: "2px 4px", minWidth: "auto" }}>
             فعال‌سازی
