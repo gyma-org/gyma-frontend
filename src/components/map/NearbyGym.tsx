@@ -42,7 +42,7 @@ export default function NearbyGyms({
     if (touchMoveTimeout.current) return;
 
     touchMoveTimeout.current = setTimeout(() => {
-      const minHeight = window.innerHeight <= 720 ? 54 : 42; // Adjust for iPhone SE
+      const minHeight = window.innerHeight <= 833 ? 54 : 42; // Adjust for iPhone SE
       if (diffY > 200 && !isFullScreen) {
         setDialogHeight(100);
         setIsFullScreen(true);
@@ -61,7 +61,7 @@ export default function NearbyGyms({
   };
 
   useEffect(() => {
-    setDialogHeight(showNearbyGyms ? (window.innerHeight <= 720 ? 54 : 42) : 0);
+    setDialogHeight(showNearbyGyms ? (window.innerHeight <= 833 ? 54 : 42) : 0);
   }, [showNearbyGyms]);
 
   return (
@@ -76,8 +76,8 @@ export default function NearbyGyms({
           margin: 0,
           backgroundColor: "white",
           height: { xs: `${dialogHeight}%`, md: 0 },
-          borderTopLeftRadius: dialogHeight <= (window.innerHeight <= 720 ? 54 : 42) ? 24 : 0,
-          borderTopRightRadius: dialogHeight <= (window.innerHeight <= 720 ? 54 : 42) ? 24 : 0,
+          borderTopLeftRadius: dialogHeight <= (window.innerHeight <= 833 ? 54 : 42) ? 24 : 0,
+          borderTopRightRadius: dialogHeight <= (window.innerHeight <= 833 ? 54 : 42) ? 24 : 0,
           transition: "height 0.3s ease",
           boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
         }}>
