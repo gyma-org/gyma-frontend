@@ -9,6 +9,7 @@ import FloatCard from "../FloatCard";
 import NearbyGyms from "./NearbyGym";
 import GymPreview from "../GymPreview";
 import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 
 const Mapp = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -18,6 +19,8 @@ const Mapp = () => {
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null); // Store clicked location
   const [gymMarkers, setGymMarkers] = useState<{ marker: Marker; popupElement: HTMLDivElement }[]>([]);
   const [locationDenied, setLocationDenied] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [countdown, setCountdown] = useState(10);
 
   // Preview
   const [gymPreview, setGymPreview] = useState<Gym | null>(null);
@@ -43,6 +46,7 @@ const Mapp = () => {
     }) as unknown as mapboxgl.Map;
 
     mapRef.current.on("load", () => {
+      setLoading(false); // Hide loading when map loads
       fetchNearbyGyms(userLat, userLon)
         .then((data) => {
           if (Array.isArray(data)) {
@@ -56,6 +60,7 @@ const Mapp = () => {
           console.error("Error fetching gyms:", error);
         });
     });
+
     handleClickOnMap();
   };
 
@@ -90,6 +95,21 @@ const Mapp = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!locationDenied) return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    const autoHide = setTimeout(() => setLocationDenied(false), 10000);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(autoHide);
+    };
+  }, [locationDenied]);
 
   const handleClickOnMap = () => {
     const map = mapRef.current;
@@ -143,14 +163,14 @@ const Mapp = () => {
     if (mapRef.current) {
       const map = mapRef.current;
       const currentCenter = map.getCenter(); // Get current center
-  
+
       map.flyTo({
         center: [currentCenter.lng, currentCenter.lat - 0.02], // Move slightly up
         zoom: 12, // Adjust zoom level
         essential: true,
       });
     }
-  }; 
+  };
 
   const handleRequestLocation = () => {
     setLocationDenied(false); // Hide the box before re-requesting
@@ -243,10 +263,10 @@ const Mapp = () => {
         popupElement.style.opacity = "1"; // Fade in
         popupElement.style.pointerEvents = "auto"; // Re-enable interaction
       }
-      
+
       const fontSize = Math.max(10, zoom * 1.2); // Prevents text from getting too small
       popupElement.style.fontSize = `${fontSize}px`;
-    
+
       const baseOffset = 15;
 
       const topOffset = -10;
@@ -293,6 +313,23 @@ const Mapp = () => {
 
   return (
     <Box sx={{ display: "flex", height: "100%", position: "relative" }}>
+      {loading && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            bgcolor: "rgba(255,255,255,0.8)", // Semi-transparent background
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 10,
+          }}>
+          <CircularProgress color="primary" />
+        </Box>
+      )}
       {locationDenied && (
         <Box
           sx={{
@@ -300,27 +337,22 @@ const Mapp = () => {
             top: 10,
             left: 10,
             bgcolor: "#fff",
-            borderRadius: "8px",
-            p: 2,
+            borderRadius: "6px",
+            p: 0.5,
             zIndex: 200,
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+            fontSize: "10px",
           }}>
-          <Typography
-            variant="body1"
-            sx={{ mb: 2 }}>
-            سرویس موقعیت یابی توسط شما غیر فعال شده است.
+          <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
+            موقعیت‌یابی غیرفعال (بستن در {countdown}s)
           </Typography>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleRequestLocation}
-            sx={{ mr: 1 }}>
-            فعال سازی سرویس موقعیت یابی
+          <Button variant="outlined" color="primary" onClick={handleRequestLocation} size="small" sx={{ minWidth: "auto", fontSize: "10px", p: "2px 6px" }}>
+            فعال‌سازی
           </Button>
-          <Button
-            variant="text"
-            color="secondary"
-            onClick={() => setLocationDenied(false)}>
+          <Button variant="text" color="secondary" onClick={() => setLocationDenied(false)} size="small" sx={{ minWidth: "auto", fontSize: "10px", p: "2px 6px" }}>
             بستن
           </Button>
         </Box>
