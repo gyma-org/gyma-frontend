@@ -196,7 +196,7 @@ const GymPreview = ({
             }}
             grabCursor={true}
             modules={[Pagination]}
-            style={{ width: 100, height: 100 }} // Fix Swiper size
+            style={{ width: 150, height: 150 }} // Fix Swiper size
           >
             {images.map((image, index) => (
               <SwiperSlide
@@ -210,8 +210,8 @@ const GymPreview = ({
                 <CardMedia
                   component="img"
                   sx={{
-                    width: "100px", // Explicitly set width
-                    height: "100px", // Explicitly set height
+                    width: "150px", // Explicitly set width
+                    height: "150px", // Explicitly set height
                     objectFit: "contain", // Ensure the whole image fits without cropping
                     borderRadius: "16px",
                   }}
