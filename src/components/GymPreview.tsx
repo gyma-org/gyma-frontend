@@ -183,8 +183,8 @@ const GymPreview = ({
           {/* Image Slider using Swiper */}
         <Box
           sx={{
-            width: 100,
-            height: 100, // Ensure Box has a fixed size
+            width: 150,
+            height: 150, // Ensure Box has a fixed size
             overflow: "hidden",
             borderRadius: "16px",
             ml: -1, // Move slightly to the left
