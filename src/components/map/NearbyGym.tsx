@@ -45,11 +45,11 @@ export default function NearbyGyms({
       if (diffY > 200 && !isFullScreen) {
         setDialogHeight(100);
         setIsFullScreen(true);
-      } else if (diffY > 50 && !isFullScreen) {
-        setDialogHeight(dialogHeight === 50 ? 100 : 50);
-      } else if (diffY < -50) {
+      } else if (diffY > 37 && !isFullScreen) {
+        setDialogHeight(dialogHeight === 37 ? 100 : 37);
+      } else if (diffY < -37) {
         if (dialogHeight === 100) {
-          setDialogHeight(50);
+          setDialogHeight(37);
           setIsFullScreen(false);
         } else {
           setShowNearbyGyms(false);
@@ -61,7 +61,7 @@ export default function NearbyGyms({
 
   useEffect(() => {
     if (showNearbyGyms) {
-      setDialogHeight(50);
+      setDialogHeight(37);
     } else {
       setDialogHeight(0);
     }
@@ -79,8 +79,8 @@ export default function NearbyGyms({
           margin: 0,
           backgroundColor: "white",
           height: { xs: `${dialogHeight}%`, md: 0 },
-          borderTopLeftRadius: dialogHeight <= 50 ? 24 : 0,
-          borderTopRightRadius: dialogHeight <= 50 ? 24 : 0,
+          borderTopLeftRadius: dialogHeight <= 37 ? 24 : 0,
+          borderTopRightRadius: dialogHeight <= 37 ? 24 : 0,
           transition: "height 0.3s ease",
           boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
         }}>
