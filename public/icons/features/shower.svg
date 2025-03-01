@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 242.22 257.78">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-width: 12px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+        stroke: #000449;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        fill: #000449;
+      }
+
+      .cls-2 {
+        stroke-width: 10px;
+      }
+
+      .cls-3 {
+        stroke-width: 7px;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g>
+    <g id="Layer_1">
+      <g>
+        <path class="cls-1" d="M81.87,108.18c0-28.05,15.15-41.55,37.7-41.55s39.09,16.13,39.09,44.18"/>
+        <rect class="cls-3" x="120.26" y="46.98" width="2.12" height="18.14" rx=".6" ry=".6"/>
+        <rect class="cls-4" x="84.51" y="142.44" width="7.86" height="20.33" rx="3.93" ry="3.93"/>
+        <rect class="cls-4" x="84.51" y="175.97" width="7.86" height="20.33" rx="3.93" ry="3.93"/>
+        <rect class="cls-4" x="115.13" y="154.87" width="8.98" height="23.23" rx="3.93" ry="3.93"/>
+        <rect class="cls-4" x="146.87" y="142.44" width="7.86" height="20.33" rx="3.93" ry="3.93"/>
+        <rect class="cls-4" x="146.87" y="175.97" width="7.86" height="20.33" rx="3.93" ry="3.93"/>
+        <rect class="cls-2" x="68.22" y="105.83" width="105.79" height="18.93" rx="9.46" ry="9.46"/>
+      </g>
+    </g>
+  </g>
+</svg>

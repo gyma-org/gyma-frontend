@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 242.22 257.78">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000449;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #000449;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 8px;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g>
+    <g id="Layer_1">
+      <g>
+        <g>
+          <rect class="cls-1" x="102.61" y="146.61" width="43.42" height="19.98" rx="2.08" ry="2.08"/>
+          <path class="cls-1" d="M52.53,148.11h4.55v19.98h-4.55c-1.9,0-3.43-1.54-3.43-3.43v-13.12c0-1.9,1.54-3.43,3.43-3.43Z"/>
+          <path class="cls-1" d="M191.85,148.11h5.19c1.54,0,2.79,1.25,2.79,2.79v14.41c0,1.54-1.25,2.79-2.79,2.79h-5.19v-19.98h0Z"/>
+          <rect class="cls-1" x="76.76" y="117.19" width="23.23" height="74.07" rx="9.49" ry="9.49"/>
+          <rect class="cls-1" x="58" y="130.13" width="16.6" height="52.95" rx="6.79" ry="6.79"/>
+          <rect class="cls-1" x="148.64" y="117.19" width="23.23" height="74.07" rx="9.49" ry="9.49" transform="translate(320.51 308.45) rotate(180)"/>
+          <rect class="cls-1" x="174.03" y="130.13" width="16.6" height="52.95" rx="6.79" ry="6.79" transform="translate(364.66 313.2) rotate(180)"/>
+        </g>
+        <path class="cls-1" d="M111.56,110.5c.04,4.25,2.45,7.57,5.98,8.75,3.67,1.22,7.46.1,9.88-3.16,3.55-4.79,6.97-9.68,10.44-14.52,3.95-5.5,7.91-11.01,11.87-16.51.93-1.29,2.01-2.88.36-3.98-.81-.54-2.82-.16-3.78.52-10.27,7.22-20.44,14.6-30.65,21.91-2.61,1.87-4.03,4.32-4.09,7.01Z"/>
+        <path class="cls-2" d="M165.63,68.55c13,11.27,21.23,27.91,21.23,46.46"/>
+        <path class="cls-2" d="M61.77,114.77c0-33.94,27.52-61.46,61.46-61.46"/>
+        <rect class="cls-1" x="84.94" y="69.53" width="4.24" height="12.21" rx="1.73" ry="1.73" transform="translate(-27.98 83.71) rotate(-45)"/>
+        <rect class="cls-1" x="69.99" y="96.07" width="4.24" height="12.21" rx="1.62" ry="1.62" transform="translate(-30.06 174.29) rotate(-90)"/>
+        <rect class="cls-1" x="173.91" y="90.45" width="4.24" height="12.21" rx="1.73" ry="1.73" transform="translate(79.47 272.59) rotate(-90)"/>
+        <rect class="cls-1" x="120.09" y="49.88" width="6.26" height="16.46" rx="3.13" ry="3.13"/>
+      </g>
+    </g>
+  </g>
+</svg>
