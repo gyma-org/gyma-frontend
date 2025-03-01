@@ -9,7 +9,7 @@ import FloatCard from "../FloatCard";
 import NearbyGyms from "./NearbyGym";
 import GymPreview from "../GymPreview";
 import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, LinearProgress } from "@mui/material";
 
 const Mapp = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -21,6 +21,7 @@ const Mapp = () => {
   const [locationDenied, setLocationDenied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(10);
+  const [progress, setProgress] = useState(100);
 
   // Preview
   const [gymPreview, setGymPreview] = useState<Gym | null>(null);
@@ -99,14 +100,21 @@ const Mapp = () => {
   useEffect(() => {
     if (!locationDenied) return;
 
+    setProgress(100); // Reset progress bar when opened
+
     const timer = setInterval(() => {
       setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => (prev > 0 ? prev - 10 : 0)); // Continuous smooth transition
     }, 1000);
 
     const autoHide = setTimeout(() => setLocationDenied(false), 10000);
 
     return () => {
       clearInterval(timer);
+      clearInterval(progressInterval);
       clearTimeout(autoHide);
     };
   }, [locationDenied]);
@@ -335,26 +343,50 @@ const Mapp = () => {
           sx={{
             position: "absolute",
             top: 10,
-            left: 10,
+            right: 10,
             bgcolor: "#fff",
             borderRadius: "6px",
             p: 0.5,
             zIndex: 200,
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0 3px 6px rgba(0, 0, 0, 0.15)", 
             display: "flex",
             alignItems: "center",
             gap: 0.5,
             fontSize: "10px",
+            maxWidth: "250px",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
           }}>
-          <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
-            موقعیت‌یابی غیرفعال (بستن در {countdown}s)
+          <Typography variant="caption" sx={{ flexShrink: 0 }}>
+            موقعیت‌یابی غیرفعال ({countdown}s)
           </Typography>
-          <Button variant="outlined" color="primary" onClick={handleRequestLocation} size="small" sx={{ minWidth: "auto", fontSize: "10px", p: "2px 6px" }}>
+          <Button variant="outlined" color="primary" onClick={handleRequestLocation} size="small" sx={{ fontSize: "9px", p: "2px 4px", minWidth: "auto" }}>
             فعال‌سازی
           </Button>
-          <Button variant="text" color="secondary" onClick={() => setLocationDenied(false)} size="small" sx={{ minWidth: "auto", fontSize: "10px", p: "2px 6px" }}>
+          <Button variant="text" color="secondary" onClick={() => setLocationDenied(false)} size="small" sx={{ fontSize: "9px", p: "2px 4px", minWidth: "auto" }}>
             بستن
           </Button>
+
+          {/* ✅ Modern, continuously moving progress bar at the bottom */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              height: "3px",
+              bgcolor: "rgba(33, 150, 243, 0.2)", // Light blue background
+              "&::after": {
+                content: '""',
+                display: "block",
+                height: "100%",
+                width: `${progress}%`,
+                bgcolor: "#2196F3", // Primary blue
+                transition: "width 1s linear", // ✅ Smooth movement
+                boxShadow: "0px 0px 6px rgba(33, 150, 243, 0.5)", // ✅ Glow effect
+              },
+            }}
+          />
         </Box>
       )}
       <Box
