@@ -4,7 +4,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, CardMedia, Divider, Rating, Typography } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import "./gym/ImageSlider/swiper.css";
 
@@ -24,6 +24,24 @@ const GymPreview = ({
   const onClick = () => {
     window.location.href = `/gyms/${gym.id}`;
   };
+
+  // State to hold platform info
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    // Detect Samsung devices specifically by user agent
+    if (/android/.test(userAgent)) {
+      setIsAndroid(true);
+    }
+    // Detect iOS devices
+    if (/iphone|ipod/.test(userAgent)) {
+      setIsIOS(true);
+    }
+  }, []);
+
+
   return (
     <>
       <Box
@@ -131,110 +149,138 @@ const GymPreview = ({
                   {city}, {address}
                 </Typography>
                 <Box
-            display="flex"
-            alignItems="center"
-            gap={1}>
-          </Box>
+                  display="flex"
+                  alignItems="center"
+                  gap={1}>
+                </Box>
               </Box>
               <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              width: "auto",
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}> {/* Push content to the right */}
-              {rate ? (
-                <Rating size="small" value={parseFloat(rate)} readOnly />
-              ) : (
-                <Box
-                  sx={{
-                    display: "inline-block",
-                    backgroundColor: "#E0F7FA",
-                    color: "#00796B",
-                    fontWeight: "bold",
-                    fontSize: "0.75rem",
-                    padding: "2px 8px",
-                    borderRadius: "12px",
-                  }}
-                >
-                  جدید
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "auto",
+                }}
+              >
+                <Box sx={{ flexGrow: 1 }}> {/* Push content to the right */}
+                  {rate ? (
+                    <Rating size="small" value={parseFloat(rate)} readOnly />
+                  ) : (
+                    <Box
+                      sx={{
+                        display: "inline-block",
+                        backgroundColor: "#E0F7FA",
+                        color: "#00796B",
+                        fontWeight: "bold",
+                        fontSize: "0.75rem",
+                        padding: "2px 8px",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      جدید
+                    </Box>
+                  )}
                 </Box>
-              )}
-            </Box>
-        </Box>
+              </Box>
             </Box>
           </Box>
 
-          
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "end",
-            // gap: 0.5,
-            // overflowX: "auto",
-            // width: "100%",
-            // borderRadius: "8px",
-            // pb: 0.5,
-            // maxHeight: "400px",
-          }}
-        >
-          {/* Image Slider using Swiper */}
-        <Box
-          sx={{
-            width: 150,
-            height: 150, // Ensure Box has a fixed size
-            overflow: "hidden",
-            borderRadius: "16px",
-            ml: -1, // Move slightly to the left
-          }}
-        >
-          <Swiper
-            pagination={{
-              dynamicBullets: true,
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "end",
+              // gap: 0.5,
+              // overflowX: "auto",
+              // width: "100%",
+              // borderRadius: "8px",
+              // pb: 0.5,
+              // maxHeight: "400px",
             }}
-            grabCursor={true}
-            modules={[Pagination]}
-            style={{ width: 150, height: 150 }} // Fix Swiper size
           >
-            {images.map((image, index) => (
-              <SwiperSlide
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+            {/* Image Slider using Swiper */}
+            <Box
+              sx={{
+                width: 150,
+                height: 180, // Ensure Box has a fixed size
+                ...(isAndroid && {
+                  // backgroundColor: "#ff5722", // For Android (Samsung) devices
+                  maxWidth: "400px",
+                  mt: 1,
+                  heigh: 180
+                  // fontSize: "14px", // Decrease font size for Android
+                  // padding: "8px 12px", // Adjust padding for Android
+                }),
+                ...(isIOS && {
+                  // backgroundColor: "#4CAF50", // For iPhones (iOS)
+                  height: 150, // Ensure Box has a fixed size
+                }),
+                overflow: "hidden",
+                borderRadius: "16px",
+                ml: -1, // Move slightly to the left
+              }}
+            >
+              <Swiper
+                pagination={{
+                  dynamicBullets: true,
                 }}
+                grabCursor={true}
+                modules={[Pagination]}
+                style={{ width: 150, height: 150 }} // Fix Swiper size
               >
-                <CardMedia
-                  component="img"
-                  sx={{
-                    width: "150px", // Explicitly set width
-                    height: "150px", // Explicitly set height
-                    objectFit: "contain", // Ensure the whole image fits without cropping
-                    borderRadius: "16px",
-                  }}
-                  image={image}
-                  title={`Gallery Image ${index + 1}`}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                {images.map((image, index) => (
+                  <SwiperSlide
+                    key={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        width: "150px", // Explicitly set width
+                        height: "150px", // Explicitly set height
+                        objectFit: "contain", // Ensure the whole image fits without cropping
+                        borderRadius: "16px",
+                      }}
+                      image={image}
+                      title={`Gallery Image ${index + 1}`}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Box>
+
+          </Box>
         </Box>
 
-        </Box>
-        </Box>
-       
         <Divider />
         <Button
           variant="outlined"
           sx={{
             borderRadius: "12px",
             mt: 1,
+            width: { xs: "100%", sm: "auto" }, // Full width for mobile
+            maxWidth: "400px", // For larger screens
+            margin: "0 auto",
+            display: "block",
+            // Add platform-specific styling
+            ...(isAndroid && {
+              backgroundColor: "#ff5722", // For Android (Samsung) devices
+              maxWidth: "400px",
+              mt: 1,
+              // fontSize: "14px", // Decrease font size for Android
+              // padding: "8px 12px", // Adjust padding for Android
+            }),
+            ...(isIOS && {
+              backgroundColor: "#4CAF50", // For iPhones (iOS)
+            }),
           }}
           color="primary"
-          onClick={onClick}>
+          onClick={onClick}
+        >
           رفتن به صفحه باشگاه و رزرو
         </Button>
       </Box>
