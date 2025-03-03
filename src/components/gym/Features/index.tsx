@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowBackIos } from "@mui/icons-material";
-import { Typography, Box, Divider, Chip } from "@mui/material";
+import { Typography, Box, Divider, Chip, Grid2 } from "@mui/material";
 
 type GymFeaturesProps = {
   features: string[];
@@ -24,14 +24,24 @@ const iconMap: Record<string, string> = {
 
 const GymFeatures: React.FC<GymFeaturesProps> = ({ features, equipment }) => {
   return (
-    <Box sx={{ p: 2 }}>
+    <Grid2 size={12} sx={{ p: 2 }}>
       {/* Equipment Section */}
       <Typography variant="h6" fontWeight={600}>
         <ArrowBackIos sx={{ ml: 2 }} />
         {"تجهیزات :"}
       </Typography>
       <Divider sx={{ my: 1 }} />
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, px: { xs: 1, sm: 4 } }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 1,
+          px: { xs: 1, sm: 4 },
+          flexDirection: { xs: "column", sm: "row" }, // Column for small screens and row for larger ones
+          justifyContent: "space-evenly",
+          alignItems: "flex-start"
+        }}
+      >
         {equipment.length > 0 ? (
           equipment.map((item, index) => (
             <Chip
@@ -41,7 +51,13 @@ const GymFeatures: React.FC<GymFeaturesProps> = ({ features, equipment }) => {
               color="default"
               icon={
                 iconMap[item] ? (
-                  <Image src={iconMap[item]} alt={item} width={40} height={40} style={{ marginLeft: "-7px" }} />
+                  <Image
+                    src={iconMap[item]}
+                    alt={item}
+                    width={40}
+                    height={40}
+                    style={{ marginLeft: "-7px" }}
+                  />
                 ) : undefined
               }
               sx={{
@@ -49,6 +65,7 @@ const GymFeatures: React.FC<GymFeaturesProps> = ({ features, equipment }) => {
                 border: "none",
                 backgroundColor: "transparent",
                 fontWeight: 500,
+                maxWidth: "calc(50% - 8px)",
               }}
             />
           ))
@@ -65,7 +82,18 @@ const GymFeatures: React.FC<GymFeaturesProps> = ({ features, equipment }) => {
         {"امکانات :"}
       </Typography>
       <Divider sx={{ my: 1 }} />
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, px: { xs: 1, sm: 4 }, mb: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 1,
+          px: { xs: 1, sm: 4 },
+          mb: 4,
+          flexDirection: { xs: "column", sm: "row" },
+          justifyContent: "space-evenly",
+          alignItems: "flex-start"
+        }}
+      >
         {features.length > 0 ? (
           features.map((item, index) => (
             <Chip
@@ -75,7 +103,13 @@ const GymFeatures: React.FC<GymFeaturesProps> = ({ features, equipment }) => {
               color="default"
               icon={
                 iconMap[item] ? (
-                  <Image src={iconMap[item]} alt={item} width={40} height={40} style={{ marginLeft: "-7px" }} />
+                  <Image
+                    src={iconMap[item]}
+                    alt={item}
+                    width={40}
+                    height={40}
+                    style={{ marginLeft: "-7px" }}
+                  />
                 ) : undefined
               }
               sx={{
@@ -83,6 +117,7 @@ const GymFeatures: React.FC<GymFeaturesProps> = ({ features, equipment }) => {
                 border: "none",
                 backgroundColor: "transparent",
                 fontWeight: 500,
+                maxWidth: "calc(50% - 8px)",
               }}
             />
           ))
@@ -92,7 +127,7 @@ const GymFeatures: React.FC<GymFeaturesProps> = ({ features, equipment }) => {
           </Typography>
         )}
       </Box>
-    </Box>
+    </Grid2>
   );
 };
 
