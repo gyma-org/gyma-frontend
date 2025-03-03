@@ -42,7 +42,7 @@ export default function NearbyGyms({
     if (touchMoveTimeout.current) return;
 
     touchMoveTimeout.current = setTimeout(() => {
-      const minHeight = (window.innerHeight <= 833 ? 54 : 42) ? 24 : window.innerHeight > 900 ? 39 : 0;
+      const minHeight = window.innerHeight > 900 ? 39 : (window.innerHeight <= 833 ? 54 : 42);
       if (diffY > 200 && !isFullScreen) {
         setDialogHeight(100);
         setIsFullScreen(true);
