@@ -202,17 +202,11 @@ const GymPreview = ({
             <Box
               sx={{
                 width: 150,
-                height: 180, // Ensure Box has a fixed size
+                height: { xs: "auto", sm: "120px" }, 
                 ...(isAndroid && {
-                  // backgroundColor: "#ff5722", // For Android (Samsung) devices
-                  maxWidth: "400px",
-                  mt: 1,
                   heigh: 180
-                  // fontSize: "14px", // Decrease font size for Android
-                  // padding: "8px 12px", // Adjust padding for Android
                 }),
                 ...(isIOS && {
-                  // backgroundColor: "#4CAF50", // For iPhones (iOS)
                   height: 150, // Ensure Box has a fixed size
                 }),
                 overflow: "hidden",
