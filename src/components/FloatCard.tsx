@@ -16,6 +16,7 @@ interface FloatCardProps {
   maxWidth?: number;
   gymId: string;
   rate: string | null;
+  width?: string;  // Add this line to accept a width prop
 }
 
 const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onClick, maxWidth = 500, price, gymId, rate }) => {
@@ -74,7 +75,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
         direction: "rtl",
         borderRadius: "16px",
         maxWidth: maxWidth,
-        width: "96vw",
+        width: "91vw",
         mx: { xs: "auto", md: 0 },
         aspectRatio: "4/1",
         p: 1,
@@ -112,6 +113,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
             sx={{
               fontWeight: "bold",
               fontSize: { xs: 16, md: 18 },
+              textAlign: 'right' 
             }}>
             {name}
           </Typography>
@@ -177,7 +179,8 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
           <Box
             display="flex"
             alignItems="center"
-            gap={1}>
+            gap={1}
+            sx={{ml:2}}>
             <Typography
               variant="h6"
               fontWeight="bold"
@@ -205,6 +208,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
         image={`${API_BASE_URL}/medias/profile/${profile}`}
         sx={{
           mr: 1,
+          ml:0.5,
           height: "100%",
           width: "auto",
           aspectRatio: "1 / 1",
