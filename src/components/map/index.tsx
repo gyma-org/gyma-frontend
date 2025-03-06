@@ -10,6 +10,7 @@ import NearbyGyms from "./NearbyGym";
 import GymPreview from "../GymPreview";
 import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp } from "@mui/icons-material";
 import { CircularProgress, LinearProgress, useMediaQuery  } from "@mui/material";
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 
 const Mapp = () => {
@@ -30,6 +31,8 @@ const Mapp = () => {
 
   const [showNearbyGyms, setShowNearbyGyms] = useState(false);
 
+  const isDesktop = useMediaQuery("(min-width:900px)"); 
+  
   const initializeMap = (userLat: number, userLon: number) => {
     mapRef.current = new mapboxgl.Map({
       mapType: mapboxgl.Map.mapTypes.neshanVector,
@@ -49,12 +52,21 @@ const Mapp = () => {
     }) as unknown as mapboxgl.Map;
 
     mapRef.current.on("load", () => {
+      if (isDesktop) {
+        setShowNearbyGyms(true); // Hide the nearby gyms when not on a desktop
+      }
       setLoading(false); // Hide loading when map loads
       fetchNearbyGyms(userLat, userLon)
         .then((data) => {
           if (Array.isArray(data)) {
             setGyms(data);
+            console.log(gyms)
             addMarkersToMap(data);
+            if (!isDesktop) {
+              setShowNearbyGyms(false); // Hide the nearby gyms when not on a desktop
+            }else{
+              setShowNearbyGyms(true);
+            }
           } else {
             console.error("Invalid gym data format:", data);
           }
@@ -68,6 +80,7 @@ const Mapp = () => {
   };
 
   useEffect(() => {
+    
     if (typeof window !== "undefined" && mapContainerRef.current) {
       const defaultLat = 35.6892; // Tehran
       const defaultLon = 51.389;
@@ -160,8 +173,12 @@ const Mapp = () => {
         // Fetch gyms based on clicked location and add them to the map
         const nearbyGyms = await fetchNearbyGyms(lat, lng);
         if (Array.isArray(nearbyGyms)) {
+          console.log(nearbyGyms)
           setGyms(nearbyGyms);
+          
+          console.log(gyms)
           addMarkersToMap(nearbyGyms);
+          setShowNearbyGyms(true);
         } else {
           console.error("Invalid gym data format:", nearbyGyms);
         }
@@ -179,6 +196,7 @@ const Mapp = () => {
         zoom: 12, // Adjust zoom level
         essential: true,
       });
+      setShowNearbyGyms(true);
     }
   };
 
@@ -418,7 +436,7 @@ const Mapp = () => {
           />
         ) : (
           <>
-            {showNearbyGyms && <Typography align="center">{"باشگاه های نزدیک"}</Typography>}
+            {/* {showNearbyGyms && <Typography align="center">{"باشگاه های نزدیک"}</Typography>} */}
             {showNearbyGyms &&
               gyms.map((gym) => (
                 <FloatCard
@@ -453,16 +471,18 @@ const Mapp = () => {
           </>
         )}
       </Box>
-      <NearbyGyms
-        gyms={gyms}
-        gymPreview={gymPreview}
-        handleBack={() => setGymPreview(null)}
-        handleGymClick={handleGymClick}
-        showNearbyGyms={showNearbyGyms}
-        setShowNearbyGyms={setShowNearbyGyms}
-        onBack={handleZoomOut}
-      />
-      {!showNearbyGyms && (
+      {!isDesktop && (
+        <NearbyGyms
+          gyms={gyms}
+          gymPreview={gymPreview}
+          handleBack={() => setGymPreview(null)}
+          handleGymClick={handleGymClick}
+          showNearbyGyms={showNearbyGyms}
+          setShowNearbyGyms={setShowNearbyGyms}
+          onBack={handleZoomOut}
+        />
+      )}
+      {/* {!showNearbyGyms && (
         <Fab
           sx={{
             position: "absolute",
@@ -479,7 +499,67 @@ const Mapp = () => {
           <FitnessCenter />
           نمایش باشگاه های نزدیک
         </Fab>
+      )} */}
+      {!showNearbyGyms && (
+        <Fab
+          sx={{
+            position: 'fixed', // Stays visible when scrolling
+            bottom: '100px', // Position higher on page
+            left: '50%', // Center horizontally
+            transform: 'translateX(-50%)', // Perfect centering
+            bgcolor: 'transparent', // Fully transparent background
+            boxShadow: 'none', // Remove default MUI shadow
+            width: 60, // Button size
+            height: 60,
+            transition: 'all 0.3s ease', // Smooth transitions
+            '&:hover': {
+              transform: 'translateX(-50%) translateY(-4px)', // Lift effect on hover
+            },
+          }}
+          onClick={() => setShowNearbyGyms(true)}
+        >
+          {/* Custom Wide Double Arrow SVG */}
+          <svg
+            width="50"
+            height="30"
+            viewBox="0 0 50 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ animation: 'float 2s infinite ease-in-out' }}
+          >
+            <path
+              d="M5 20L25 5L45 20"
+              stroke="gray"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M5 30L25 15L45 30"
+              stroke="gray"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Fab>
       )}
+     <style jsx>{`
+        @keyframes float {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+      
+      
+      
       <Box
         sx={{ width: "100%", height: "78vh" }}
         ref={mapContainerRef}
