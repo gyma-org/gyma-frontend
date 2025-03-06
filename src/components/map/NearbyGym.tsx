@@ -34,6 +34,14 @@ export default function NearbyGyms({
     transform: "translateZ(0)", 
     WebkitTransform: "translateZ(0)", // Safari fix
   }}
+  disableBackdropTransition={isDesktop} // Disable transition effect for backdrop
+  ModalProps={{
+    BackdropProps: {
+      style: {
+        backgroundColor: isDesktop ? "transparent" : "rgba(0, 0, 0, 0.5)", // No darkening on desktop
+      },
+    },
+  }}
 >
   <Box
     sx={{
