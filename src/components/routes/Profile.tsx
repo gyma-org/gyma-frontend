@@ -724,6 +724,18 @@ const Profile = () => {
           {"درباره جیما"}
         </Button>
       </Grid>
+      <a
+      referrerPolicy="origin"
+      target="_blank"
+      href="https://trustseal.enamad.ir/?id=588646&Code=OdOh07mDjGRVMXCamgrr8JOra7N8WdRL"
+      >
+      <img
+        referrerPolicy="origin"
+        src="https://trustseal.enamad.ir/logo.aspx?id=588646&Code=OdOh07mDjGRVMXCamgrr8JOra7N8WdRL"
+        alt="Enamad Trust Seal"
+        style={{ cursor: "pointer" }}
+      />
+    </a>
     </Grid>
   );
 };

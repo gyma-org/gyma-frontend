@@ -178,7 +178,9 @@ const Mapp = () => {
           
           console.log(gyms)
           addMarkersToMap(nearbyGyms);
-          setShowNearbyGyms(true);
+          if (isDesktop) {
+            setShowNearbyGyms(true); // Hide the nearby gyms when not on a desktop
+          }
         } else {
           console.error("Invalid gym data format:", nearbyGyms);
         }
