@@ -145,7 +145,9 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
             <Typography
               sx={{ fontSize: { xs: 8, md: 9 } }}
               noWrap>
-              {city}, {address}
+              {`${city}, ${address}`.length > 50 
+                ? `${`${city}, ${address}`.slice(0, 50)}...` 
+                : `${city}, ${address}`}
             </Typography>
           </Box>
         </Box>
