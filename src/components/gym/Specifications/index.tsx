@@ -95,7 +95,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
   useEffect(() => {
     const selectedGender = showGender === 0 ? "men" : "women";
     const gregorianMonth = currentMonth.clone().locale("en").format("YYYY-MM-DD");
-  
+
     fetchGymSessions(gymId, selectedGender, gregorianMonth).then((responseSessions) => {
       const jalaliSessions = responseSessions.map((session) => ({
         ...session,
@@ -280,110 +280,61 @@ const Specifications: React.FC<SpecificationsProps> = ({
               {"مشخصات باشگاه :"}
             </Typography>
           </Box>
-          <Box
-            sx={{
-              mr: { xs: 2, md: 8 },
-            }}>
-            {features.length > 0 ? (
-              <Grid2
-                container
-                mt={1}
-                spacing={1}>
-                <Grid2
-                  size={6}
-                  display="flex"
-                  gap={0.5}
-                  alignItems="center">
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold">
+          <Box sx={{ mr: { xs: 2, md: 8 } }}>
+            {structure ? (
+              <Grid2 container mt={1} spacing={1}>
+                <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
+                  <Typography variant="body1" fontWeight="bold">
                     {"مساحت باشگاه"}:
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary">
-                    <Typography variant="body2" color="text.secondary">
-                      {structure?.area ? `${structure.area} مترمربع` : "نامشخص"}
-                    </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {structure?.area ? `${structure.area} مترمربع` : "نامشخص"}
                   </Typography>
                 </Grid2>
-                <Grid2
-                  size={6}
-                  display="flex"
-                  gap={0.5}
-                  alignItems="center">
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold">
+
+                <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
+                  <Typography variant="body1" fontWeight="bold">
                     {"ارتفاع سقف"}:
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary">
+                  <Typography variant="body2" color="text.secondary">
                     {structure?.height ? `${structure.height} متر` : "نامشخص"}
                   </Typography>
                 </Grid2>
-                <Grid2
-                  size={6}
-                  display="flex"
-                  gap={0.5}
-                  alignItems="center">
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold">
+
+                <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
+                  <Typography variant="body1" fontWeight="bold">
                     {"طبقه"}:
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary">
+                  <Typography variant="body2" color="text.secondary">
                     {structure?.floor ? structure.floor : "نامشخص"}
                   </Typography>
                 </Grid2>
-                <Grid2
-                  size={6}
-                  display="flex"
-                  gap={0.5}
-                  alignItems="center">
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold">
+
+                <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
+                  <Typography variant="body1" fontWeight="bold">
                     {"پارکینگ"}:
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary">
-                    <Typography variant="body2" color="text.secondary">
-                      {structure?.parking === 1
-                        ? "پارکینگ دارد"
-                        : structure?.parking === 0
-                          ? "جای پارک مناسب بیرون از باشگاه (پارکینگ ندارد)"
-                          : "پارکینگ ندارد"}
-                    </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {structure?.parking === 1
+                      ? "پارکینگ دارد"
+                      : structure?.parking === 0
+                        ? "جای پارک مناسب بیرون از باشگاه (پارکینگ ندارد)"
+                        : "پارکینگ ندارد"}
                   </Typography>
                 </Grid2>
-                <Grid2
-                  size={6}
-                  display="flex"
-                  gap={0.5}
-                  alignItems="center">
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold">
+
+                <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
+                  <Typography variant="body1" fontWeight="bold">
                     {"آسانسور"}:
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary">
+                  <Typography variant="body2" color="text.secondary">
                     {structure?.elevator ? "دارد" : "ندارد"}
                   </Typography>
                 </Grid2>
               </Grid2>
             ) : (
-              <Typography
-                variant="subtitle1"
-                fontWeight={500}
-                color="textSecondary">
-                {"ویژگی موجود نیست"}
+              <Typography variant="subtitle1" fontWeight={500} color="textSecondary">
+                {"ویژگی های ساختار باشگاه موجود نیست"}
               </Typography>
             )}
           </Box>
