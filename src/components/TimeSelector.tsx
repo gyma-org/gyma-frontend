@@ -70,10 +70,7 @@ const TimeSelector = ({
             onClick={() => setSelectedTimeID(time.id)}>
             {" "}
             {/* Assuming 'is_full' indicates full sessions */}
-            <Box
-              display="flex"
-              alignItems="center"
-              gap={1}>
+            <Box display="flex" alignItems="center" gap={1}>
               <Typography
                 variant="h4"
                 fontWeight="bold"
@@ -81,7 +78,7 @@ const TimeSelector = ({
                   fontSize: { xs: 12, md: 14 },
                   color: selectedTimeID === time.id ? "white" : "black",
                 }}>
-                {time.price} تومان {/* Assuming the price is in Toman */}
+                {Number(time.price).toLocaleString()} تومان {/* Format price */}
               </Typography>
               <svg
                 width="16"
