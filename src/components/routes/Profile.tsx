@@ -56,6 +56,11 @@ const Profile = () => {
 
   const handleCloseModal = () => setOpenModal(false);
 
+
+  const formatNumber = (value: string): string => {
+    return value.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands separator
+  };
+
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = event.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
 
@@ -66,7 +71,7 @@ const Profile = () => {
       return;
     }
 
-    const numericValue = Number(rawValue);
+    const numericValue = Number(rawValue) * 10;
 
     // Update the state
     setAmount(rawValue); // Display the number in the input field
@@ -657,18 +662,18 @@ const Profile = () => {
             variant="h6"
             component="h2"
             sx={{ mb: 2 }}>
-            مبلغ به ریال اضافه کنید
+            مبلغ به تومان اضافه کنید
           </Typography>
           <TextField
-            label="مقدار به ریال"
+            label="مقدار به تومان"
             variant="outlined"
             fullWidth
-            value={amount}
+            value={formatNumber(amount)}
             onChange={handleAmountChange}
             type="text"
             inputProps={{
-              inputMode: "numeric", // Ensures the numeric keypad is displayed
-              pattern: "[0-9]*", // Limits input to digits only
+              inputMode: "numeric",
+              pattern: "[0-9]*",
             }}
           />
           <Button
