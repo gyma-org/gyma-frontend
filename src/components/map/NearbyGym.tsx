@@ -107,6 +107,7 @@ export default function NearbyGyms({
             maxWidth={450}
             width="100%"  // Ensure proper sizing
             rate={gym.rate}
+            min_price = {gym.min_price}
           />
         ))
       )}
