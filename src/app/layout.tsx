@@ -23,8 +23,8 @@ export default function RootLayout({
         {/* Meta Tags for PWA */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
-        <link rel="icon" href="/icons/192x192.png" />
-        <link rel="apple-touch-icon" href="/icons/512x512.png" />
+        {/* <link rel="icon" href="/icons/192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/512x512.png" /> */}
       </head>
       <body className={vazirmatn.className}>
         <AuthProvider>
