@@ -42,6 +42,7 @@ export interface GymDetails {
     parking: number;
     elevator: number | null;
   };
+  min_price: number
 }
 
 export interface Structure {

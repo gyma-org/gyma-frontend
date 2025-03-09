@@ -23,6 +23,7 @@ export interface Gym {
     features?: string[][];
     sex: string;
     rate: string;
+    min_price?: number
   }
   
   interface GymNearbyResponse {

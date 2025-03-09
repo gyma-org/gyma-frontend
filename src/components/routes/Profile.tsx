@@ -586,7 +586,7 @@ const Profile = () => {
             variant="h3"
             fontWeight="bold"
             color="#fff">
-            {`${wallet?.balance}`}
+              {wallet?.balance?.toLocaleString()}
           </Typography>
           <svg
             width="26"

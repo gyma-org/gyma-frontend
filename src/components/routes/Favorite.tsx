@@ -186,6 +186,7 @@ const Favorite = () => {
             onClick={() => handleGymClick(gym.gym_id)}
             gymId={gym.gym_id}
             rate={details?.rate || null}
+            min_price = {details?.min_price}
           />
           );
         })}

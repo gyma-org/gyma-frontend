@@ -141,7 +141,7 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
                     fontSize={18}
                     fontWeight="bold"
                     color="black">
-                    {booking.final_price}
+                    {booking.final_price.toLocaleString()}
                   </Typography>
                   <svg
                     width="18"
