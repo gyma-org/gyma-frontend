@@ -28,18 +28,33 @@ export default function NearbyGyms({
     <SwipeableDrawer
   anchor="bottom"
   open={showNearbyGyms}
-  onClose={() => setShowNearbyGyms(false)}
+  onClose={() => setShowNearbyGyms(false)} // Close only via internal actions
   onOpen={() => setShowNearbyGyms(true)}
   sx={{
-    transform: "translateZ(0)", 
+    transform: "translateZ(0)",
     WebkitTransform: "translateZ(0)", // Safari fix
   }}
-  disableBackdropTransition={isDesktop} // Disable transition effect for backdrop
+  disableEscapeKeyDown // Prevent closing via ESC key
+  disableBackdropTransition // Remove animation for smoother behavior
   ModalProps={{
     BackdropProps: {
       style: {
-        backgroundColor: isDesktop ? "transparent" : "rgba(0, 0, 0, 0.5)", // No darkening on desktop
+        backgroundColor: "transparent", // Keeps background visible
       },
+    },
+    sx: {
+      pointerEvents: "none", // Allows background to be interactive
+    },
+  }}
+  PaperProps={{
+    sx: {
+      // height: "50vh",
+      maxHeight: "50vh",
+      borderTopLeftRadius: 15,
+      borderTopRightRadius: 15,
+      display: "flex",
+      flexDirection: "column",
+      pointerEvents: "auto", // Ensures drawer itself is still interactive
     },
   }}
 >
@@ -48,9 +63,10 @@ export default function NearbyGyms({
       display: { xs: "block", md: "none" },
       p: 2,
       textAlign: "center",
-      boxSizing: "border-box", // Ensure proper box sizing
+      boxSizing: "border-box",
     }}
   >
+    {/* Handle Bar */}
     <Box
       sx={{
         width: 40,
@@ -64,33 +80,36 @@ export default function NearbyGyms({
 
     {!gymPreview ? (
       <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between', // Align the buttons to the sides
-        alignItems: 'center',
-        px: 2,
-      }}
-    >
-      <Box sx={{ opacity: 0 }}>بستن</Box>
-      <Typography sx={{ flexGrow: 1, textAlign: 'center' }}>
-        باشگاه های نزدیک
-      </Typography>
-      <Box
-        sx={{ cursor: 'pointer', textAlign: 'right' }}
-        onClick={() => setShowNearbyGyms(false)}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: 2,
+        }}
       >
-        بستن <KeyboardDoubleArrowDown />
+        <Box sx={{ opacity: 0 }}>بستن</Box>
+        <Typography sx={{ flexGrow: 1, textAlign: "center" }}>
+          باشگاه های نزدیک
+        </Typography>
+        <Box
+          sx={{ cursor: "pointer", textAlign: "right" }}
+          onClick={() => setShowNearbyGyms(false)}
+        >
+          بستن <KeyboardDoubleArrowDown />
+        </Box>
       </Box>
-    </Box>
     ) : null}
 
-    <Box sx={{
-      overflowY: "auto", 
-      maxHeight: "75vh", 
-      pb: 8, 
-      WebkitOverflowScrolling: "touch",
-      boxSizing: "border-box",
-    }}>
+    {/* Scrollable Content */}
+    <Box
+      sx={{
+        overflowY: "auto",
+        flexGrow: 1,
+        pb: 8,
+        WebkitOverflowScrolling: "touch",
+        boxSizing: "border-box",
+      }}
+    >
       {gymPreview ? (
         <GymPreview handleBack={handleBack} gym={gymPreview} onBack={onBack} />
       ) : (
@@ -105,9 +124,9 @@ export default function NearbyGyms({
             gymId={gym.id}
             onClick={() => handleGymClick(gym)}
             maxWidth={450}
-            width="100%"  // Ensure proper sizing
+            width="100%"
             rate={gym.rate}
-            min_price = {gym.min_price}
+            min_price={gym.min_price}
           />
         ))
       )}

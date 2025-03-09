@@ -48,7 +48,7 @@ const Reservation = () => {
   return (
     <Grid
       mx="auto"
-      sx={{ p: 1, direction: "rtl" }}>
+      sx={{ p: 1, direction: "rtl",pb:10 }}>
       {/* Search component */}
       <Box
         sx={{

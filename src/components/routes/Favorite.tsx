@@ -151,7 +151,7 @@ const Favorite = () => {
   return (
     <Grid
       mx="auto"
-      sx={{ p: 1, direction: "rtl" }}>
+      sx={{ p: 1, direction: "rtl",pb:10 }}>
       <Box
         sx={{
           position: "fixed",
@@ -172,7 +172,7 @@ const Favorite = () => {
       <Grid
         sx={{ maxWidth: 1050, mx: "auto", mt: { xs: 12, md: 16 }, justifyContent: "start" }}
         container
-        spacing={3}>
+        spacing={1}>
         {gyms.map((gym) => {
           const details = gymDetails.get(gym.gym_id); // Get the gym details for each gym
           return (
