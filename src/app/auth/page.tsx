@@ -589,6 +589,20 @@ const LoginSignup: React.FC = () => {
         </SignInContainer>
         {isMobile && (
           <>
+             {/* Close Button for Mobile */}
+            <IconButton
+              onClick={() => window.history.back()}
+              sx={{
+                position: "absolute",
+                top: 10,
+                left: 10,
+                backgroundColor: "rgba(0,0,0,0.1)",
+                "&:hover": { backgroundColor: "rgba(0,0,0,0.2)" },
+                zIndex: 1100, // Ensure it's above other elements
+              }}
+            >
+              <CloseIcon />
+            </IconButton>   
             <MuiButton
               onClick={() => toggle(!signIn)}
               sx={{
@@ -600,8 +614,13 @@ const LoginSignup: React.FC = () => {
                 left: "50%",
                 transform: "translateX(-50%)",
               }}>
+
+              
               {signIn ? "حساب کاربری ندارید؟" : "حساب کاربری داری؟"}
+              
             </MuiButton>
+            {/* Close Button */}
+            
           </>
         )}
         {!isMobile && (
