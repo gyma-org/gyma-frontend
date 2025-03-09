@@ -147,9 +147,6 @@ const PersianCalendar: React.FC<PersianCalendarProps> = ({ handleSetDate, sessio
           if (selectedDate) {
             const session = getSessionForDate(selectedDate.format("YYYY-MM-DD"));
             if (session) {
-              console.log("Selected Date: ", selectedDate.format("jYYYY/jMM/jDD"));
-              console.log("Session Start Time: ", session.start_time); // Corrected property name
-              console.log("Session End Time: ", session.end_time); // Corrected property name
               handleSetDate({
                 date: selectedDate.format("jYYYY/jMM/jDD"),
                 startTime: session.start_time, // Use `start_time`

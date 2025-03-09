@@ -30,6 +30,8 @@ import { API_USER_URL } from "@/config";
 import { ArrowBack, Edit } from "@mui/icons-material";
 import { Loading } from "../Loading";
 import { useSnackbar } from "notistack";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useRouter } from "next/navigation"; 
 
 const PROFILE_BASE_URL = `${API_USER_URL}/medias/profile/`;
 const BANNER_BASE_URL = `${API_USER_URL}/medias/banner/`;
@@ -56,7 +58,18 @@ const Profile = () => {
 
   const handleCloseModal = () => setOpenModal(false);
 
+  const router = useRouter();
 
+  const handleLogout = () => {
+    // Ensure this runs only on the client
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authTokens");
+      sessionStorage.removeItem("authTokens");
+    }
+
+    // Redirect to /auth
+    router.push("/auth");
+  };
   const formatNumber = (value: string): string => {
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands separator
   };
@@ -728,6 +741,29 @@ const Profile = () => {
           }}>
           {"درباره جیما"}
         </Button>
+
+        <Button
+      variant="contained"
+      onClick={handleLogout}
+      sx={{
+        my: 1,
+        width: "100%",
+        aspectRatio: "5 / 1",
+        boxShadow: "0px 0px 10px #00000040",
+        borderRadius: "16px",
+        bgcolor: "#fff",
+        color: "red", // Set text color to red
+        fontWeight: 700,
+        fontSize: { xs: 18, md: 20 },
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 1, // Space between icon and text
+      }}
+    >
+      <LogoutIcon sx={{ color: "red" }} /> {/* Red Logout Icon */}
+      {"خروج از حساب کاربری"}
+    </Button>
       </Grid>
       <a
       referrerPolicy="origin"
