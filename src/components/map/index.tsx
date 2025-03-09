@@ -452,6 +452,7 @@ const Mapp = () => {
                   onClick={() => handleGymClick(gym)}
                   maxWidth={400}
                   rate={gym.rate}
+                  min_price = {gym.min_price}
                 />
               ))}
             <Button

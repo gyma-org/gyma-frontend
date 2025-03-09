@@ -20,6 +20,9 @@ import {
   ToggleButton,
   CircularProgress,
 } from "@mui/material";
+
+import { IconButton} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { Button as MuiButton, Container as MuiContainer } from "@mui/material";
 import { ErrorMessage, Field, Formik, FormikHelpers } from "formik";
 import ForgotPassword from "@/components/Authorization/ForgotPassword";
@@ -364,12 +367,15 @@ const LoginSignup: React.FC = () => {
           display: "flex",
           flexDirection: isMobile ? "column" : "row",
         }}>
+
+       
         <SignUpContainer
           sx={{
             height: "100%",
             direction: "rtl",
           }}
           signingIn={signIn}>
+        
           <Formik
             initialValues={{
               first_name: "",
@@ -603,11 +609,37 @@ const LoginSignup: React.FC = () => {
             <Overlay signingIn={signIn}>
               <LeftOverlayPanel signingIn={signIn}>
                 <Title>{"ساخت حساب"}</Title>
+                {/* Close Button */}
+                <IconButton
+                  onClick={() => window.history.back()}
+                  sx={{
+                    position: "absolute",
+                    top: 10,
+                    left: 10,
+                    backgroundColor: "rgba(0,0,0,0.1)",
+                    "&:hover": { backgroundColor: "rgba(0,0,0,0.2)" },
+                  }}
+                >
+                <CloseIcon />
+                </IconButton>
                 <Paragraph>{"برای ساخت حساب کابری شما به این اطلاعات نیاز داریم."}</Paragraph>
                 <GhostButton onClick={() => toggle(true)}>{"رفتن به ورود"}</GhostButton>
               </LeftOverlayPanel>
               <RightOverlayPanel signingIn={signIn}>
                 <Title>{"ورود به حساب"}</Title>
+                {/* Close Button */}
+                <IconButton
+                  onClick={() => window.history.back()}
+                  sx={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    backgroundColor: "rgba(0,0,0,0.1)",
+                    "&:hover": { backgroundColor: "rgba(0,0,0,0.2)" },
+                  }}
+                >
+                <CloseIcon />
+                </IconButton>
                 <Paragraph>{"اطلاعات خود را وارد کنید."}</Paragraph>
                 <GhostButton onClick={() => toggle(false)}>{"رفتن به ساخت حساب"}</GhostButton>
               </RightOverlayPanel>

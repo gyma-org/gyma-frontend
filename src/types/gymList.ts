@@ -35,4 +35,5 @@ export interface GymListResponse {
   gallery: string[]; // Array of URLs or paths to gallery images
   features: string[];
   sex: 'men' | 'women' | 'both';
+  min_price?:number
 }
