@@ -1,10 +1,9 @@
 {
   "name": "Gyma production",
   "short_name": "Gyma",
-  "description": "",
   "lang": "fa",
   "start_url": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
@@ -18,5 +17,14 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "id": "1",
+  "dir": "rtl",
+  "iarc_rating_id": "10",
+  "categories": [
+    "sports"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 0
+  }
 }
