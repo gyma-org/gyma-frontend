@@ -1,6 +1,6 @@
 import mapboxgl from "@neshan-maps-platform/mapbox-gl";
 import { Marker } from "mapbox-gl";
-import { Box, Button, Fab, Typography } from "@mui/material";
+import { Box, Button, Fab, Typography,Modal } from "@mui/material";
 import "./index.css";
 import myLocationIcon from "@/assets/mylocation.svg";
 import React, { useEffect, useRef, useState } from "react";
@@ -8,7 +8,7 @@ import { fetchNearbyGyms, Gym } from "../../api/gymMap";
 import FloatCard from "../FloatCard";
 import NearbyGyms from "./NearbyGym";
 import GymPreview from "../GymPreview";
-import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp } from "@mui/icons-material";
+import { FitnessCenter, KeyboardDoubleArrowDown, KeyboardDoubleArrowUp,InfoOutlined } from "@mui/icons-material";
 import { CircularProgress, LinearProgress, useMediaQuery  } from "@mui/material";
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
@@ -25,6 +25,7 @@ const Mapp = () => {
   const [countdown, setCountdown] = useState(10);
   const [progress, setProgress] = useState(100);
   const isMobile = useMediaQuery("(max-width:600px)");
+  const [open, setOpen] = useState(false);
 
   // Preview
   const [gymPreview, setGymPreview] = useState<Gym | null>(null);
@@ -503,6 +504,57 @@ const Mapp = () => {
           نمایش باشگاه های نزدیک
         </Fab>
       )} */}
+
+      <Fab
+        sx={{
+          position: "absolute",
+          top: "1.5%",
+          left: 10, // Adjust position if needed
+          display: { xs: "flex", md: "flex" }, 
+          color: "#fff",
+          bgcolor: "#258cf3!important",
+          borderRadius: "50%", // Ensures a circular shape
+          width: 48, // Standard FAB size
+          height: 48, // Standard FAB size
+          minWidth: 0, // Prevents unwanted stretching
+        }}
+        onClick={() => setOpen(true)}
+      >
+        <InfoOutlined />
+      </Fab>
+
+      
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 300,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          {/* <h2>About Us</h2>
+          <p>Here is some information about us...</p> */}
+          <a
+            referrerPolicy="origin"
+            target="_blank"
+            href="https://trustseal.enamad.ir/?id=588646&Code=OdOh07mDjGRVMXCamgrr8JOra7N8WdRL"
+            >
+          <img
+            referrerPolicy="origin"
+            src="https://trustseal.enamad.ir/logo.aspx?id=588646&Code=OdOh07mDjGRVMXCamgrr8JOra7N8WdRL"
+            alt="Enamad Trust Seal"
+            style={{ cursor: "pointer" }}
+          />
+        </a>
+        </Box>
+      </Modal>
+
       {!showNearbyGyms && (
         <Fab
           sx={{

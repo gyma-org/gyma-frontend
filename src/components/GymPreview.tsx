@@ -133,8 +133,8 @@ const GymPreview = ({
                 <Typography
                     sx={{ fontSize: { xs: 8, md: 9 } }}
                     noWrap>
-                    {`${city}, ${address}`.length > 45 
-                      ? `${`${city}, ${address}`.slice(0, 45)}...` 
+                    {`${city}, ${address}`.length > 35 
+                      ? `${`${city}, ${address}`.slice(0, 35)}...` 
                       : `${city}, ${address}`}
                 </Typography>
                 <Box
@@ -176,9 +176,9 @@ const GymPreview = ({
               {min_price ? (
                 <>
                   <Typography variant="h6" fontWeight="bold" color="black">
-                    <Typography component="span"  variant="body2" fontWeight="bold" color="black">
+                    {/* <Typography component="span"  variant="body2" fontWeight="bold" color="black">
                       شروع قیمت از
-                    </Typography>
+                    </Typography> */}
                     {` ${min_price.toLocaleString()}`}
                   </Typography>
                   <svg
