@@ -44,8 +44,7 @@ const Search = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const inputRef = useRef(null);
-
+  const inputRef = useRef<HTMLInputElement | null>(null);
   // Media query to detect desktop screens
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -98,7 +97,9 @@ const Search = () => {
   const handleSearchOpen = () => {
     setSearchOpen(true);
     setTimeout(() => {
-      inputRef.current.focus();
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }, 300);
   };
 
