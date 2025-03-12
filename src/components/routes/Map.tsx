@@ -29,7 +29,7 @@ const Map = () => {
         <Search />
       </Box>
 
-      <Grid mt={12}>
+      <Grid mt={12} sx={{height: "100%" }} >
         <Mapp />
       </Grid>
     </Grid>
