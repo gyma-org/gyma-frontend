@@ -1,7 +1,23 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Box, InputBase, styled, Paper, List, ListItem, ListItemText, CircularProgress, ListItemButton  } from "@mui/material";
+import {
+  Box,
+  InputBase,
+  styled,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  ListItemButton,
+  IconButton,
+  Slide,
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 import { searchGyms, Gym } from "@/api/Search";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   borderColor: "#B9B9B9",
@@ -25,8 +41,14 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(false);
   const [openResults, setOpenResults] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const inputRef = useRef(null);
+
+  // Media query to detect desktop screens
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   const fetchSearchResults = useCallback(async (query: string) => {
     if (query.length < 3) {
@@ -61,37 +83,98 @@ const Search = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setOpenResults(false);
+        if (!isDesktop) setSearchOpen(false);
       }
     };
 
-    if (openResults) {
+    if (openResults || searchOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openResults]);
+  }, [openResults, searchOpen, isDesktop]);
+
+  const handleSearchOpen = () => {
+    setSearchOpen(true);
+    setTimeout(() => {
+      inputRef.current.focus();
+    }, 300);
+  };
+
+  // Ensure search bar is always open on desktop
+  useEffect(() => {
+    if (isDesktop) {
+      setSearchOpen(true);
+    }
+  }, [isDesktop]);
 
   return (
-    <Box ref={searchRef} sx={{ position: "relative", width: "100%", maxWidth: 600 }}>
-      <BootstrapInput
-        placeholder="جستجو ..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onFocus={() => setOpenResults(true)}
-        startAdornment={
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="14.6666" cy="14.6666" r="9.33333" stroke="#33363F" strokeWidth="2" />
-            <path
-              d="M14.6667 10.6667C14.1414 10.6667 13.6213 10.7702 13.136 10.9712C12.6507 11.1722 12.2097 11.4668 11.8383 11.8383C11.4668 12.2097 11.1722 12.6507 10.9712 13.136C10.7701 13.6213 10.6667 14.1414 10.6667 14.6667"
-              stroke="#33363F"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            <path d="M26.6667 26.6667L22.6667 22.6667" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-        }
+    <Box ref={searchRef} sx={{ position: "relative", width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      {/* Logo - Fixed to Left Side */}
+      <Box
+        component="img"
+        src="/icons/192x192.png"
+        alt="Logo"
+        sx={{
+          height: 60,
+          cursor: "pointer",
+          position: "absolute",
+          left: 0,
+          top: "50%",
+          transform: "translateY(-50%)"
+        }}
       />
+
+      {/* Search Button & Input */}
+      {!isDesktop && (
+          <IconButton 
+            onClick={handleSearchOpen} 
+            sx={{ 
+              display: searchOpen ? "none" : "flex", 
+              mr: { xs: 2, sm: 5, md: 10 }, 
+              p: 1, // Increase padding to make the button larger
+              fontSize: "1rem" // Increase icon size
+            }}
+          >
+            <SearchIcon sx={{ fontSize: "2rem" }} /> {/* Increase icon size */}
+          </IconButton>
+        )}
+
+      <Slide direction="down" in={searchOpen} mountOnEnter unmountOnExit>
+        <Box 
+          sx={{
+            position: "relative", 
+            flexGrow: 1, 
+            display: searchOpen ? "block" : "none", 
+            width: searchOpen ? "100%" : "0%", 
+            transition: "width 0.3s ease-in-out"
+          }}
+        >
+          <BootstrapInput
+            ref={inputRef}
+            placeholder="جستجو ..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onFocus={() => setOpenResults(true)}
+            sx={{
+              width: "100%",
+              opacity: searchOpen ? 1 : 0,
+              transition: "opacity 0.3s ease-in-out"
+            }}
+          />
+          
+          {/* Close button only on mobile */}
+          {!isDesktop && (
+            <IconButton 
+              onClick={() => setSearchOpen(false)} 
+              sx={{ position: "absolute", left: 10, top: 5 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          )}
+        </Box>
+      </Slide>
 
       {/* Dropdown Results */}
       {openResults && (
@@ -107,7 +190,7 @@ const Search = () => {
             borderRadius: "10px",
             boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
             backgroundColor: "#fff",
-            zIndex: 9999, // Ensures dropdown stays above other elements
+            zIndex: 9999,
           }}
         >
           <List>
