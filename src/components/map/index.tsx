@@ -536,22 +536,23 @@ const Mapp = () => {
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          {/* <h2>About Us</h2>
-          <p>Here is some information about us...</p> */}
           <a
             referrerPolicy="origin"
             target="_blank"
             href="https://trustseal.enamad.ir/?id=588646&Code=OdOh07mDjGRVMXCamgrr8JOra7N8WdRL"
-            >
-          <img
-            referrerPolicy="origin"
-            src="https://trustseal.enamad.ir/logo.aspx?id=588646&Code=OdOh07mDjGRVMXCamgrr8JOra7N8WdRL"
-            alt="Enamad Trust Seal"
-            style={{ cursor: "pointer" }}
-          />
-        </a>
+          >
+            <img
+              referrerPolicy="origin"
+              src="https://trustseal.enamad.ir/logo.aspx?id=588646&Code=OdOh07mDjGRVMXCamgrr8JOra7N8WdRL"
+              alt="Enamad Trust Seal"
+              style={{ cursor: "pointer", display: "block" }}
+            />
+          </a>
         </Box>
       </Modal>
 
