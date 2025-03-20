@@ -69,7 +69,7 @@ const Reservation = () => {
           boxShadow: "0px 0px 5px #00000040",
         }}>
         <Search />
-        <Button
+        {/* <Button
           variant="contained"
           sx={{
             borderRadius: 2,
@@ -126,7 +126,7 @@ const Reservation = () => {
             />
           </svg>
           <Typography sx={{ color: "#33363F" }}>{"فیلتر ها"}</Typography>
-        </Button>
+        </Button> */}
       </Box>
       <Box
         mt={16}

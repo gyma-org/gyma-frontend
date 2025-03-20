@@ -343,7 +343,7 @@ const Mapp = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100%", position: "relative" }}>
+    <Box sx={{ display: "flex",height: "100%",position: "relative" }}>
       {loading && (
         <Box
           sx={{
@@ -365,22 +365,22 @@ const Mapp = () => {
         <Box
           sx={{
             position: "absolute",
-      top: 10,
-      left: isMobile ? "auto" : "50%",
-      right: isMobile ? 10 : "auto",
-      transform: isMobile ? "none" : "translateX(-50%)",
-      bgcolor: "#fff",
-      borderRadius: "8px",
-      p: 1,
-      zIndex: 200,
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)", // ✅ Soft shadow
-      display: "flex",
-      alignItems: "center",
-      gap: 1,
-      fontSize: "12px",
-      maxWidth: isMobile ? "200px" : "320px", // ✅ Smaller on mobile, normal on desktop
-      whiteSpace: "nowrap",
-      overflow: "hidden",
+            top: 10,
+            left: isMobile ? "auto" : "50%",
+            right: isMobile ? 10 : "auto",
+            transform: isMobile ? "none" : "translateX(-50%)",
+            bgcolor: "#fff",
+            borderRadius: "8px",
+            p: 1,
+            zIndex: 200,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)", // ✅ Soft shadow
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            fontSize: "12px",
+            maxWidth: isMobile ? "200px" : "320px", // ✅ Smaller on mobile, normal on desktop
+            whiteSpace: "nowrap",
+            overflow: "hidden",
           }}>
           <Typography variant="caption" sx={{ flexShrink: 0 }}>
             موقعیت‌یابی غیرفعال
@@ -414,34 +414,41 @@ const Mapp = () => {
           />
         </Box>
       )}
-      <Box
-        sx={{
-          display: { xs: "none", md: "flex" },
-          flexDirection: "column",
-          borderRadius: "15px",
-          gap: 1,
-          p: 2,
-          right: 10,
-          top: 10,
-          position: "absolute",
-          bgcolor: "#fff",
-          zIndex: 1,
-          border: "2px solid #FF9100",
-          width: "100%",
-          maxWidth: 440,
-        }}>
-        {gymPreview ? (
-          <GymPreview
-            handleBack={() => setGymPreview(null)}
-            gym={gymPreview}
-            maxWidth={400}
-            onBack={handleZoomOut}
-          />
-        ) : (
-          <>
-            {/* {showNearbyGyms && <Typography align="center">{"باشگاه های نزدیک"}</Typography>} */}
-            {showNearbyGyms &&
-              gyms.map((gym) => (
+   <Box
+      sx={{
+        display: { xs: "none", md: "flex" },
+        flexDirection: "column",
+        borderRadius: "15px",
+        gap: 1,
+        p: 2,
+        right: 10,
+        top: 10,
+        position: "absolute",
+        bgcolor: "#fff",
+        zIndex: 1,
+        border: "2px solid #FF9100",
+        width: "100%",
+        maxWidth: 470,
+      }}
+    >
+      {gymPreview ? (
+        <GymPreview
+          handleBack={() => setGymPreview(null)}
+          gym={gymPreview}
+          maxWidth={400}
+          onBack={handleZoomOut}
+        />
+      ) : (
+        <>
+          {showNearbyGyms && (
+            <Box
+              sx={{
+                maxHeight: "60vh", // Adjust this based on your design
+                overflowY: "auto", // Enables scrolling
+                pr: 1, // Optional: Prevents scrollbar from overlapping content
+              }}
+            >
+              {gyms.map((gym) => (
                 <FloatCard
                   key={gym.gym_code}
                   name={gym.name}
@@ -453,28 +460,31 @@ const Mapp = () => {
                   onClick={() => handleGymClick(gym)}
                   maxWidth={400}
                   rate={gym.rate}
-                  min_price = {gym.min_price}
+                  min_price={gym.min_price}
                 />
               ))}
-            <Button
-              variant="outlined"
-              onClick={() => setShowNearbyGyms(!showNearbyGyms)}
-              color="primary">
-              {showNearbyGyms ? (
-                <>
-                  عدم نمایش
-                  <KeyboardDoubleArrowUp />
-                </>
-              ) : (
-                <>
-                  نمایش باشگاه های نزدیک
-                  <KeyboardDoubleArrowDown />
-                </>
-              )}
-            </Button>
-          </>
-        )}
-      </Box>
+            </Box>
+          )}
+          <Button
+            variant="outlined"
+            onClick={() => setShowNearbyGyms(!showNearbyGyms)}
+            color="primary"
+          >
+            {showNearbyGyms ? (
+              <>
+                عدم نمایش
+                <KeyboardDoubleArrowUp />
+              </>
+            ) : (
+              <>
+                نمایش باشگاه های نزدیک
+                <KeyboardDoubleArrowDown />
+              </>
+            )}
+          </Button>
+        </>
+      )}
+    </Box>
       {!isDesktop && (
         <NearbyGyms
           gyms={gyms}
