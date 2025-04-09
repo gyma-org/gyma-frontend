@@ -11,6 +11,7 @@ export const addComment = async (
   const formData = new FormData();
   formData.append("content", commentData.content);
   formData.append("gym", commentData.gym_id);
+  formData.append("booking", commentData.id);
   formData.append("rate", commentData.rate.toString());
 
   if (commentData.image) {

@@ -16,6 +16,8 @@ export interface booked {
     end_time: string;
     gym_id: string;
     comment: number | null;
+    id: number;
+
   }
   
   export interface BookingListResponse {

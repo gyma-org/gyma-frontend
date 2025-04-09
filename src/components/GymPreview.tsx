@@ -92,19 +92,29 @@ const GymPreview = ({
 
           {/* Card data */}
           <Box
-            sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between",mr:3, mt:2 }}
+            sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between",mr:3, mt:2, overflow: "visible" }}
             onClick={onClick}>
+
             <Box>
-              <Typography
-                noWrap
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: { xs: 20, md: 18 },
-                  alignItems: "center",
-                  display: "flex"
-                }}>
-                {name}
-              </Typography>
+             
+             
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: "bold",
+                fontSize: { xs: 15, md: 18 },
+                display: "flex",
+                alignItems: "center",       // vertical alignment
+                // justifyContent: "flex-end", // align content to the right
+                textAlign: "right",         // make text itself align right
+                mb: 0.5,
+                whiteSpace: "normal",       // keep text in one line
+                overflow: "visible",        // allow overflow
+                textOverflow: "unset",      // prevent truncation
+              }}
+            >
+              {name}
+            </Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                 <svg
                   width="20"
@@ -219,27 +229,49 @@ const GymPreview = ({
           }}
         >
           {/* Image Slider using Swiper */}
-        <Box
-          sx={{
-            width: 150,
-            height: 150, // Ensure Box has a fixed size
-            overflow: "hidden",
-            borderRadius: "16px",
-            ml: -1, // Move slightly to the left
-          }}
-        >
-          <Swiper
-              pagination={{
-                dynamicBullets: true,
-              }}
-              grabCursor={true}
-              modules={[Pagination]}
-              style={{ width: 150, height: 150 }} // Fix Swiper size
-            >
-              {images.length > 0 ? (
-                images.map((image, index) => (
+          <Box
+            sx={{
+              width: 150,
+              height: 150, // Ensure Box has a fixed size
+              overflow: "hidden",
+              borderRadius: "16px",
+              ml: -1, // Move slightly to the left,
+              // mt:3.5,
+            }}
+          >
+            <Swiper
+                pagination={{
+                  dynamicBullets: true,
+                }}
+                grabCursor={true}
+                modules={[Pagination]}
+                style={{ width: 150, height: 150 }} // Fix Swiper size
+              >
+                {images.length > 0 ? (
+                  images.map((image, index) => (
+                    <SwiperSlide
+                      key={index}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        sx={{
+                          width: "150px",
+                          height: "150px",
+                          objectFit: "contain",
+                          borderRadius: "16px",
+                        }}
+                        image={image}
+                        title={`Gallery Image ${index + 1}`}
+                      />
+                    </SwiperSlide>
+                  ))
+                ) : (
                   <SwiperSlide
-                    key={index}
                     style={{
                       display: "flex",
                       justifyContent: "center",
@@ -254,35 +286,13 @@ const GymPreview = ({
                         objectFit: "contain",
                         borderRadius: "16px",
                       }}
-                      image={image}
-                      title={`Gallery Image ${index + 1}`}
+                      image="/images/fallback-image.png" // Use the image from public/images
+                      title="Sample Image"
                     />
                   </SwiperSlide>
-                ))
-              ) : (
-                <SwiperSlide
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    sx={{
-                      width: "150px",
-                      height: "150px",
-                      objectFit: "contain",
-                      borderRadius: "16px",
-                    }}
-                    image="/images/fallback-image.png" // Use the image from public/images
-                    title="Sample Image"
-                  />
-                </SwiperSlide>
-              )}
-          </Swiper>
-        </Box>
-
+                )}
+            </Swiper>
+          </Box>
         </Box>
         </Box>
        
