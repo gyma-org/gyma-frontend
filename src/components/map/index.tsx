@@ -87,7 +87,7 @@ const Mapp = () => {
       const defaultLon = 51.389;
 
       // Initialize the map immediately with default coordinates
-      initializeMap(defaultLat, defaultLon);
+      // initializeMap(defaultLat, defaultLon);
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -239,8 +239,8 @@ const Mapp = () => {
     newGymMarkers.forEach(({ marker }, i) => {
       const el = marker.getElement();
       el.style.backgroundImage = i === index ? `url(/icons/selectedgyms.svg)` : `url(/icons/gyms.svg)`;
-      el.style.width = i === index ? "60px" : "50px";
-      el.style.height = i === index ? "60px" : "50px";
+      el.style.width = i === index ? "30px" : "29px";
+      el.style.height = i === index ? "30px" : "29px";
     });
   };
 
@@ -258,8 +258,8 @@ const Mapp = () => {
     const markerElement = document.createElement("div");
     markerElement.className = "custom-marker";
     markerElement.style.backgroundImage = `url(/icons/gyms.svg)`;
-    markerElement.style.width = "40px";
-    markerElement.style.height = "40px";
+    markerElement.style.width = "29px";
+    markerElement.style.height = "29px";
     markerElement.style.cursor = "pointer";
 
     // ✅ Create text container (popup)
@@ -270,11 +270,11 @@ const Mapp = () => {
     // ✅ Style for popup
 
     popupElement.style.position = "absolute";
-    popupElement.style.padding = "5px 8px";
-    popupElement.style.whiteSpace = "nowrap";
-    // popupElement.style.fontSize = "14px";
-    popupElement.style.backgroundColor = "transparent";
-    popupElement.style.borderRadius = "5px";
+    // popupElement.style.padding = "5px 8px";
+    // popupElement.style.whiteSpace = "nowrap";
+    // // popupElement.style.fontSize = "14px";
+    // popupElement.style.backgroundColor = "transparent";
+    // popupElement.style.borderRadius = "5px";
     // popupElement.style.boxShadow = "0px 2px 5px rgba(0,0,0,0.2)";
 
     const marker = new mapboxgl.Marker(markerElement).setLngLat([gym.lon, gym.lat]).addTo(map);

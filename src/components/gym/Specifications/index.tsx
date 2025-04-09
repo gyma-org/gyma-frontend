@@ -186,7 +186,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
               lg: 32,
             },
           }}>
-          {gymName}
+           {gymName.length > 25 ? `${gymName.slice(0, 25)}...` : gymName}
         </Typography>
 
         {/* Location */}

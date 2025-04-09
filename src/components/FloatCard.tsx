@@ -118,7 +118,7 @@ const FloatCard: React.FC<FloatCardProps> = ({ name, address, city, profile, onC
               fontSize: { xs: 16, md: 18 },
               textAlign: 'right' 
             }}>
-            {name}
+            {name.length > 25 ? `${name.slice(0, 25)}...` : name}
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <svg

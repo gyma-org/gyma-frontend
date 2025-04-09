@@ -22,6 +22,8 @@ import moment from "jalali-moment";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useSnackbar } from "notistack";
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 interface ReservationCardIFace {
   outdate?: boolean;
@@ -32,7 +34,7 @@ interface ReservationCardIFace {
 const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => {
   const { enqueueSnackbar } = useSnackbar();
   const { authTokens, logoutUser } = useAuth();
-
+  const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState("");
   const [rate, setRate] = useState<number | null>(null);
   const [openCommentModal, setOpenCommentModal] = useState(false);
@@ -53,9 +55,10 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
 
   const handleCommentSubmit = async () => {
     if (!comment.trim()) return;
-
+    setLoading(true);
     const newComment: CommentAdd = {
       gym_id: booking.gym_id,
+      id: booking.id,
       content: comment,
       rate: rate ?? 0,
     };
@@ -71,6 +74,8 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
     } catch (error) {
       console.error("Error submitting comment:", error);
       enqueueSnackbar("خطا در ثبت نظر، دوباره تلاش کنید!", { variant: "error" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -243,18 +248,20 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
               />
             </DialogContent>
             <DialogActions>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleCommentSubmit}
-                sx={{
-                  borderRadius: "8px",
-                  fontWeight: "bold",
-                }}>
-                ارسال نظر
-              </Button>
-            </DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleCommentSubmit}
+              disabled={loading}
+              sx={{
+                borderRadius: "8px",
+                fontWeight: "bold",
+              }}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : "ارسال نظر"}
+            </Button>
+          </DialogActions>
           </Dialog>
         </Box>
         <Box sx={{ height: outdate ? 11 : 20, overflow: "hidden" }}>

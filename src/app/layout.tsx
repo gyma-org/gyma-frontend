@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
@@ -20,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="fa-IR">
       <head>
-        {/* Meta Tags for PWA */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
         {/* <link rel="icon" href="/icons/192x192.png" />
