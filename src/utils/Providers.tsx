@@ -1,4 +1,4 @@
-"use client";  // Add this at the top of your file to mark it as a client-side component
+"use client"; // ✅ Ensure this file is a client component
 
 import React from "react";
 import { CssBaseline } from "@mui/material";
