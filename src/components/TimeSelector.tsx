@@ -1,34 +1,32 @@
 import React from "react";
 import styles from "./PersianCalendar.module.css";
 import { Box, Button, Typography } from "@mui/material";
-
+import jMoment from "jalali-moment"; // Import jalali-moment for date conversion
+import jalaali from 'jalaali-js';
+import { isPast } from "../../node_modules/date-fns/isPast";
+// Define the type for a single time slot
 interface TimeSlot {
   id: number;
+  date: string; // Assuming date is in 'YYYY-MM-DD' format
   start_time: string;
   end_time: string;
   price: number;
 }
 
-const TimeSelector = ({
-  timeSlots,
-  handleSetTime,
-}: {
+// Props for TimeSelector component
+interface TimeSelectorProps {
   timeSlots: TimeSlot[];
-  handleSetTime: (selectedTime: {
-    id: number;
-    start_time: string;
-    end_time: string;
-    price: number;
-  }) => void;
-}) => {
+  handleSetTime: (selectedTime: TimeSlot) => void;
+}
+
+const TimeSelector: React.FC<TimeSelectorProps> = ({ timeSlots, handleSetTime }) => {
   const [selectedTimeID, setSelectedTimeID] = React.useState<number | null>(null);
   const selectedTime = timeSlots.find((time) => time.id === selectedTimeID);
 
-  // Get current time in Iran Standard Time (UTC+3:30)
-  const now = new Date();
-  const nowInTehran = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tehran" }));
-
-  const array = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "24:00"];
+  // Get the current time in Tehran timezone
+  const nowInTehran = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Tehran" })
+  );
 
   return (
     <Box
@@ -37,7 +35,7 @@ const TimeSelector = ({
         p: 2,
       }}
     >
-      {/* Render time slots */}
+      {/* Time slot list */}
       <Box
         sx={{
           display: "flex",
@@ -48,24 +46,60 @@ const TimeSelector = ({
         }}
       >
         <Typography align="center">{"انتخاب سانس"}</Typography>
-        {timeSlots.map((time) => {
-          // Convert end_time to Iran timezone
-          const endTimeDate = new Date(now.toDateString() + " " + time.end_time);
-          const isPast = endTimeDate < nowInTehran;
 
+        {timeSlots.map((time) => {
+          // Convert Jalali date (YYYY/MM/DD) to Gregorian date (YYYY-MM-DD)
+          const session_day = time.date.replace(/\//g, "-");
+          console.log(session_day) //1404-01-21
+          const todayJalali = jalaali.toJalaali(new Date());
+          const todayDate = `${todayJalali.jy}-${todayJalali.jm.toString().padStart(2, '0')}-${todayJalali.jd.toString().padStart(2, '0')}`;
+
+          console.log('Today\'s Jalali Date:', todayDate); // Example output: 1404-01-21
+          let isPast = false
+          // Compare with the endTime
+          if (todayDate.toString() === session_day.toString()) {
+            const tehranTime = new Date().toLocaleString('en-US', {
+              timeZone: 'Asia/Tehran',
+              hour12: false,
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            });
+            
+            // Now, parse the endTime and tehranTime into comparable time values
+            const [endHour, endMinute, endSecond] = time.end_time.toString().split(':').map(Number);
+            const [currentHour, currentMinute, currentSecond] = tehranTime.split(':').map(Number);
+            console.log(`${currentHour}curr`)
+            console.log(`${endHour}end`)
+
+            // Compare the times
+            isPast = currentHour > endHour || (currentHour === endHour && currentMinute > endMinute) || (currentHour === endHour && currentMinute === endMinute && currentSecond > endSecond);
+
+            
+              console.log("equal");
+              console.log(time.end_time)
+          } else {
+              console.log("not equal");
+          }
+
+
+          
+
+          // const isPast = endTimeUTC < nowInTehran; // Check if the time slot is in the past
+         
           return (
             <Button
               key={time.id}
               variant="contained"
-              disabled={isPast} // Disable if the time slot has ended
+              disabled={isPast}
               sx={{
                 bgcolor: isPast
-                  ? "#ccc" // Gray out past times
+                  ? "#ccc"
                   : selectedTimeID === time.id
                   ? "#00215E"
                   : "#f0f0f0",
                 color: isPast
-                  ? "#888" // Make text lighter for past times
+                  ? "#888"
                   : selectedTimeID === time.id
                   ? "#fff"
                   : "#000",
@@ -74,9 +108,9 @@ const TimeSelector = ({
                 display: "flex",
                 justifyContent: "space-between",
                 mt: 1,
-                opacity: isPast ? 0.5 : 1, // Reduce opacity for past times
+                opacity: isPast ? 0.5 : 1,
               }}
-              onClick={() => !isPast && setSelectedTimeID(time.id)} // Prevent clicking past slots
+              onClick={() => !isPast && setSelectedTimeID(time.id)}
             >
               <Box display="flex" alignItems="center" gap={1}>
                 <Typography
@@ -95,7 +129,7 @@ const TimeSelector = ({
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d=" 20Z" fill={selectedTimeID === time.id ? "white" : "black"} />
+           
                 </svg>
               </Box>
               <Typography sx={{ direction: "ltr" }}>
@@ -106,6 +140,7 @@ const TimeSelector = ({
         })}
       </Box>
 
+      {/* Confirm/Reserve Button */}
       <Button
         fullWidth
         variant="contained"
