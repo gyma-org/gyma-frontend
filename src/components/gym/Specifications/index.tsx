@@ -112,6 +112,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
       start_time: session.start_time,
       end_time: session.end_time,
       price: session.price,
+      date: session.date
     }));
 
   const handleSetTime = async (selectedTime: {

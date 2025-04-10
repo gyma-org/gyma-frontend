@@ -210,11 +210,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (authTokens) {
       interval = setInterval(() => {
         secondsPassed += 1; // Increment the seconds counter
-        console.log(`Seconds passed: ${secondsPassed}`);
+        // console.log(`Seconds passed: ${secondsPassed}`);
 
         // Check if it's time to refresh the token
         if (secondsPassed >= REFRESH_INTERVAL / 1000) {
-          console.log("Refreshing token now...");
+          // console.log("Refreshing token now...");
           updateToken();
           secondsPassed = 0; // Reset the counter after refresh
         }
