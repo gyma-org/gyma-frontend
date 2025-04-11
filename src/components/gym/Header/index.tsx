@@ -64,8 +64,8 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleBackClick = () => {
-    // window.location.href = "/";
-    router.push("/auth")
+    window.location.href = "/";
+    // router.push("/auth")
   };
 
   return (
