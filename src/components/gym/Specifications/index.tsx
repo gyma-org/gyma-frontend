@@ -285,11 +285,20 @@ const Specifications: React.FC<SpecificationsProps> = ({
             {structure ? (
               <Grid2 container mt={1} spacing={1}>
                 <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
-                  <Typography variant="body1" fontWeight="bold">
+                  <Typography variant="body1" fontWeight="bold" sx={{ whiteSpace: 'nowrap' }}>
                     {"مساحت باشگاه"}:
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
                     {structure?.area ? `${structure.area} مترمربع` : "نامشخص"}
+                  </Typography>
+                </Grid2>
+
+                <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
+                  <Typography variant="body1" fontWeight="bold"  sx={{ mr: 2 }}>
+                    {"طبقه"}:
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {structure?.floor ? structure.floor : "نامشخص"}
                   </Typography>
                 </Grid2>
 
@@ -303,33 +312,24 @@ const Specifications: React.FC<SpecificationsProps> = ({
                 </Grid2>
 
                 <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
-                  <Typography variant="body1" fontWeight="bold">
-                    {"طبقه"}:
+                  <Typography variant="body1" fontWeight="bold" sx={{ mr: 2 }}>
+                    {"آسانسور"}:
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {structure?.floor ? structure.floor : "نامشخص"}
+                    {structure?.elevator ? "دارد" : "ندارد"}
                   </Typography>
                 </Grid2>
 
                 <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
-                  <Typography variant="body1" fontWeight="bold">
+                  <Typography variant="body1" fontWeight="bold" sx={{ whiteSpace: 'nowrap' }}>
                     {"پارکینگ"}:
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
                     {structure?.parking === 1
                       ? "پارکینگ دارد"
                       : structure?.parking === 0
                         ? "جای پارک مناسب بیرون از باشگاه (پارکینگ ندارد)"
                         : "پارکینگ ندارد"}
-                  </Typography>
-                </Grid2>
-
-                <Grid2 size={6} display="flex" gap={0.5} alignItems="center">
-                  <Typography variant="body1" fontWeight="bold">
-                    {"آسانسور"}:
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {structure?.elevator ? "دارد" : "ندارد"}
                   </Typography>
                 </Grid2>
               </Grid2>
@@ -651,12 +651,26 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   bgcolor: "#fff",
                   color: "#F95A00",
                   boxShadow: 0,
-                  border: "1px solid #F95A00",
-                  px: { xs: 1, md: 1 },
-                  py: { xs: 0.55, md: 1.5 },
-                }}>
-                تقویم
-                <EditCalendarRounded sx={{ mr: 0.5 }} />
+                  border: "2px solid #F95A00",
+                  width: 80,
+                  height: 40,
+                  minWidth: 40,
+                  minHeight: 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 0,
+                }}
+              >
+                <img
+                  src="/icons/calendar.svg"
+                  alt="calendar icon"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    objectFit: "contain",
+                  }}
+                />
               </Button>
             </Box>
             <Box
