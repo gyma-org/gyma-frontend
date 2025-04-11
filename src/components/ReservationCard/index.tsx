@@ -68,9 +68,15 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
         console.error("Auth tokens are null. Cannot fetch bookings.");
         return;
       }
-      await addComment(newComment, authTokens.access, logoutUser);
-      setComment("");
-      enqueueSnackbar("نظر شما ثبت شد!", { variant: "success" });
+  
+      const status = await addComment(newComment, authTokens.access, logoutUser);
+  
+      if (status === 200) {
+        setComment("");
+        enqueueSnackbar("نظر شما ثبت شد!", { variant: "success" });
+      } else if (status === 404) {
+        enqueueSnackbar("باشگاه پیدا نشد!", { variant: "error" });
+      }
     } catch (error) {
       console.error("Error submitting comment:", error);
       enqueueSnackbar("خطا در ثبت نظر، دوباره تلاش کنید!", { variant: "error" });

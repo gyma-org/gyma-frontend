@@ -5,7 +5,7 @@ export const addComment = async (
   commentData: CommentAdd,
   token: string,
   logoutUser: () => void
-): Promise<void> => {
+): Promise<number> => {
   const url = `${API_USER_URL}/comments/add/`;
 
   const formData = new FormData();
@@ -29,8 +29,10 @@ export const addComment = async (
   if (!response.ok) {
     if (response.status === 401) {
       logoutUser(); // Handle unauthorized access
-    } else {
-      throw new Error("Failed to submit comment");
     }
+    return response.status; // Return the error status for handling
   }
+
+  return response.status;
+
 };
