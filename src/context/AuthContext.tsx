@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     setAuthTokens(null);
     setUser(null);
-    router.push("/auth");
+    window.location.href = "/";
   }, [router]);
 
   const updateToken = useCallback(async () => {

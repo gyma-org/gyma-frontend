@@ -14,7 +14,7 @@ const Loading = () => {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "rgba(255, 255, 255, 0.7)",
-        zIndex: 10000,
+        zIndex: 10,
       }}>
       <div className="loader"></div>
     </Box>

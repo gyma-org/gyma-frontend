@@ -65,10 +65,11 @@ const Profile = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("authTokens");
       sessionStorage.removeItem("authTokens");
+      document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 
     // Redirect to /auth
-    router.push("/auth");
+    window.location.href = "/";
   };
   const formatNumber = (value: string): string => {
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands separator
