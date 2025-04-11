@@ -18,7 +18,7 @@ const Navigation = ({
         right: 0,
         elevation: 1,
         boxShadow: "0px -7px 10px rgba(0, 0, 0, 0.2)",
-        zIndex: 10000,
+        zIndex: 40,
       }}
       elevation={3}>
       <BottomNavigation

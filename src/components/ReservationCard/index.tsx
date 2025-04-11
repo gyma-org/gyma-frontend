@@ -69,13 +69,16 @@ const ReservationCard = ({ booking, outdate = false }: ReservationCardIFace) => 
         return;
       }
   
-      const status = await addComment(newComment, authTokens.access, logoutUser);
+      const response = await addComment(newComment, authTokens.access, logoutUser);
   
-      if (status === 200) {
-        setComment("");
+      if (response.status_code === 200) {
         enqueueSnackbar("نظر شما ثبت شد!", { variant: "success" });
-      } else if (status === 404) {
+      } else if (response.status_code === 404) {
         enqueueSnackbar("باشگاه پیدا نشد!", { variant: "error" });
+      } else if (response.status_code === 400) {
+        enqueueSnackbar("باشگاه پیدا نشد!", { variant: "error" });
+      } else if (response.status_code === 201) {
+        enqueueSnackbar("نظر شما ثبت شد!", { variant: "success" });
       }
     } catch (error) {
       console.error("Error submitting comment:", error);

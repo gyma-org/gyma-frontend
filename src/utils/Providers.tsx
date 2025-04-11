@@ -12,7 +12,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppRouterCacheProvider>
       <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3} autoHideDuration={3000}> {/* ✅ Wrap the children */}
+        <SnackbarProvider maxSnack={3} autoHideDuration={3000}
+        style={{ zIndex: 9999 }}
+        > {/* ✅ Wrap the children */}
           <CssBaseline />
           {children}
         </SnackbarProvider>

@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { saveGym } from "@/api/SaveGym";
 import { removeGym } from "@/api/RemoveGym";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   gymId: string;
@@ -18,6 +19,7 @@ const Header: React.FC<HeaderProps> = ({
   const { authTokens } = useAuth();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     const savedGymIds = Cookies.get("savedGymIds");
@@ -62,7 +64,8 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleBackClick = () => {
-    window.location.href = "/";
+    // window.location.href = "/";
+    router.push("/auth")
   };
 
   return (

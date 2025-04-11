@@ -31,12 +31,12 @@ export default function Home() {
 
   return (
     <div>
+      <SnackbarProvider />
       {pages[pageIndex]}
       <Navigation
         value={pageIndex}
         setValue={handleNavigation}
       />
-      <SnackbarProvider />
     </div>
   );
 }

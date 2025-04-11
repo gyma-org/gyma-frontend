@@ -5,7 +5,7 @@ export const addComment = async (
   commentData: CommentAdd,
   token: string,
   logoutUser: () => void
-): Promise<number> => {
+): Promise<{ status_code: number }> => {
   const url = `${API_USER_URL}/comments/add/`;
 
   const formData = new FormData();
@@ -30,9 +30,9 @@ export const addComment = async (
     if (response.status === 401) {
       logoutUser(); // Handle unauthorized access
     }
-    return response.status; // Return the error status for handling
+    return { status_code: response.status };
   }
 
-  return response.status;
+  return { status_code: response.status };
 
 };
