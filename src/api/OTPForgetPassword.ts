@@ -1,4 +1,4 @@
-const API_USER_URL = "http://127.0.0.1:8000";
+import { API_USER_URL } from '../config';
 // import { API_USER_URL } from "../config";
 
 interface SendOtpResponse {
