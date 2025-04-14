@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 
 const CustomBottomNavigationAction = styled(BottomNavigationAction)(({ theme }) => ({
   "&.Mui-selected": {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#000449",
     color: "#fff",
     transform: "translateY(-20px)",
     borderRadius: "24px",
