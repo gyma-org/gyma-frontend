@@ -49,7 +49,7 @@ const Mapp = () => {
       trackResize: true,
       mapKey: "web.371ed93a9e524959acafafcafdeb0783",
       poi: false,
-      traffic: false,
+      traffic: true,
     }) as unknown as mapboxgl.Map;
 
     mapRef.current.on("load", () => {
@@ -365,7 +365,7 @@ const Mapp = () => {
         <Box
           sx={{
             position: "absolute",
-            top: 10,
+            top: 30,
             left: isMobile ? "auto" : "50%",
             right: isMobile ? 10 : "auto",
             transform: isMobile ? "none" : "translateX(-50%)",
@@ -422,7 +422,7 @@ const Mapp = () => {
         gap: 1,
         p: 2,
         right: 10,
-        top: 10,
+        top: 30,
         position: "absolute",
         bgcolor: "#fff",
         zIndex: 1,
@@ -518,7 +518,7 @@ const Mapp = () => {
       <Fab
         sx={{
           position: "absolute",
-          top: "1.5%",
+          top: "3%",
           left: 10, // Adjust position if needed
           display: { xs: "flex", md: "flex" }, 
           color: "#fff",
@@ -570,7 +570,7 @@ const Mapp = () => {
         <Fab
           sx={{
             position: 'fixed', // Stays visible when scrolling
-            bottom: '100px', // Position higher on page
+            bottom: 70, // Position higher on page
             left: '50%', // Center horizontally
             transform: 'translateX(-50%)', // Perfect centering
             bgcolor: 'transparent', // Fully transparent background
@@ -627,7 +627,7 @@ const Mapp = () => {
       
       
       <Box
-        sx={{ width: "100%", height: "78vh" }}
+        sx={{ width: "100%", height: "calc(100vh - 64px)" }} // Assuming your Search is ~64px tall
         ref={mapContainerRef}
       />
     </Box>
