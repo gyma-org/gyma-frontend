@@ -365,7 +365,7 @@ const Mapp = () => {
         <Box
           sx={{
             position: "absolute",
-            top: 30,
+            top: 43,
             left: isMobile ? "auto" : "50%",
             right: isMobile ? 10 : "auto",
             transform: isMobile ? "none" : "translateX(-50%)",
@@ -518,11 +518,11 @@ const Mapp = () => {
       <Fab
         sx={{
           position: "absolute",
-          top: "3%",
-          left: 10, // Adjust position if needed
+          top: 40,
+          left: 15, // Adjust position if needed
           display: { xs: "flex", md: "flex" }, 
           color: "#fff",
-          bgcolor: "#258cf3!important",
+          bgcolor: "#000449!important",
           borderRadius: "50%", // Ensures a circular shape
           width: 48, // Standard FAB size
           height: 48, // Standard FAB size
@@ -595,14 +595,14 @@ const Mapp = () => {
           >
             <path
               d="M5 20L25 5L45 20"
-              stroke="gray"
+              stroke="#000449"
               strokeWidth="4"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
               d="M5 30L25 15L45 30"
-              stroke="gray"
+              stroke="#000449"
               strokeWidth="4"
               strokeLinecap="round"
               strokeLinejoin="round"

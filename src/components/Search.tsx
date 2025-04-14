@@ -168,11 +168,17 @@ const Search = () => {
           {/* Close button only on mobile */}
           {!isDesktop && (
             <IconButton 
-              onClick={() => setSearchOpen(false)} 
-              sx={{ position: "absolute", left: 10, top: 5 }}
-            >
-              <CloseIcon />
-            </IconButton>
+            onClick={() => {
+              setSearchOpen(false);
+              setOpenResults(false);
+              setSearchTerm(""); // 👈 Clear the search input
+              setSearchResults([]);
+
+            }} 
+            sx={{ position: "absolute", left: 10, top: 5 }}
+          >
+            <CloseIcon />
+          </IconButton>
           )}
         </Box>
       </Slide>
@@ -183,7 +189,7 @@ const Search = () => {
           elevation={3}
           sx={{
             position: "absolute",
-            top: "110%",
+            top: 56,
             left: 0,
             width: "100%",
             maxHeight: 200,
@@ -201,8 +207,12 @@ const Search = () => {
               </ListItem>
             ) : hasSearched && searchResults.length === 0 ? (
               <ListItem>
-                <ListItemText primary="نتیجه‌ای یافت نشد" />
+                <ListItemText
+                  primary="نتیجه‌ای یافت نشد"
+                  sx={{ textAlign: "right" }} // 👈 Align the text to the right
+                />
               </ListItem>
+
             ) : (
               searchResults.map((gym) => (
                 <ListItem key={gym.id} disablePadding>
