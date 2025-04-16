@@ -511,7 +511,7 @@ const Mapp = () => {
           <Button
             variant="outlined"
             onClick={() => setShowNearbyGyms(!showNearbyGyms)}
-            color="#00044"
+            sx={{ color: "#00044", borderColor: "#00044" }} // Custom color with sx
           >
             {showNearbyGyms ? (
               <>
