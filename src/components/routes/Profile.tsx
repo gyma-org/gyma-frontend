@@ -513,67 +513,16 @@ const Profile = () => {
           borderRadius: "24px",
           overflow: "hidden",
         }}>
-        <svg
-          width="100%"
-          height="auto"
-          viewBox="0 0 398 233"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <rect
-            width="100%"
-            height="232.483"
-            rx="20"
-            fill="url(#paint0_linear_0_1)"
-          />
-          <mask
-            id="mask0_0_1"
-            style={{ maskType: "alpha" }}
-            maskUnits="userSpaceOnUse"
-            x="0"
-            y="0"
-            width="100%"
-            height="233">
-            <rect
-              width="100%"
-              height="232.483"
-              rx="20"
-              fill="#ED713C"
-            />
-          </mask>
-          <g mask="url(#mask0_0_1)">
-            <ellipse
-              opacity="0.1"
-              cx="30.9556"
-              cy="269.124"
-              rx="202.79"
-              ry="142.775"
-              fill="black"
-            />
-            <ellipse
-              opacity="0.08"
-              cx="367.044"
-              cy="-36.6413"
-              rx="202.79"
-              ry="142.775"
-              fill="black"
-            />
-          </g>
-          <defs>
-            <linearGradient
-              id="paint0_linear_0_1"
-              x1="69.9931"
-              y1="-36.7078"
-              x2="111.834"
-              y2="289.191"
-              gradientUnits="userSpaceOnUse">
-              <stop stop-color="#E42C66" />
-              <stop
-                offset="1"
-                stop-color="#F55B46"
-              />
-            </linearGradient>
-          </defs>
-        </svg>
+        <img
+          src="/icons/wallet.svg"
+          alt="Wallet Icon"
+          style={{
+            width: "100%", // Makes the image fill the container
+            height: "100%", // Makes the image fill the container
+            objectFit: "cover", // Ensures the image covers the area while maintaining aspect ratio
+            transform: "scale(1.1)",  // Slightly scale the image to fill the space
+          }}
+        />        
         <Typography
           sx={{
             position: "absolute",
