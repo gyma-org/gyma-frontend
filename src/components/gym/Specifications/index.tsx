@@ -85,7 +85,6 @@ const Specifications: React.FC<SpecificationsProps> = ({
       if (!response.ok) throw new Error("Failed to fetch gym sessions");
       return await response.json();
     } catch (error) {
-      console.error(error);
       return [];
     }
   };
@@ -101,6 +100,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
         ...session,
         date: moment(session.date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD"),
       }));
+      
       setSessions(jalaliSessions);
     });
   }, [gymId, currentMonth, showGender]);
@@ -112,7 +112,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
       start_time: session.start_time,
       end_time: session.end_time,
       price: session.price,
-      date: session.date
+      date: session.date,
+      sale_percentage: session.sale_percentage
     }));
 
   const handleSetTime = async (selectedTime: {
@@ -122,7 +123,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
     price: number;
   }) => {
     if (!authTokens) {
-      console.error("User is not authenticated.");
+      // console.error("User is not authenticated.");
       logoutUser();
       return;
     }
@@ -143,10 +144,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
         enqueueSnackbar("رزرو انجام نشد، دوباره تلاش کنید!", { variant: "error" });
         // setSnackbarSeverity("error");
         // setSnackbarMessage("Unexpected response. Please try again.");
-        console.error("Unexpected response from bookGymSession:", result);
+        // console.error("Unexpected response from bookGymSession:", result);
       }
     } catch (error: unknown) {
-      console.error("Error booking gym session:", error);
+      // console.error("Error booking gym session:", error);
 
       let errorMessage = "Failed to book session. Please try again."; // Default message
 
@@ -401,38 +402,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
             gap={1}
             mt={1}
             mr={1}>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <circle
-                cx="12"
-                cy="12"
-                r="7"
-                stroke="#33363F"
-                strokeWidth="2"
-              />
-              <path
-                d="M5.96472 3.1363C5.2865 3.31803 4.66807 3.67508 4.17157 4.17157C3.67508 4.66807 3.31803 5.2865 3.1363 5.96472"
-                stroke="#33363F"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M18.0353 3.1363C18.7135 3.31803 19.3319 3.67508 19.8284 4.17157C20.3249 4.66807 20.682 5.2865 20.8637 5.96472"
-                stroke="#33363F"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M12 8V11.75C12 11.8881 12.1119 12 12.25 12H15"
-                stroke="#33363F"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+            <img src="/icons/clock.svg" alt="clock icon" width={24} height={24} />
             <Typography
               variant="h6"
               fontWeight={600}>
@@ -651,11 +621,10 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   bgcolor: "#fff",
                   color: "#F95A00",
                   boxShadow: 0,
-                  border: "2px solid #F95A00",
-                  width: 80,
-                  height: 40,
-                  minWidth: 40,
-                  minHeight: 40,
+                  width: 60,
+                  height: 60,
+                  minWidth: 60,
+                  minHeight: 60,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -666,8 +635,8 @@ const Specifications: React.FC<SpecificationsProps> = ({
                   src="/icons/calendar.svg"
                   alt="calendar icon"
                   style={{
-                    width: 40,
-                    height: 40,
+                    width: 60,
+                    height: 60,
                     objectFit: "contain",
                   }}
                 />

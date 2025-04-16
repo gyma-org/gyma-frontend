@@ -34,7 +34,6 @@ const GymPage: React.FC<GymPageProps> = async ({ params }) => {
   // Fetch gym details using the gym code
   const gymDetails = await getGymDetails(id, { cache: "no-store" });
 
-  console.log("Fetched Gym Details:", gymDetails);
 
   if (!gymDetails) {
     return <p>No gym details found for gym code: {id}</p>;

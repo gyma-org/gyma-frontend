@@ -15,7 +15,7 @@
   bottom: 0;
   position: absolute;
   border-radius: 50% 50% 0;
-  border: 15px solid #11b;
+  border: 15px solid #000fe0;
   transform: rotate(45deg) translate(0, 0);
   box-sizing: border-box;
   animation: animMarker 0.4s ease-in-out infinite alternate;

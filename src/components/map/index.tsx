@@ -43,12 +43,12 @@ const Mapp = () => {
       },
       zoom: 12,
       pitch: 0,
+      poi: false,
       center: [userLon, userLat],
       minZoom: 2,
       maxZoom: 21,
       trackResize: true,
       mapKey: "web.371ed93a9e524959acafafcafdeb0783",
-      poi: false,
       traffic: true,
     }) as unknown as mapboxgl.Map;
 
@@ -205,17 +205,45 @@ const Mapp = () => {
 
   const handleRequestLocation = () => {
     setLocationDenied(false); // Hide the box before re-requesting
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
-        initializeMap(userLat, userLon);
-      },
-      (error) => {
-        console.error("Error getting location:", error);
-        setLocationDenied(true); // Show the box again if denied
-      }
-    );
+  
+    // Check for permission status first (Optional)
+    navigator.permissions.query({ name: 'geolocation' })
+      .then((permissionStatus) => {
+        if (permissionStatus.state === 'granted') {
+          // If permission is already granted, get the location
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const userLat = position.coords.latitude;
+              const userLon = position.coords.longitude;
+              initializeMap(userLat, userLon);
+            },
+            (error) => {
+              console.error("Error getting location:", error);
+              setLocationDenied(true); // Show the box again if denied
+            }
+          );
+        } else if (permissionStatus.state === 'denied') {
+          // If permission was denied previously, inform the user
+          setLocationDenied(true);
+          // Optionally, show a message to the user to enable location manually in settings
+        } else {
+          // If permission is not granted or denied, request it
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const userLat = position.coords.latitude;
+              const userLon = position.coords.longitude;
+              initializeMap(userLat, userLon);
+            },
+            (error) => {
+              console.error("Error getting location:", error);
+              setLocationDenied(true); // Show the box again if denied
+            }
+          );
+        }
+      })
+      .catch((err) => {
+        console.error('Error checking geolocation permission:', err);
+      });
   };
 
   let newGymMarkers: { marker: Marker; popupElement: HTMLDivElement }[] = [];
@@ -239,8 +267,8 @@ const Mapp = () => {
     newGymMarkers.forEach(({ marker }, i) => {
       const el = marker.getElement();
       el.style.backgroundImage = i === index ? `url(/icons/selectedgyms.svg)` : `url(/icons/gyms.svg)`;
-      el.style.width = i === index ? "30px" : "29px";
-      el.style.height = i === index ? "30px" : "29px";
+      el.style.width = i === index ? "30px" : "32px";
+      el.style.height = i === index ? "30px" : "32px";
     });
   };
 
@@ -258,8 +286,8 @@ const Mapp = () => {
     const markerElement = document.createElement("div");
     markerElement.className = "custom-marker";
     markerElement.style.backgroundImage = `url(/icons/gyms.svg)`;
-    markerElement.style.width = "29px";
-    markerElement.style.height = "29px";
+    markerElement.style.width = "32px";
+    markerElement.style.height = "32px";
     markerElement.style.cursor = "pointer";
 
     // ✅ Create text container (popup)
@@ -365,30 +393,45 @@ const Mapp = () => {
         <Box
           sx={{
             position: "absolute",
-            top: 43,
+            top: 33,
             left: isMobile ? "auto" : "50%",
             right: isMobile ? 10 : "auto",
             transform: isMobile ? "none" : "translateX(-50%)",
             bgcolor: "#fff",
             borderRadius: "8px",
             p: 1,
+            // border: "2px solid #ff9100", // ✅ Added border color
             zIndex: 200,
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)", // ✅ Soft shadow
             display: "flex",
             alignItems: "center",
             gap: 1,
             fontSize: "12px",
-            maxWidth: isMobile ? "200px" : "320px", // ✅ Smaller on mobile, normal on desktop
+            maxWidth: isMobile ? "300px" : "620px", // ✅ Smaller on mobile, normal on desktop
             whiteSpace: "nowrap",
             overflow: "hidden",
-          }}>
+            flexWrap: isMobile ? "wrap" : "nowrap", // Enable wrapping for mobile
+          }}
+        >
           <Typography variant="caption" sx={{ flexShrink: 0 }}>
-            موقعیت‌یابی غیرفعال
+            دسترسی به موقعیت‌یابی را از تنظیمات مرورگر خود فعال کنید
           </Typography>
-          <Button variant="outlined" color="primary" onClick={handleRequestLocation} size="small" sx={{ fontSize: "9px", p: "2px 4px", minWidth: "auto" }}>
-            فعال‌سازی
-          </Button>
-          <Button variant="text" color="secondary" onClick={() => setLocationDenied(false)} size="small" sx={{ fontSize: "9px", p: "2px 4px", minWidth: "auto" }}>
+          
+          {/* Button for closing the box */}
+          <Button
+            variant="outlined" // Border added to the button
+            color="#000449"
+            onClick={() => setLocationDenied(false)}
+            size="small"
+            sx={{
+              fontSize: "12px",
+              p: "1px 4px",
+              minWidth: "auto",
+              width: isMobile ? "100%" : "auto", // Full width on mobile
+              borderColor: "#ff9100", // Border color
+              fontWeight: "bold", // Make the text bold
+            }}
+          >
             بستن
           </Button>
 
@@ -406,7 +449,7 @@ const Mapp = () => {
                 display: "block",
                 height: "100%",
                 width: `${progress}%`,
-                bgcolor: "#2196F3", // Primary blue
+                bgcolor: "#000449", // Primary blue
                 transition: "width 1s linear", // ✅ Smooth movement
                 boxShadow: "0px 0px 6px rgba(33, 150, 243, 0.5)", // ✅ Glow effect
               },
@@ -414,6 +457,7 @@ const Mapp = () => {
           />
         </Box>
       )}
+
    <Box
       sx={{
         display: { xs: "none", md: "flex" },
@@ -426,7 +470,7 @@ const Mapp = () => {
         position: "absolute",
         bgcolor: "#fff",
         zIndex: 1,
-        border: "2px solid #FF9100",
+        border: "2px solid #ff9100;",
         width: "100%",
         maxWidth: 470,
       }}
@@ -468,7 +512,7 @@ const Mapp = () => {
           <Button
             variant="outlined"
             onClick={() => setShowNearbyGyms(!showNearbyGyms)}
-            color="primary"
+            color="#00044"
           >
             {showNearbyGyms ? (
               <>
@@ -520,7 +564,7 @@ const Mapp = () => {
           position: "absolute",
           top: 40,
           left: 15, // Adjust position if needed
-          display: { xs: "flex", md: "flex" }, 
+          display: { xs: "flex", md: "flex" },
           color: "#fff",
           bgcolor: "#000449!important",
           borderRadius: "50%", // Ensures a circular shape
@@ -530,8 +574,9 @@ const Mapp = () => {
         }}
         onClick={() => setOpen(true)}
       >
-        <InfoOutlined />
+        <img src="/icons/credits.svg" alt="Credits" style={{ width: "60px", height: "60px" }} />
       </Fab>
+
 
       
       <Modal open={open} onClose={() => setOpen(false)}>

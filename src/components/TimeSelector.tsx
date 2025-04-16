@@ -11,6 +11,7 @@ interface TimeSlot {
   start_time: string;
   end_time: string;
   price: number;
+  sale_percentage: number;
 }
 
 // Props for TimeSelector component
@@ -50,11 +51,9 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ timeSlots, handleSetTime })
         {timeSlots.map((time) => {
           // Convert Jalali date (YYYY/MM/DD) to Gregorian date (YYYY-MM-DD)
           const session_day = time.date.replace(/\//g, "-");
-          console.log(session_day) //1404-01-21
           const todayJalali = jalaali.toJalaali(new Date());
           const todayDate = `${todayJalali.jy}-${todayJalali.jm.toString().padStart(2, '0')}-${todayJalali.jd.toString().padStart(2, '0')}`;
-
-          console.log('Today\'s Jalali Date:', todayDate); // Example output: 1404-01-21
+          console.log(time.sale_percentage)
           let isPast = false
           // Compare with the endTime
           if (todayDate.toString() === session_day.toString()) {
@@ -69,24 +68,12 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ timeSlots, handleSetTime })
             // Now, parse the endTime and tehranTime into comparable time values
             const [endHour, endMinute, endSecond] = time.end_time.toString().split(':').map(Number);
             const [currentHour, currentMinute, currentSecond] = tehranTime.split(':').map(Number);
-            console.log(`${currentHour}curr`)
-            console.log(`${endHour}end`)
+         
 
             // Compare the times
-            isPast = currentHour > endHour || (currentHour === endHour && currentMinute > endMinute) || (currentHour === endHour && currentMinute === endMinute && currentSecond > endSecond);
-
-            
-              console.log("equal");
-              console.log(time.end_time)
-          } else {
-              console.log("not equal");
+            isPast = currentHour > endHour || (currentHour === endHour && currentMinute > endMinute) || (currentHour === endHour && currentMinute === endMinute && currentSecond > endSecond);   
           }
 
-
-          
-
-          // const isPast = endTimeUTC < nowInTehran; // Check if the time slot is in the past
-         
           return (
             <Button
               key={time.id}
@@ -109,33 +96,64 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ timeSlots, handleSetTime })
                 justifyContent: "space-between",
                 mt: 1,
                 opacity: isPast ? 0.5 : 1,
+                position: "relative", // for line overlay
               }}
               onClick={() => !isPast && setSelectedTimeID(time.id)}
             >
-              <Box display="flex" alignItems="center" gap={1}>
-                <Typography
-                  variant="h4"
-                  fontWeight="bold"
-                  sx={{
-                    fontSize: { xs: 12, md: 14 },
-                  }}
-                >
-                  {Number(time.price).toLocaleString()} تومان
-                </Typography>
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={1}
+                sx={{ whiteSpace: "nowrap", overflow: "hidden" }}
+              >
+                {time.sale_percentage !== 0 && !isPast ? (
+                  <>
+                    <Typography
+                      sx={{
+                        fontSize: { xs: 9, md: 13 },
+                        color: "red",
+                        textDecoration: "line-through",
+                      }}
+                    >
+                      {Number(time.price).toLocaleString()} تومان
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: { xs: 12, md: 14 },
+                        fontWeight: "bold",
+                        color: "green",
+                      }}
+                    >
+                      {Number(
+                        time.price - (time.price * time.sale_percentage) / 100
+                      ).toLocaleString()} تومان
+                    </Typography>
+                  </>
+                ) : (
+                  <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    sx={{
+                      fontSize: { xs: 12, md: 14 },
+                    }}
+                  >
+                    {Number(time.price).toLocaleString()} تومان
+                  </Typography>
+                )}
+
                 <svg
                   width="16"
                   height="16"
                   viewBox="0 0 22 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                >
-           
-                </svg>
+                ></svg>
               </Box>
-              <Typography sx={{ direction: "ltr" }}>
+              <Typography sx={{ direction: "ltr", fontSize: { xs: 12, md: 14 }, fontWeight: "bold" }}>
                 {time.start_time} - {time.end_time}
               </Typography>
             </Button>
+
           );
         })}
       </Box>
