@@ -353,17 +353,6 @@ const LoginSignup: React.FC = () => {
     }
   };
 
-  const fixNumbers = (str) => {
-    const persian = [/[\u06F0-\u06F9]/g, '۰۱۲۳۴۵۶۷۸۹'];
-    const arabic = [/[\u0660-\u0669]/g, '٠١٢٣٤٥٦٧٨٩'];
-    
-    for (let i = 0; i < 10; i++) {
-      str = str.replace(new RegExp(persian[1][i], 'g'), i);
-      str = str.replace(new RegExp(arabic[1][i], 'g'), i);
-    }
-    return str;
-  };
-
   return (
     <MuiContainer
       sx={{
@@ -432,9 +421,6 @@ const LoginSignup: React.FC = () => {
                   name="phone_number"
                   type="text"
                   placeholder="شماره تلفن"
-                  onInput={(e) => {
-                    e.target.value = fixNumbers(e.target.value).replace(/[^\d]/g, "");
-                  }}
                 />
                 <ErrorMessage
                   name="phone_number"
