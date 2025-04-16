@@ -417,10 +417,8 @@ const Mapp = () => {
             دسترسی به موقعیت‌یابی را از تنظیمات مرورگر خود فعال کنید
           </Typography>
           
-          {/* Button for closing the box */}
           <Button
             variant="outlined" // Border added to the button
-            color="#000449"
             onClick={() => setLocationDenied(false)}
             size="small"
             sx={{
@@ -430,6 +428,7 @@ const Mapp = () => {
               width: isMobile ? "100%" : "auto", // Full width on mobile
               borderColor: "#ff9100", // Border color
               fontWeight: "bold", // Make the text bold
+              color: "#000449", // Custom text color
             }}
           >
             بستن
