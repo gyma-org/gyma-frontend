@@ -26,6 +26,7 @@ const Mapp = () => {
   const [progress, setProgress] = useState(100);
   const isMobile = useMediaQuery("(max-width:600px)");
   const [open, setOpen] = useState(false);
+  const [showNoGymsModal, setShowNoGymsModal] = useState(false);
 
   // Preview
   const [gymPreview, setGymPreview] = useState<Gym | null>(null);
@@ -34,7 +35,11 @@ const Mapp = () => {
 
   const isDesktop = useMediaQuery("(min-width:900px)"); 
   
-  const initializeMap = (userLat: number, userLon: number) => {
+  const userMarkerRef = useRef<mapboxgl.Marker | null>(null);
+  const defaultLocations = {
+    tehran: { lat: 35.727785, lon: 51.367974 },
+  };
+  const initializeMap = (userLat: number, userLon: number, default_loc: boolean) => {
     mapRef.current = new mapboxgl.Map({
       mapType: mapboxgl.Map.mapTypes.neshanVector,
       container: mapContainerRef.current!,
@@ -56,18 +61,28 @@ const Mapp = () => {
       if (isDesktop) {
         setShowNearbyGyms(true); // Hide the nearby gyms when not on a desktop
       }
+
+      createUserMarker(userLat, userLon);
+
       setLoading(false); // Hide loading when map loads
+
       fetchNearbyGyms(userLat, userLon)
         .then((data) => {
           if (Array.isArray(data)) {
-            setGyms(data);
-            console.log(gyms)
-            addMarkersToMap(data);
             if (!isDesktop) {
               setShowNearbyGyms(false); // Hide the nearby gyms when not on a desktop
             }else{
               setShowNearbyGyms(true);
             }
+            if (data.length === 0 && default_loc) {
+              setShowNoGymsModal(true);
+            }
+            else{
+              setGyms(data);
+              addMarkersToMap(data);
+            }
+            
+           
           } else {
             console.error("Invalid gym data format:", data);
           }
@@ -83,8 +98,9 @@ const Mapp = () => {
   useEffect(() => {
     
     if (typeof window !== "undefined" && mapContainerRef.current) {
-      const defaultLat = 35.6892; // Tehran
-      const defaultLon = 51.389;
+      const defaultLat = 35.727785; // Tehran
+      const defaultLon = 51.367974;
+      
 
       // Initialize the map immediately with default coordinates
       // initializeMap(defaultLat, defaultLon);
@@ -93,21 +109,21 @@ const Mapp = () => {
           (position) => {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
-            initializeMap(userLat, userLon);
+            initializeMap(userLat, userLon,true);
           },
           (error) => {
             console.error("Error getting location:", error);
             setLocationDenied(true); // Show the location denied box
-            const defaultLat = 35.6892; // Tehran
-            const defaultLon = 51.389;
-            initializeMap(defaultLat, defaultLon);
+            const defaultLat = 35.727785; // Tehran
+            const defaultLon = 51.367974;
+            initializeMap(defaultLat, defaultLon,false);
           }
         );
       } else {
         console.error("Geolocation is not supported by this browser.");
         setLocationDenied(true); // Show the location denied box
 
-        initializeMap(defaultLat, defaultLon);
+        initializeMap(defaultLat, defaultLon,true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,50 +153,31 @@ const Mapp = () => {
 
   const handleClickOnMap = () => {
     const map = mapRef.current;
-    let newMarker: Marker | null = null;
-
+  
     if (map) {
       map.on("click", async (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) => {
         const { lat, lng } = e.lngLat;
-        console.log(e.lngLat);
-
+  
         const clickedElement = e.originalEvent.target as HTMLElement;
-
+  
         // ❌ Ignore clicks on gym pins
         if (clickedElement.classList.contains("custom-marker")) return;
-
-        // Remove previous user marker if it exists
-        if (newMarker) {
-          newMarker.remove();
-        }
-
-        const markerElement = document.createElement("div");
-        markerElement.className = "marker";
-        markerElement.style.backgroundImage = `url(/icons/mylocation.svg)`; // Use the SVG as the background image
-        markerElement.style.backgroundSize = "contain"; // Ensure the image is fully contained
-        markerElement.style.width = "50px"; // Set width of the marker
-        markerElement.style.height = "50px"; // Set height of the marker
-
-        // Add new user marker
-        newMarker = new mapboxgl.Marker(markerElement).setLngLat([lng, lat]).addTo(map);
-
-        // Update marker and selected location state
-        // setUserMarker(newMarker);
+  
+        createUserMarker(lat, lng);
+  
+       
         setSelectedLocation({ lat, lng });
-
-        // Remove previous gym markers
+  
+        // Clear old gyms
         clearGymMarkers();
-
-        // Fetch gyms based on clicked location and add them to the map
+  
+        // Load new gyms
         const nearbyGyms = await fetchNearbyGyms(lat, lng);
         if (Array.isArray(nearbyGyms)) {
-          console.log(nearbyGyms)
           setGyms(nearbyGyms);
-          
-          console.log(gyms)
           addMarkersToMap(nearbyGyms);
           if (isDesktop) {
-            setShowNearbyGyms(true); // Hide the nearby gyms when not on a desktop
+            setShowNearbyGyms(true);
           }
         } else {
           console.error("Invalid gym data format:", nearbyGyms);
@@ -188,6 +185,32 @@ const Mapp = () => {
       });
     }
   };
+  
+
+  const createUserMarker = (lat: number, lon: number) => {
+    // Remove old marker
+    if (userMarkerRef.current) {
+      console.log("Removing previous marker...");
+      userMarkerRef.current.remove();
+      userMarkerRef.current = null;
+    }
+  
+    const markerElement = document.createElement("div");
+    markerElement.className = "marker";
+    markerElement.style.backgroundImage = `url(/icons/mylocation.svg)`;
+    markerElement.style.backgroundSize = "contain";
+    markerElement.style.width = "50px";
+    markerElement.style.height = "50px";
+  
+    const marker = new mapboxgl.Marker(markerElement)
+      .setLngLat([lon, lat])
+      .addTo(mapRef.current!);
+  
+    console.log("New marker added at:", lat, lon);
+  
+    userMarkerRef.current = marker;
+  };
+
 
   const handleZoomOut = () => { // این فانکشن در دو بخش NearbyGym و GymPreview اضافه شده به
     if (mapRef.current) {
@@ -203,48 +226,7 @@ const Mapp = () => {
     }
   };
 
-  const handleRequestLocation = () => {
-    setLocationDenied(false); // Hide the box before re-requesting
-  
-    // Check for permission status first (Optional)
-    navigator.permissions.query({ name: 'geolocation' })
-      .then((permissionStatus) => {
-        if (permissionStatus.state === 'granted') {
-          // If permission is already granted, get the location
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const userLat = position.coords.latitude;
-              const userLon = position.coords.longitude;
-              initializeMap(userLat, userLon);
-            },
-            (error) => {
-              console.error("Error getting location:", error);
-              setLocationDenied(true); // Show the box again if denied
-            }
-          );
-        } else if (permissionStatus.state === 'denied') {
-          // If permission was denied previously, inform the user
-          setLocationDenied(true);
-          // Optionally, show a message to the user to enable location manually in settings
-        } else {
-          // If permission is not granted or denied, request it
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const userLat = position.coords.latitude;
-              const userLon = position.coords.longitude;
-              initializeMap(userLat, userLon);
-            },
-            (error) => {
-              console.error("Error getting location:", error);
-              setLocationDenied(true); // Show the box again if denied
-            }
-          );
-        }
-      })
-      .catch((err) => {
-        console.error('Error checking geolocation permission:', err);
-      });
-  };
+ 
 
   let newGymMarkers: { marker: Marker; popupElement: HTMLDivElement }[] = [];
   let selectedMarkerIndex: number | null = null;
@@ -298,12 +280,7 @@ const Mapp = () => {
     // ✅ Style for popup
 
     popupElement.style.position = "absolute";
-    // popupElement.style.padding = "5px 8px";
-    // popupElement.style.whiteSpace = "nowrap";
-    // // popupElement.style.fontSize = "14px";
-    // popupElement.style.backgroundColor = "transparent";
-    // popupElement.style.borderRadius = "5px";
-    // popupElement.style.boxShadow = "0px 2px 5px rgba(0,0,0,0.2)";
+  
 
     const marker = new mapboxgl.Marker(markerElement).setLngLat([gym.lon, gym.lat]).addTo(map);
 
@@ -539,25 +516,47 @@ const Mapp = () => {
           onBack={handleZoomOut}
         />
       )}
-      {/* {!showNearbyGyms && (
-        <Fab
-          sx={{
-            position: "absolute",
-            bottom: "7%",
-            right: -5,
-            gap: 1,
-            display: { xs: "flex", md: "none" },
-            borderRadius: "16px 0 0 16px",
-            color: "#fff",
-            bgcolor: "#FF9100 !important",
-          }}
-          onClick={() => setShowNearbyGyms(true)}
-          variant="extended">
-          <FitnessCenter />
-          نمایش باشگاه های نزدیک
-        </Fab>
-      )} */}
 
+    <Box
+      sx={{
+        position: "fixed",
+        bottom: isDesktop ? 80 : "unset",
+        top: !isDesktop ? 80 : "unset",
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 100,
+        width: "230px", // Fixed width
+        px: 0,
+        py: 0,
+        bgcolor: "transparent",
+      }}
+    >
+      <Box
+        sx={{
+          bgcolor: "#000449",
+          color: "white",
+          px: 0.5,
+          py: 1.0,
+          textAlign: "center",
+          fontSize: "13px", // Fixed font size
+          boxShadow: 3,
+          borderTopLeftRadius: isDesktop ? "300px" : 0,
+          borderTopRightRadius: isDesktop ? "300px" : 0,
+          borderBottomLeftRadius: isDesktop ? 0 : "300px",
+          borderBottomRightRadius: isDesktop ? 0 : "300px",
+          width: "100%",
+        }}
+      >
+          نزدیک محل مورد نظرت کلیک کن
+      </Box>
+    </Box>
+
+
+
+
+
+
+  
       <Fab
         sx={{
           position: "absolute",
@@ -610,6 +609,31 @@ const Mapp = () => {
         </Box>
       </Modal>
 
+
+      {showNoGymsModal && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-xl shadow-xl max-w-md w-full text-center">
+            <h2 className="text-xl font-semibold mb-4">باشگاه‌ ورزشی پیدا نشد!</h2>
+            <p className="mb-6">
+              در موقعیت فعلی شما باشگاهی ثبت نشده است.
+              <br />
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  setTimeout(() => {
+                    setShowNoGymsModal(false);
+                  }, 1000); // 1000ms = 1 second
+                  initializeMap(defaultLocations.tehran.lat, defaultLocations.tehran.lon, false);
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg"
+              >
+                مشاهده باشگاه‌های تهران
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {!showNearbyGyms && (
         <Fab
           sx={{
